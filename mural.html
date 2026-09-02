@@ -64,11 +64,51 @@
 
     /* Animação suave de vela acesa */
     @keyframes flameFlicker {
-      0%, 100% { opacity: 0.9; transform: scale(1); filter: drop-shadow(0 0 4px #FFB703); }
-      50% { opacity: 1; transform: scale(1.12); filter: drop-shadow(0 0 10px #FB8500); }
+      0%, 100% { opacity: 0.92; transform: scale(1); filter: drop-shadow(0 0 5px #FFB703); }
+      50% { opacity: 1; transform: scale(1.15); filter: drop-shadow(0 0 12px #FB8500); }
     }
     .flame-pulsing {
       animation: flameFlicker 1.8s ease-in-out infinite;
+    }
+
+    /* Cursor dinâmico de máquina de escrever em ouro */
+    .cursor-blink {
+      display: inline-block;
+      width: 2.5px;
+      height: 1.1em;
+      background-color: #F59E0B;
+      margin-left: 5px;
+      vertical-align: middle;
+      animation: blinkMemorial 0.85s infinite;
+    }
+    @keyframes blinkMemorial {
+      0%, 100% { opacity: 1; }
+      50% { opacity: 0; }
+    }
+
+    /* Revelação fluida ao rolar a página */
+    .reveal-on-scroll {
+      opacity: 0;
+      transform: translateY(24px);
+      transition: all 0.8s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+    .reveal-on-scroll.is-visible {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    /* Painel de Vidro e Ouro Nobre Moderno */
+    .glass-memorial-panel {
+      background: rgba(66, 12, 74, 0.72);
+      backdrop-filter: blur(18px);
+      -webkit-backdrop-filter: blur(18px);
+      border: 1.5px solid rgba(245, 158, 11, 0.55);
+      box-shadow: 0 15px 35px -5px rgba(20, 1, 22, 0.75), inset 0 0 18px -4px rgba(245, 158, 11, 0.2);
+      transition: all 0.35s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+    .glass-memorial-panel:hover {
+      border-color: rgba(245, 158, 11, 0.85);
+      box-shadow: 0 20px 45px -5px rgba(20, 1, 22, 0.9), inset 0 0 22px -4px rgba(245, 158, 11, 0.3);
     }
 
     /* Brilho Dourado do Solene */
@@ -127,38 +167,38 @@
       <span class="text-amber-300">✨</span>
     </div>
 
-    <!-- TÍTULO RADIANTE DOURADO & FONTE CELESTIAL ADEQUADA -->
-    <div class="space-y-2">
+    <!-- TÍTULO RADIANTE DOURADO & LETRAS DINÂMICAS QUE COMPLETAM -->
+    <div class="space-y-3">
       <h2 class="text-5xl sm:text-7xl md:text-8xl font-bold font-estrelinhas tracking-wide leading-tight text-transparent bg-clip-text bg-gradient-to-r from-amber-200 via-yellow-300 to-amber-100" style="text-shadow: 0 4px 30px rgba(255, 215, 0, 0.5);">
         Jardim das Estrelinhas
       </h2>
-      <p class="font-cinzel text-xs sm:text-sm md:text-base uppercase tracking-[0.28em] text-amber-200/90 font-bold drop-shadow-xs">
-        Memorial Coletivo &bull; Santuário da Eterna Saudade
+      <p class="font-cinzel text-xs sm:text-sm md:text-base uppercase tracking-[0.24em] text-amber-200 font-bold drop-shadow-xs min-h-[2em] flex items-center justify-center">
+        <span id="textoDinamicoMemorial">Onde o Amor Permanece Vivo</span><span class="cursor-blink"></span>
       </p>
     </div>
 
-    <!-- Mensagem de Consolo e Carinho em Cartão Acolhedor de Alto Contraste -->
-    <div class="max-w-2xl mx-auto bg-[#420C4A]/85 backdrop-blur-md px-6 py-4 rounded-3xl border-2 border-amber-300/80 shadow-2xl">
+    <!-- Mensagem de Consolo e Carinho em Cartão de Vidro Luxuoso -->
+    <div class="max-w-2xl mx-auto glass-memorial-panel px-6 py-4 rounded-3xl reveal-on-scroll">
       <p class="text-sm sm:text-base text-[#FFFDF0] font-poetic italic font-semibold leading-relaxed">
         &ldquo;Existe um lugar luminoso do outro lado do arco-íris, onde a dor não existe e o carinho se faz eterno. Aqui celebramos a vida de cada anjinho que marcou para sempre a nossa história.&rdquo;
       </p>
     </div>
 
-    <!-- PAINEL DE TRIBUTOS EM ROXO EQUILIBRADO COM BORDAS DE OURO -->
-    <div class="grid grid-cols-2 sm:grid-cols-4 gap-3.5 max-w-3xl mx-auto pt-4 text-center">
-      <div class="bg-[#420C4A]/90 backdrop-blur-md border-2 border-amber-300/80 p-4 rounded-2xl shadow-xl">
-        <p id="totalAnjinhos" class="text-2xl sm:text-3xl font-black font-cinzel text-yellow-300">1.428</p>
+    <!-- PAINEL DE TRIBUTOS EM VIDRO NOBRE E CONTADORES ANIMADOS -->
+    <div class="grid grid-cols-2 sm:grid-cols-4 gap-3.5 max-w-3xl mx-auto pt-4 text-center reveal-on-scroll">
+      <div class="glass-memorial-panel p-4 rounded-2xl">
+        <p id="totalAnjinhos" class="text-2xl sm:text-3xl font-black font-cinzel text-yellow-300 counter-memorial" data-target="1428">1.428</p>
         <p class="text-xs text-[#FFFDF0] font-black uppercase tracking-wider mt-1">Anjinhos no Céu</p>
       </div>
-      <div class="bg-[#420C4A]/90 backdrop-blur-md border-2 border-amber-300/80 p-4 rounded-2xl shadow-xl">
-        <p id="totalVelasAcesas" class="text-2xl sm:text-3xl font-black font-cinzel text-yellow-300">15.920</p>
+      <div class="glass-memorial-panel p-4 rounded-2xl">
+        <p id="totalVelasAcesas" class="text-2xl sm:text-3xl font-black font-cinzel text-yellow-300 counter-memorial" data-target="15920">15.920</p>
         <p class="text-xs text-[#FFFDF0] font-black uppercase tracking-wider mt-1">Velas da Saudade</p>
       </div>
-      <div class="bg-[#420C4A]/90 backdrop-blur-md border-2 border-amber-300/80 p-4 rounded-2xl shadow-xl">
+      <div class="glass-memorial-panel p-4 rounded-2xl">
         <p class="text-2xl sm:text-3xl font-black font-cinzel text-yellow-300">100%</p>
         <p class="text-xs text-[#FFFDF0] font-black uppercase tracking-wider mt-1">Amor Puro</p>
       </div>
-      <div class="bg-[#420C4A]/90 backdrop-blur-md border-2 border-amber-300/80 p-4 rounded-2xl shadow-xl">
+      <div class="glass-memorial-panel p-4 rounded-2xl">
         <p class="text-2xl sm:text-3xl font-black font-cinzel text-yellow-300">Eterno</p>
         <p class="text-xs text-[#FFFDF0] font-black uppercase tracking-wider mt-1">Nas Lembranças</p>
       </div>
@@ -168,7 +208,7 @@
   <!-- ========================================================================= -->
   <!-- BARRA DE BUSCA E FILTROS (ROXO EQUILIBRADO & DOURADO) -->
   <!-- ========================================================================= -->
-  <section class="max-w-6xl mx-auto mb-10 relative z-10">
+  <section class="max-w-6xl mx-auto mb-10 relative z-10 reveal-on-scroll">
     <div class="bg-gradient-to-r from-[#4A0E52] via-[#37093E] to-[#4A0E52] border-2 border-amber-300/80 p-4 sm:p-5 rounded-3xl shadow-2xl flex flex-col sm:flex-row items-center justify-between gap-4">
       
       <!-- CAMPO DE BUSCA -->
@@ -313,6 +353,8 @@
 
     window.addEventListener("DOMContentLoaded", () => {
       carregarPetsMural();
+      digitarFraseMemorial();
+      setTimeout(iniciarAnimacaoScrollMemorial, 80);
     });
 
     function carregarPetsMural() {
@@ -479,6 +521,79 @@
         audio.pause();
         label.innerText = "Música Solene";
       }
+    }
+
+    // =========================================================================
+    // TIPOGRAFIA DINÂMICA (LETRAS QUE COMPLETAM NO HERO DO MEMORIAL)
+    // =========================================================================
+    const frasesMemorial = [
+      "Onde o Amor Permanece Vivo",
+      "Santuário da Eterna Saudade",
+      "Luz e Paz do Outro Lado do Arco-Íris",
+      "Para Sempre Vivos em Nossos Corações"
+    ];
+    let idxMemorialFrase = 0;
+    let idxMemorialLetra = 0;
+    let apagandoMemorial = false;
+    const elementoTextoMemorial = document.getElementById("textoDinamicoMemorial");
+
+    function digitarFraseMemorial() {
+      if (!elementoTextoMemorial) return;
+      const fraseAtual = frasesMemorial[idxMemorialFrase];
+
+      if (!apagandoMemorial) {
+        elementoTextoMemorial.innerText = fraseAtual.substring(0, idxMemorialLetra + 1);
+        idxMemorialLetra++;
+        if (idxMemorialLetra === fraseAtual.length) {
+          apagandoMemorial = true;
+          setTimeout(digitarFraseMemorial, 2600);
+          return;
+        }
+      } else {
+        elementoTextoMemorial.innerText = fraseAtual.substring(0, idxMemorialLetra - 1);
+        idxMemorialLetra--;
+        if (idxMemorialLetra === 0) {
+          apagandoMemorial = false;
+          idxMemorialFrase = (idxMemorialFrase + 1) % frasesMemorial.length;
+        }
+      }
+
+      const vel = apagandoMemorial ? 35 : 75;
+      setTimeout(digitarFraseMemorial, vel);
+    }
+
+    // =========================================================================
+    // REVELAÇÃO SUAVE AO ROLAR & CONTADORES ANIMADOS
+    // =========================================================================
+    function iniciarAnimacaoScrollMemorial() {
+      const observados = document.querySelectorAll(".reveal-on-scroll");
+      const observer = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+          if (entry.isIntersecting) {
+            entry.target.classList.add("is-visible");
+            const contadores = entry.target.querySelectorAll(".counter-memorial");
+            contadores.forEach(c => animarContadorMemorial(c));
+          }
+        });
+      }, { threshold: 0.12 });
+
+      observados.forEach(el => observer.observe(el));
+    }
+
+    function animarContadorMemorial(el) {
+      if (el.dataset.animado === "true") return;
+      el.dataset.animado = "true";
+      const target = parseInt(el.dataset.target, 10);
+      let count = 0;
+      const step = Math.ceil(target / 45);
+      const timer = setInterval(() => {
+        count += step;
+        if (count >= target) {
+          count = target;
+          clearInterval(timer);
+        }
+        el.innerText = count.toLocaleString("pt-BR");
+      }, 25);
     }
   </script>
 </body>
