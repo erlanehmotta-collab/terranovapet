@@ -1338,6 +1338,9 @@
                 partida: d.partida || d.pa || "2026",
                 subtitulo: d.subtitulo || "Nosso leal companheiro e eterno anjo da família",
                 tutorNome: d.tutorNome || d.t || "Família",
+                tutorEmail: d.tutorEmail || d.te || "",
+                senhaTutor: d.senhaTutor || d.st || "123",
+                permitirDownloadVideo: d.permitirDownloadVideo !== undefined ? d.permitirDownloadVideo : true,
                 cidade: d.cidade || d.c || "Montes Claros - MG",
                 fotoPrincipal: d.fotoPrincipal || d.f || "https://images.unsplash.com/photo-1552053831-71594a27632d?auto=format&fit=crop&w=1200&q=95",
                 galeria: (d.galeria && d.galeria.length) ? d.galeria : (d.g && d.g.length ? d.g : [d.fotoPrincipal || d.f]),
@@ -1350,6 +1353,22 @@
                 if (idx !== -1) store[idx] = petFromUrl;
                 else store.unshift(petFromUrl);
                 localStorage.setItem("terranova_pets_store_v3", JSON.stringify(store));
+
+                if (petFromUrl.tutorEmail) {
+                  try {
+                    let tutDb = JSON.parse(localStorage.getItem("terranova_tutores_db")) || [];
+                    const idxT = tutDb.findIndex(t => t.email && t.email.toLowerCase() === petFromUrl.tutorEmail.toLowerCase());
+                    const tObj = {
+                      nome: petFromUrl.tutorNome,
+                      email: petFromUrl.tutorEmail,
+                      senha: petFromUrl.senhaTutor || "123",
+                      petNome: petFromUrl.nome
+                    };
+                    if (idxT !== -1) tutDb[idxT] = tObj;
+                    else tutDb.push(tObj);
+                    localStorage.setItem("terranova_tutores_db", JSON.stringify(tutDb));
+                  } catch(errT) {}
+                }
               } catch(e) {}
               return petFromUrl;
             }
