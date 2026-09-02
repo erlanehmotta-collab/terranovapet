@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Lote Exclusivo: 100 Tags Inteligentes NFC &bull; Terranova Pet</title>
+  <title>Terranova Pet &bull; Lote Exclusivo de 100 Tags Inteligentes NFC</title>
   <script src="https://cdn.tailwindcss.com"></script>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -12,7 +12,7 @@
   <style>
     body {
       font-family: 'Plus Jakarta Sans', sans-serif;
-      background-color: #0F0212;
+      background: #0D0110;
       color: #F8FAFC;
       overflow-x: hidden;
     }
@@ -20,198 +20,256 @@
     .font-poetic { font-family: 'Playfair Display', serif; }
     .font-cinzel { font-family: 'Cinzel', serif; }
 
-    /* Brilhos e Degradês Nobres da Marca Terranova */
-    .bg-radial-terranova {
-      background: radial-gradient(circle at 50% 0%, #4A0E52 0%, #2A0630 40%, #150219 75%, #0B010D 100%);
+    /* Fundo Celestial Noturno Imperial */
+    .bg-nebula-terranova {
+      background: radial-gradient(circle at 50% -15%, #52135A 0%, #360A3D 30%, #1D0322 65%, #0B000D 100%);
     }
 
-    .border-glow-gold {
-      border: 2px solid rgba(245, 158, 11, 0.7);
-      box-shadow: 0 0 25px -5px rgba(245, 158, 11, 0.4), inset 0 0 15px -5px rgba(245, 158, 11, 0.2);
+    /* Brilho dourado pulsante e suave */
+    .glow-gold-box {
+      box-shadow: 0 0 40px -10px rgba(245, 158, 11, 0.4), inset 0 0 20px -5px rgba(245, 158, 11, 0.2);
     }
 
-    .badge-shimmer {
-      background: linear-gradient(90deg, rgba(245, 158, 11, 0.15) 0%, rgba(254, 240, 138, 0.4) 50%, rgba(245, 158, 11, 0.15) 100%);
-      background-size: 200% 100%;
-      animation: shimmer 3s infinite linear;
+    .glow-purple-box {
+      box-shadow: 0 0 50px -10px rgba(116, 5, 104, 0.6);
     }
 
-    @keyframes shimmer {
-      0% { background-position: -200% 0; }
-      100% { background-position: 200% 0; }
+    /* Partículas luminosas de fundo */
+    .bg-starlight {
+      background-image: 
+        radial-gradient(1.5px 1.5px at 40px 60px, #FFF, rgba(0,0,0,0)),
+        radial-gradient(2px 2px at 180px 120px, #FFDF6D, rgba(0,0,0,0)),
+        radial-gradient(1.2px 1.2px at 320px 240px, #FFF, rgba(0,0,0,0)),
+        radial-gradient(2.2px 2.2px at 450px 160px, #F59E0B, rgba(0,0,0,0));
+      background-size: 550px 380px;
     }
 
-    /* Animação de Pulso de Leitura NFC */
-    @keyframes nfcWave {
-      0% { transform: scale(0.95); opacity: 0.8; }
-      50% { transform: scale(1.15); opacity: 0.3; }
-      100% { transform: scale(1.35); opacity: 0; }
+    /* Cursor de máquina de escrever dinâmico */
+    .cursor-blink {
+      display: inline-block;
+      width: 3px;
+      height: 1.1em;
+      background-color: #F59E0B;
+      margin-left: 4px;
+      vertical-align: middle;
+      animation: blink 0.85s infinite;
     }
-    .nfc-pulse-ring {
-      animation: nfcWave 2.2s cubic-bezier(0.25, 1, 0.5, 1) infinite;
+    @keyframes blink {
+      0%, 100% { opacity: 1; }
+      50% { opacity: 0; }
     }
 
-    /* Cartão Flutuante Suave */
-    .card-hover-lift {
-      transition: all 0.35s cubic-bezier(0.16, 1, 0.3, 1);
+    /* Revelação suave de elementos ao scrollar */
+    .reveal-on-scroll {
+      opacity: 0;
+      transform: translateY(30px);
+      transition: all 0.8s cubic-bezier(0.16, 1, 0.3, 1);
     }
-    .card-hover-lift:hover {
-      transform: translateY(-8px);
-      box-shadow: 0 20px 40px -10px rgba(116, 5, 104, 0.5), 0 0 20px 0 rgba(245, 158, 11, 0.3);
-      border-color: #F59E0B;
+    .reveal-on-scroll.is-visible {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    /* Efeito de Vidro Luxuoso (Glassmorphism) */
+    .glass-card-luxury {
+      background: rgba(255, 255, 255, 0.035);
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
+      border: 1px solid rgba(245, 158, 11, 0.35);
+      transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+    .glass-card-luxury:hover {
+      background: rgba(255, 255, 255, 0.06);
+      border-color: rgba(245, 158, 11, 0.8);
+      transform: translateY(-6px);
+      box-shadow: 0 25px 50px -10px rgba(116, 5, 104, 0.4), 0 0 25px 0 rgba(245, 158, 11, 0.25);
+    }
+
+    /* Ondas do Toque NFC */
+    @keyframes nfcPulseAnim {
+      0% { transform: scale(0.95); opacity: 0.9; }
+      50% { transform: scale(1.2); opacity: 0.35; }
+      100% { transform: scale(1.45); opacity: 0; }
+    }
+    .nfc-ring-wave {
+      animation: nfcPulseAnim 2s infinite cubic-bezier(0.2, 0.8, 0.4, 1);
+    }
+
+    /* Brilho Shimmer em Botões e Selos */
+    .shimmer-text {
+      background: linear-gradient(90deg, #FDE68A 0%, #FFFFFF 50%, #F59E0B 100%);
+      background-size: 200% auto;
+      color: transparent;
+      -webkit-background-clip: text;
+      animation: shine 3.5s linear infinite;
+    }
+    @keyframes shine {
+      to { background-position: 200% center; }
     }
   </style>
 </head>
-<body class="bg-radial-terranova min-h-screen text-slate-100 selection:bg-amber-400 selection:text-[#4A0E52]">
+<body class="bg-nebula-terranova bg-starlight min-h-screen text-slate-100 selection:bg-amber-400 selection:text-[#4A0E52]">
 
   <!-- ========================================================================= -->
-  <!-- BARRA DE AVISO SUPERIOR EXCLUSIVA -->
+  <!-- BARRA SUPERIOR DINÂMICA COM BRILHO SUAVE -->
   <!-- ========================================================================= -->
-  <div class="bg-gradient-to-r from-amber-500 via-yellow-400 to-amber-500 text-[#4A0E52] py-2.5 px-4 text-center text-xs sm:text-sm font-black tracking-wide shadow-md flex items-center justify-center gap-2">
-    <span>💎</span>
-    <span>PROPOSTA COMERCIAL EXCLUSIVA PARA A DIRETORIA DA TERRANOVA PET &bull; LOTE LIMITADO DE 100 TAGS NFC</span>
-    <span>💎</span>
-  </div>
+  <aside class="bg-gradient-to-r from-amber-500 via-yellow-300 to-amber-500 text-[#4A0E52] py-2 px-4 text-center text-xs font-black tracking-wide shadow-md flex items-center justify-center gap-2 relative z-50">
+    <span class="animate-pulse">✨</span>
+    <span>PROPOSTA COMERCIAL &bull; LOTE EXCLUSIVO DE 100 TAGS INTELIGENTES NFC PARA A TERRANOVA PET</span>
+    <span class="animate-pulse">✨</span>
+  </aside>
 
   <!-- ========================================================================= -->
-  <!-- CABEÇALHO PRINCIPAL (HEADER COM LOGO OFICIAL & CTAs) -->
+  <!-- CABEÇALHO ELEGANTE E FLUTUANTE (HEADER COM NAVEGAÇÃO E LOGO OFICIAL) -->
   <!-- ========================================================================= -->
-  <header class="max-w-7xl mx-auto px-4 sm:px-6 py-5 flex items-center justify-between border-b border-amber-500/20 sticky top-0 bg-[#150219]/90 backdrop-blur-md z-50">
-    <div class="flex items-center gap-3.5">
-      <div class="w-12 h-12 rounded-2xl overflow-hidden border-2 border-amber-400 bg-[#FFD700] p-0.5 shadow-lg shadow-amber-500/30">
+  <header class="max-w-7xl mx-auto px-4 sm:px-6 py-4 flex items-center justify-between sticky top-0 bg-[#16021B]/90 backdrop-blur-md z-40 border-b border-amber-400/20 shadow-xl transition duration-300">
+    
+    <!-- Logo Oficial e Identidade -->
+    <a href="vendas.html" class="flex items-center gap-3.5 group">
+      <div class="w-12 h-12 rounded-2xl overflow-hidden border-2 border-amber-400 bg-[#FFD700] p-0.5 shadow-lg shadow-amber-500/30 group-hover:scale-105 transition duration-300">
         <img src="logo_terranova.png" alt="Terranova Pet" class="w-full h-full object-cover rounded-xl">
       </div>
       <div>
         <div class="flex items-center gap-2">
-          <span class="font-cinzel text-lg sm:text-xl font-bold tracking-wider text-amber-200 uppercase">Terranova Pet</span>
-          <span class="text-[9px] uppercase font-black px-2 py-0.5 rounded-full bg-amber-400 text-[#4A0E52]">Inovação 2026</span>
+          <span class="font-cinzel text-lg sm:text-xl font-bold tracking-wider text-amber-200 uppercase drop-shadow-xs">Terranova Pet</span>
+          <span class="text-[9px] uppercase font-black px-2 py-0.5 rounded-full bg-gradient-to-r from-amber-400 to-yellow-300 text-[#4A0E52] shadow-xs">
+            Exclusivo
+          </span>
         </div>
-        <p class="text-[11px] text-amber-100/70 font-semibold">Lote de 100 Tags Inteligentes NFC + Sistema Integrado</p>
+        <p class="text-[11px] text-amber-100/70 font-semibold">100 Tags Físicas NFC + Ecossistema Digital</p>
       </div>
-    </div>
+    </a>
 
-    <!-- Links de Navegação e Ação Rápida -->
-    <div class="flex items-center gap-3">
-      <a href="#modulos" class="hidden md:inline-flex text-xs font-bold text-amber-200 hover:text-white transition px-3 py-2">
-        Módulos do App
-      </a>
-      <a href="#lucratividade" class="hidden md:inline-flex text-xs font-bold text-amber-200 hover:text-white transition px-3 py-2">
-        Lucratividade
-      </a>
-      <a href="#dominio" class="hidden md:inline-flex text-xs font-bold text-amber-200 hover:text-white transition px-3 py-2">
-        Domínio &amp; Custos
-      </a>
-      <a href="https://wa.me/5538997263620?text=Ol%C3%A1%2C%20tenho%20interesse%20em%20fechar%20o%20lote%20de%20100%20Tags%20NFC%20para%20a%20Terranova%20Pet!" target="_blank" class="px-4 sm:px-5 py-2.5 rounded-full bg-gradient-to-r from-amber-400 via-yellow-300 to-amber-500 hover:brightness-110 text-[#4A0E52] font-black text-xs sm:text-sm shadow-lg shadow-amber-500/30 transition active:scale-95 flex items-center gap-2">
-        <span>📲</span>
-        <span>Fechar Lote Agora</span>
-      </a>
-    </div>
+    <!-- Menu de Navegação Rápida -->
+    <nav class="hidden lg:flex items-center gap-6 text-xs font-bold text-amber-200/90">
+      <a href="#vitrine" class="hover:text-amber-300 transition">A Tag Física</a>
+      <a href="#como-funciona" class="hover:text-amber-300 transition">O Toque NFC</a>
+      <a href="#modulos" class="hover:text-amber-300 transition">3 Módulos Inclusos</a>
+      <a href="#dominio" class="hover:text-amber-300 transition">Zero Mensalidades</a>
+      <a href="#lucro" class="hover:text-amber-300 transition">Calculadora de Lucro</a>
+    </nav>
+
+    <!-- Botão de Ação Imediata -->
+    <a href="https://wa.me/5538997263620?text=Ol%C3%A1%21%20Vi%20a%20p%C3%A1gina%20das%20100%20Tags%20NFC%20da%20Terranova%20Pet%20e%20gostaria%20de%20fechar%20o%20lote%21" target="_blank" class="px-5 py-2.5 rounded-full bg-gradient-to-r from-amber-400 via-yellow-300 to-amber-500 hover:brightness-110 text-[#4A0E52] font-black text-xs sm:text-sm shadow-lg shadow-amber-500/30 transition active:scale-95 flex items-center gap-2">
+      <span>📲</span>
+      <span>Falar no WhatsApp</span>
+    </a>
   </header>
 
   <!-- ========================================================================= -->
-  <!-- HERO SECTION: O PRODUTO QUE ENCANTA & MULTIPLICA O VALOR DA MARCA -->
+  <!-- HERO SECTION ULTRA-MODERNO: TEXTO DINÂMICO QUE APARECE + PRODUTO REAL -->
   <!-- ========================================================================= -->
   <section class="max-w-7xl mx-auto px-4 sm:px-6 pt-12 sm:pt-20 pb-16 relative">
     
-    <!-- Elementos Decorativos de Luz -->
-    <div class="absolute top-10 left-1/2 -translate-x-1/2 w-96 h-96 bg-[#740568]/40 rounded-full blur-[140px] pointer-events-none"></div>
+    <!-- Luzes de Fundo -->
+    <div class="absolute top-10 left-1/2 -translate-x-1/2 w-[550px] h-[550px] bg-[#740568]/30 rounded-full blur-[160px] pointer-events-none"></div>
 
     <div class="grid grid-cols-1 lg:grid-cols-12 gap-12 items-center relative z-10">
       
-      <!-- COLUNA ESQUERDA: COPYWRITING IRRESISTÍVEL DE VENDAS -->
+      <!-- LADO ESQUERDO: COPYWRITING DINÂMICO & EFEITO DE DIGITAÇÃO -->
       <div class="lg:col-span-7 space-y-6 text-center lg:text-left">
         
-        <div class="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-[#4A0E52]/80 border border-amber-400/50 text-amber-300 text-xs font-black shadow-inner">
-          <span>🐾</span>
-          <span class="uppercase tracking-widest text-[11px]">100 Tags Prontas com NFC Integrado</span>
-          <span class="text-amber-400">&bull;</span>
-          <span class="text-amber-100">Zero Mensalidades</span>
+        <!-- Selo de Inovação -->
+        <div class="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-[#4A0E52]/80 border border-amber-400/60 text-amber-300 text-xs font-black shadow-inner">
+          <span class="animate-spin text-sm" style="animation-duration: 8s;">✨</span>
+          <span class="uppercase tracking-widest text-[11px]">Tecnologia Phygital Pronta para Entrega</span>
         </div>
 
-        <h1 class="text-3xl sm:text-5xl lg:text-6xl font-black font-poetic tracking-tight text-white leading-tight">
-          A Revolução que a <span class="text-transparent bg-clip-text bg-gradient-to-r from-amber-300 via-yellow-300 to-amber-400">Terranova Pet</span> precisa para liderar o mercado.
-        </h1>
+        <!-- TÍTULO COM TEXTO QUE APARECE E MUDA DINAMICAMENTE -->
+        <div class="space-y-2">
+          <h1 class="text-3xl sm:text-5xl lg:text-6xl font-black font-poetic tracking-tight text-white leading-[1.15]">
+            Para os clientes da <span class="text-amber-300">Terranova Pet</span>:
+            <br>
+            <span class="text-transparent bg-clip-text bg-gradient-to-r from-amber-200 via-yellow-300 to-amber-400" id="textoDinamicoHero">Segurança Inteligente 24h</span><span class="cursor-blink"></span>
+          </h1>
+        </div>
 
-        <p class="text-base sm:text-lg text-amber-100/90 leading-relaxed font-medium max-w-2xl mx-auto lg:mx-0">
-          Apresentamos o lote de <strong>100 Tags Inteligentes com Chip NFC e QR Code</strong> em formato de patinha emborrachada premium, integradas ao ecossistema digital que criamos: 
-          <strong>Tag de Resgate 24h</strong>, <strong>Rede Social estilo Instagram</strong> e o acolhedor <strong>Jardim das Estrelinhas</strong>.
+        <!-- Subtítulo Harmônico & Elegante -->
+        <p class="text-sm sm:text-lg text-amber-100/90 leading-relaxed font-normal max-w-2xl mx-auto lg:mx-0">
+          Um lote exclusivo com <strong>100 Tags NFC Físicas</strong> em formato de patinha emborrachada, integradas ao ecossistema digital que criamos: 
+          <strong>Tag de Resgate com GPS</strong>, <strong>Rede Social estilo Instagram</strong> e o eterno <strong>Jardim das Estrelinhas</strong>.
         </p>
 
-        <!-- Pílulas de Benefício Imediato -->
+        <!-- Indicadores de Alta Conversão em Badges -->
         <div class="grid grid-cols-2 sm:grid-cols-3 gap-3 pt-2">
-          <div class="p-3 rounded-2xl bg-[#2A0630]/80 border border-amber-500/30 text-left">
-            <span class="text-xl">⚡</span>
-            <h4 class="font-bold text-xs text-amber-300 mt-1">Toque NFC Instantâneo</h4>
-            <p class="text-[11px] text-stone-300">Sem baixar app no celular</p>
+          <div class="p-3.5 rounded-2xl glass-card-luxury text-left">
+            <span class="text-2xl">⚡</span>
+            <h4 class="font-bold text-xs text-amber-300 mt-1">Toque NFC < 1s</h4>
+            <p class="text-[11px] text-stone-300">Sem baixar nenhum aplicativo</p>
           </div>
-          <div class="p-3 rounded-2xl bg-[#2A0630]/80 border border-amber-500/30 text-left">
-            <span class="text-xl">🛡️</span>
-            <h4 class="font-bold text-xs text-amber-300 mt-1">Resgate 24h com GPS</h4>
-            <p class="text-[11px] text-stone-300">WhatsApp e discagem direta</p>
+          <div class="p-3.5 rounded-2xl glass-card-luxury text-left">
+            <span class="text-2xl">🛡️</span>
+            <h4 class="font-bold text-xs text-amber-300 mt-1">Resgate Imediato</h4>
+            <p class="text-[11px] text-stone-300">WhatsApp, Ligação &amp; Mapa GPS</p>
           </div>
-          <div class="p-3 rounded-2xl bg-[#2A0630]/80 border border-amber-500/30 text-left col-span-2 sm:col-span-1">
-            <span class="text-xl">💰</span>
-            <h4 class="font-bold text-xs text-amber-300 mt-1">0% de Mensalidade</h4>
-            <p class="text-[11px] text-stone-300">Margem 100% da Terranova</p>
+          <div class="p-3.5 rounded-2xl glass-card-luxury text-left col-span-2 sm:col-span-1">
+            <span class="text-2xl">💎</span>
+            <h4 class="font-bold text-xs text-amber-300 mt-1">0% Mensalidade</h4>
+            <p class="text-[11px] text-stone-300">Sem taxas por pet ativo</p>
           </div>
         </div>
 
-        <!-- Botões de Ação Imediata -->
+        <!-- Botões de Ação Imediata com Efeito Hover -->
         <div class="flex flex-col sm:flex-row items-center gap-4 pt-4 justify-center lg:justify-start">
-          <a href="https://wa.me/5538997263620?text=Ol%C3%A1%21%20Quero%20agendar%20a%20apresenta%C3%A7%C3%A3o%20do%20lote%20de%20100%20Tags%20NFC%20Terranova%20Pet" target="_blank" class="w-full sm:w-auto px-8 py-4 rounded-full bg-gradient-to-r from-amber-400 via-yellow-400 to-amber-500 text-[#4A0E52] font-black text-sm sm:text-base shadow-xl shadow-amber-500/30 hover:scale-105 transition active:scale-95 flex items-center justify-center gap-2.5">
+          <a href="https://wa.me/5538997263620?text=Ol%C3%A1%21%20Quero%20fechar%20o%20lote%20de%20100%20Tags%20NFC%20para%20a%20Terranova%20Pet%20agora%20mesmo%21" target="_blank" class="w-full sm:w-auto px-8 py-4 rounded-full bg-gradient-to-r from-amber-400 via-yellow-300 to-amber-500 text-[#4A0E52] font-black text-sm sm:text-base shadow-xl shadow-amber-500/30 hover:scale-105 transition active:scale-95 flex items-center justify-center gap-2.5">
             <span>🚀</span>
-            <span>Garantir as 100 Tags NFC</span>
+            <span>Quero Fechar o Lote das 100 Tags</span>
           </a>
 
-          <button onclick="document.getElementById('simuladorNfc').scrollIntoView({behavior: 'smooth'})" class="w-full sm:w-auto px-6 py-4 rounded-full bg-[#3D0A46] hover:bg-[#520C5E] text-amber-200 border border-amber-400/40 font-bold text-sm transition flex items-center justify-center gap-2">
+          <button onclick="document.getElementById('como-funciona').scrollIntoView({behavior: 'smooth'})" class="w-full sm:w-auto px-6 py-4 rounded-full bg-[#3D0A46]/90 hover:bg-[#520C5E] text-amber-200 border border-amber-400/40 font-bold text-sm transition flex items-center justify-center gap-2">
             <span>📲</span>
-            <span>Ver Toque NFC Funcionando</span>
+            <span>Ver Como Funciona na Prática</span>
           </button>
         </div>
 
       </div>
 
-      <!-- COLUNA DIREITA: FOTO REAL DO PRODUTO (CHAVEIRO, CÃO, GATO E COLEIRA DE COURO) -->
-      <div class="lg:col-span-5">
+      <!-- LADO DIREITO: FOTO REAL DO PRODUTO (CHAVEIRO, GOLDEN, GATO E COLEIRA) -->
+      <div class="lg:col-span-5" id="vitrine">
         <div class="relative group">
           
-          <!-- Anéis de Pulso NFC -->
-          <div class="absolute inset-0 rounded-3xl bg-gradient-to-tr from-amber-500/30 to-[#740568]/40 blur-2xl group-hover:blur-3xl transition"></div>
-          
-          <!-- Card Vitrine com Moldura Dourada Nobre -->
-          <div class="relative bg-gradient-to-b from-[#3D0C44] to-[#200424] rounded-3xl p-3 sm:p-4 border-2 border-amber-400 shadow-2xl overflow-hidden">
+          <!-- Auréola de Luz Dourada e Roxa -->
+          <div class="absolute inset-0 rounded-3xl bg-gradient-to-tr from-amber-500/40 via-[#740568]/50 to-amber-300/30 blur-2xl group-hover:blur-3xl transition duration-500"></div>
+
+          <!-- Card de Apresentação de Alto Luxo -->
+          <div class="relative bg-gradient-to-b from-[#3E0C47] to-[#1E0323] rounded-3xl p-4 sm:p-5 border-2 border-amber-400 shadow-2xl overflow-hidden glow-gold-box">
             
-            <div class="flex items-center justify-between px-3 py-2 border-b border-amber-400/30 mb-3">
+            <div class="flex items-center justify-between px-2 pb-3 border-b border-amber-400/30">
               <span class="text-xs font-black text-amber-300 flex items-center gap-1.5">
                 <span>📸</span>
-                <span>FOTOS REAIS DO PRODUTO FÍSICO</span>
+                <span>FOTOS REAIS DAS 100 TAGS FÍSICAS</span>
               </span>
-              <span class="text-[10px] bg-emerald-500 text-white font-bold px-2 py-0.5 rounded-full">
+              <span class="text-[10px] bg-emerald-500 text-white font-black px-2.5 py-0.5 rounded-full uppercase tracking-wider">
                 Pronta-Entrega
               </span>
             </div>
 
-            <!-- Imagem Oficial Enviada pelo Usuário -->
-            <div class="relative rounded-2xl overflow-hidden border border-amber-300/40 shadow-lg bg-black">
-              <img src="tag_nfc_produto.jpg" alt="Tag Inteligente NFC Terranova Pet" class="w-full h-auto object-cover transform group-hover:scale-[1.02] transition duration-500">
+            <!-- Imagem Oficial do Produto -->
+            <div class="relative mt-3 rounded-2xl overflow-hidden border border-amber-400/50 shadow-inner bg-black">
+              <img src="tag_nfc_produto.jpg" alt="Tag Inteligente NFC Terranova Pet" class="w-full h-auto object-cover transform group-hover:scale-105 transition duration-700">
               
-              <!-- Badges Sobrepostas na Foto -->
-              <div class="absolute top-3 left-3 bg-[#4A0E52]/90 backdrop-blur-md px-3 py-1 rounded-full text-yellow-300 text-[11px] font-black border border-amber-400/60 shadow-md">
+              <!-- Badges Dinâmicas Sobrepostas na Imagem -->
+              <div class="absolute top-3 left-3 bg-[#4A0E52]/90 backdrop-blur-md px-3 py-1 rounded-full text-yellow-300 text-[11px] font-black border border-amber-400/70 shadow-lg">
                 🐾 Tag Patinha Emborrachada 3D
               </div>
 
-              <div class="absolute bottom-3 right-3 bg-black/75 backdrop-blur-md px-3 py-1 rounded-full text-amber-300 text-[10px] font-bold border border-white/20">
+              <div class="absolute bottom-3 right-3 bg-black/80 backdrop-blur-md px-3 py-1 rounded-full text-amber-300 text-[10px] font-bold border border-white/20">
                 🐕 Cães &bull; 🐱 Gatos &bull; 🔑 Chaveiro
               </div>
             </div>
 
-            <div class="p-3 text-center">
+            <!-- Legenda Elegante -->
+            <div class="pt-4 px-2 text-center space-y-1">
               <p class="text-xs text-amber-100 font-semibold leading-relaxed">
-                Design patenteado, silicone atóxico de alta densidade, resistente à água e com corrente em aço inoxidável cirúrgico.
+                Silicone atóxico de alta resistência, 100% à prova d'água, sem pilhas e com argola dupla reforçada em aço cirúrgico.
+              </p>
+              <p class="text-[11px] text-amber-300/80 font-mono font-bold">
+                ✓ Cada uma das 100 unidades já gravada com NFC
               </p>
             </div>
 
           </div>
+
         </div>
       </div>
 
@@ -220,78 +278,108 @@
   </section>
 
   <!-- ========================================================================= -->
-  <!-- SIMULADOR INTERATIVO: COMO FUNCIONA O TOQUE NFC -->
+  <!-- NÚMEROS DE IMPACTO: ANIMAÇÃO DE CONTADORES AO ENTRAR NA TELA -->
   <!-- ========================================================================= -->
-  <section id="simuladorNfc" class="max-w-5xl mx-auto px-4 py-16">
-    <div class="bg-gradient-to-r from-[#380C42] via-[#2D0735] to-[#380C42] border-2 border-amber-400/80 rounded-3xl p-6 sm:p-10 shadow-2xl relative overflow-hidden">
+  <section class="max-w-6xl mx-auto px-4 py-8 reveal-on-scroll">
+    <div class="grid grid-cols-2 md:grid-cols-4 gap-4 text-center">
       
-      <div class="text-center space-y-3 mb-8">
-        <span class="text-xs uppercase tracking-widest font-black text-amber-400 bg-amber-400/10 px-3.5 py-1 rounded-full border border-amber-400/30">
-          Experiência do Usuário (UX) Imbatível
+      <div class="glass-card-luxury p-6 rounded-3xl">
+        <span class="text-3xl sm:text-5xl font-black font-cinzel text-amber-300 counter-val" data-target="100">0</span>
+        <span class="text-xs text-amber-100 font-bold uppercase tracking-wider block mt-1">Tags Prontas</span>
+      </div>
+
+      <div class="glass-card-luxury p-6 rounded-3xl">
+        <span class="text-3xl sm:text-5xl font-black font-cinzel text-emerald-400">0</span>
+        <span class="text-xs text-amber-100 font-bold uppercase tracking-wider block mt-1">Reais de Mensalidade</span>
+      </div>
+
+      <div class="glass-card-luxury p-6 rounded-3xl">
+        <span class="text-3xl sm:text-5xl font-black font-cinzel text-yellow-300">&lt; 1s</span>
+        <span class="text-xs text-amber-100 font-bold uppercase tracking-wider block mt-1">Leitura Instantânea</span>
+      </div>
+
+      <div class="glass-card-luxury p-6 rounded-3xl">
+        <span class="text-3xl sm:text-5xl font-black font-cinzel text-amber-400 counter-val" data-target="100">0</span><span class="text-3xl font-black text-amber-400">%</span>
+        <span class="text-xs text-amber-100 font-bold uppercase tracking-wider block mt-1">Margem Terranova</span>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- ========================================================================= -->
+  <!-- SIMULADOR INTERATIVO: COMO FUNCIONA O TOQUE NFC NA PRÁTICA -->
+  <!-- ========================================================================= -->
+  <section id="como-funciona" class="max-w-5xl mx-auto px-4 py-16 reveal-on-scroll">
+    <div class="bg-gradient-to-r from-[#3A0D44] via-[#2A0630] to-[#3A0D44] border-2 border-amber-400/80 rounded-3xl p-6 sm:p-10 shadow-2xl relative overflow-hidden">
+      
+      <div class="text-center space-y-3 mb-10">
+        <span class="text-xs uppercase tracking-widest font-black text-amber-400 bg-amber-400/15 px-4 py-1 rounded-full border border-amber-400/30">
+          Experiência de Usuário (UX) Sem Fricção
         </span>
         <h2 class="text-2xl sm:text-4xl font-black font-poetic text-white">
-          Apenas 1 Segundo: Encostou o Celular, Abriu Tudo!
+          Apenas Encostou o Smartphone na Tag: Abriu Tudo!
         </h2>
         <p class="text-xs sm:text-sm text-amber-100/80 max-w-xl mx-auto">
-          O tutor ou a pessoa que encontrou o pet <strong>não precisa baixar aplicativo</strong>, não precisa fazer login demorado e não precisa gastar bateria. O NFC nativo do iPhone e Android faz toda a mágica instantaneamente.
+          O tutor ou quem encontrar o pet <strong>não precisa baixar aplicativo</strong>, não gasta internet em downloads e não precisa digitar senhas. A leitura nativa do iPhone e Android reconhece o chip em milissegundos.
         </p>
       </div>
 
-      <!-- Simulador Visual Interativo com Botão -->
+      <!-- 3 Passos Interativos -->
       <div class="grid grid-cols-1 md:grid-cols-3 gap-6 items-center">
         
         <!-- Passo 1 -->
-        <div class="bg-[#1A031F]/90 p-5 rounded-2xl border border-amber-400/30 text-center space-y-3">
-          <div class="w-14 h-14 rounded-full bg-amber-400/20 text-amber-300 font-black text-xl flex items-center justify-center mx-auto border border-amber-400/40">
+        <div class="bg-[#19021D]/90 p-5 rounded-2xl border border-amber-400/30 text-center space-y-3">
+          <div class="w-12 h-12 rounded-full bg-amber-400/20 text-amber-300 font-black text-lg flex items-center justify-center mx-auto border border-amber-400/40">
             1
           </div>
-          <h3 class="font-bold text-sm text-white">O Pet está usando a Tag</h3>
+          <h3 class="font-bold text-sm text-white">Pet Protegido na Coleira</h3>
           <p class="text-xs text-stone-300 leading-relaxed">
-            A plaquinha emborrachada fica presa na coleira ou peitoral com segurança e sem machucar o animal.
+            A tag amarela em formato de patinha fica presa de forma confortável e elegante no animal.
           </p>
         </div>
 
-        <!-- Passo 2: O Toque -->
-        <div class="bg-gradient-to-b from-[#52115B] to-[#36083C] p-6 rounded-2xl border-2 border-amber-400 text-center space-y-4 shadow-xl relative">
+        <!-- Passo 2: O Toque Interativo -->
+        <div class="bg-gradient-to-b from-[#56135F] to-[#36073C] p-6 rounded-2xl border-2 border-amber-400 text-center space-y-4 shadow-xl relative">
           <div class="relative w-20 h-20 mx-auto flex items-center justify-center">
-            <div class="absolute inset-0 rounded-full border-2 border-amber-400 nfc-pulse-ring"></div>
-            <div class="w-16 h-16 rounded-full bg-amber-400 text-[#4A0E52] flex items-center justify-center text-3xl shadow-lg">
+            <div class="absolute inset-0 rounded-full border-2 border-amber-400 nfc-ring-wave"></div>
+            <div class="w-16 h-16 rounded-full bg-gradient-to-tr from-amber-400 to-yellow-300 text-[#4A0E52] flex items-center justify-center text-3xl shadow-lg cursor-pointer transform active:scale-90 transition" onclick="simularToqueNfcNaTela()">
               📲
             </div>
           </div>
-          <h3 class="font-black text-sm text-yellow-300">Aproximação Sem Fio</h3>
+          <h3 class="font-black text-sm text-yellow-300">Toque de Aproximação</h3>
           <p class="text-xs text-amber-100">
-            Basta encostar o topo do smartphone na patinha amarela. Um aviso sonoro e visual salta na tela do celular.
+            Aproxime qualquer smartphone a 3cm da patinha amarela para disparar o leitor.
           </p>
-          <button onclick="acionarSimulacaoNfc()" id="btnSimularToque" class="w-full py-2.5 bg-amber-400 hover:bg-yellow-300 text-[#4A0E52] font-black text-xs rounded-xl shadow-md transition active:scale-95">
-            Clique para Simular o Toque
+          <button onclick="simularToqueNfcNaTela()" id="btnAcaoSimularNfc" class="w-full py-2.5 bg-amber-400 hover:bg-yellow-300 text-[#4A0E52] font-black text-xs rounded-xl shadow-md transition active:scale-95 cursor-pointer">
+            👆 Clique para Simular o Toque
           </button>
         </div>
 
         <!-- Passo 3 -->
-        <div class="bg-[#1A031F]/90 p-5 rounded-2xl border border-amber-400/30 text-center space-y-3">
-          <div class="w-14 h-14 rounded-full bg-amber-400/20 text-amber-300 font-black text-xl flex items-center justify-center mx-auto border border-amber-400/40">
+        <div class="bg-[#19021D]/90 p-5 rounded-2xl border border-amber-400/30 text-center space-y-3">
+          <div class="w-12 h-12 rounded-full bg-amber-400/20 text-amber-300 font-black text-lg flex items-center justify-center mx-auto border border-amber-400/40">
             3
           </div>
-          <h3 class="font-bold text-sm text-white">Abertura Imediata</h3>
+          <h3 class="font-bold text-sm text-white">Conexão Instantânea</h3>
           <p class="text-xs text-stone-300 leading-relaxed">
-            Abre a página oficial personalizada do pet com botões de resgate, WhatsApp do tutor e fotos.
+            O celular vibra e abre a tela oficial do pet com ligação em 1 toque, WhatsApp e mapa GPS.
           </p>
         </div>
 
       </div>
 
-      <!-- Notificação Mockup Interativa -->
-      <div id="mockupNotificacaoNfc" class="hidden mt-6 max-w-md mx-auto bg-stone-900/95 border-2 border-emerald-400 p-4 rounded-2xl shadow-2xl text-white flex items-center gap-3 animate-bounce">
-        <div class="w-10 h-10 rounded-xl bg-amber-400 text-[#4A0E52] font-black flex items-center justify-center text-xl flex-shrink-0">
+      <!-- Alerta Simulado que Surge no Toque -->
+      <div id="boxNotificacaoToque" class="hidden mt-6 max-w-md mx-auto bg-stone-950/95 border-2 border-emerald-400 p-4 rounded-2xl shadow-2xl text-white flex items-center gap-3 transition-all duration-300">
+        <div class="w-11 h-11 rounded-xl bg-gradient-to-tr from-amber-400 to-yellow-300 text-[#4A0E52] font-black flex items-center justify-center text-2xl flex-shrink-0 shadow-md">
           🐾
         </div>
         <div class="flex-1 text-left">
-          <p class="text-[10px] text-emerald-400 font-bold uppercase">Terranova Pet NFC &bull; Agora mesmo</p>
-          <p class="text-xs font-bold text-white">Tag de Thor Encontrada! Abrindo perfil...</p>
+          <span class="text-[10px] text-emerald-400 font-bold uppercase tracking-wider block">Leitura NFC Reconhecida</span>
+          <strong class="text-xs font-bold text-white block">Tag de Thor &bull; Terranova Pet</strong>
+          <span class="text-[11px] text-amber-200">Abrindo módulo de resgate...</span>
         </div>
-        <a href="index.html" target="_blank" class="px-3 py-1.5 rounded-lg bg-emerald-500 hover:bg-emerald-600 text-white font-bold text-xs transition">
-          Ver Tela
+        <a href="index.html" target="_blank" class="px-3.5 py-1.5 rounded-xl bg-emerald-500 hover:bg-emerald-600 text-white font-black text-xs transition shadow-md">
+          Abrir
         </a>
       </div>
 
@@ -299,59 +387,59 @@
   </section>
 
   <!-- ========================================================================= -->
-  <!-- OS 3 MÓDULOS INCLUSOS QUE ENCHANTAM OS CLIENTES DA TERRANOVA -->
+  <!-- OS 3 MÓDULOS INCLUSOS QUE ENCHANTAM A DIRETORIA E OS TUTORES -->
   <!-- ========================================================================= -->
   <section id="modulos" class="max-w-7xl mx-auto px-4 sm:px-6 py-16 space-y-12">
     
-    <div class="text-center space-y-3 max-w-3xl mx-auto">
-      <span class="text-xs uppercase tracking-widest font-black text-amber-400 bg-amber-400/10 px-4 py-1.5 rounded-full border border-amber-400/30">
-        Ecossistema Phygital Completo
+    <div class="text-center space-y-3 max-w-3xl mx-auto reveal-on-scroll">
+      <span class="text-xs uppercase tracking-widest font-black text-amber-400 bg-amber-400/15 px-4 py-1.5 rounded-full border border-amber-400/30">
+        Ecossistema Completo em 3 Fases da Vida do Pet
       </span>
       <h2 class="text-3xl sm:text-5xl font-black font-poetic text-white">
-        O que o Cliente da Terranova Recebe ao Ativar a Tag?
+        O que Está Incluso nas 100 Tags NFC?
       </h2>
       <p class="text-sm sm:text-base text-amber-100/80 font-medium">
-        Não vendemos apenas um chaveiro de borracha. Entregamos uma <strong>solução completa de carinho, segurança e memória</strong> que conecta a família com a Terranova Pet todos os dias.
+        Não entregamos apenas uma plaquinha. A Terranova Pet passa a oferecer uma <strong>plataforma integrada de afeto, segurança e memorial perpétuo</strong>.
       </p>
     </div>
 
     <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
       
-      <!-- MÓDULO 1: SEGURANÇA E RESGATE -->
-      <div class="bg-gradient-to-b from-[#380C42] to-[#200424] rounded-3xl p-6 sm:p-8 border border-amber-400/40 card-hover-lift flex flex-col justify-between space-y-6">
+      <!-- MÓDULO 1: SEGURANÇA E RESGATE 24H -->
+      <article class="glass-card-luxury rounded-3xl p-6 sm:p-8 flex flex-col justify-between space-y-6 reveal-on-scroll">
         <div class="space-y-4">
           <div class="w-14 h-14 rounded-2xl bg-amber-400 text-[#4A0E52] flex items-center justify-center text-3xl shadow-lg">
             🛡️
           </div>
           <div class="space-y-1">
-            <span class="text-[10px] font-black uppercase tracking-wider text-amber-300">Módulo 1 &bull; Pet Vivo</span>
+            <span class="text-[10px] font-black uppercase tracking-wider text-amber-300">Pilar 1 &bull; Dia a Dia</span>
             <h3 class="text-2xl font-black font-poetic text-white">Tag de Resgate 24h &amp; GPS</h3>
           </div>
           <p class="text-xs text-amber-100/80 leading-relaxed">
-            Se o animal escapar, quem encontrá-lo encosta o celular e vê na hora o nome do tutor, telefone com discagem em 1 clique, WhatsApp com mensagem automática e o botão de <strong>envio de coordenadas de mapa GPS</strong>.
+            Se o animal escapar, quem encontrá-lo encosta o celular na patinha e tem acesso instantâneo aos contatos do tutor, discagem rápida sem precisar salvar o número, WhatsApp pré-formatado e <strong>envio de localização GPS em tempo real</strong>.
           </p>
 
-          <ul class="space-y-2 text-xs text-stone-200 pt-2 border-t border-amber-500/20">
+          <ul class="space-y-2 text-xs text-stone-200 pt-3 border-t border-amber-500/20 font-medium">
             <li class="flex items-center gap-2">
-              <span class="text-emerald-400 font-bold">✓</span> Discagem direta sem salvar na agenda
+              <span class="text-emerald-400 font-bold">✓</span> Discagem telefônica direta com 1 toque
             </li>
             <li class="flex items-center gap-2">
-              <span class="text-emerald-400 font-bold">✓</span> Alerta de cuidados médicos e alergias
+              <span class="text-emerald-400 font-bold">✓</span> Alerta de alergias, raça e endereço opcional
             </li>
             <li class="flex items-center gap-2">
-              <span class="text-emerald-400 font-bold">✓</span> Central de apoio 24h Terranova Pet
+              <span class="text-emerald-400 font-bold">✓</span> Suporte do plantão 24h Terranova Pet
             </li>
           </ul>
         </div>
 
-        <a href="index.html" target="_blank" class="w-full py-3 rounded-2xl bg-amber-400 hover:bg-yellow-300 text-[#4A0E52] font-black text-xs text-center shadow-md transition flex items-center justify-center gap-2">
+        <a href="index.html" target="_blank" class="w-full py-3.5 rounded-2xl bg-amber-400 hover:bg-yellow-300 text-[#4A0E52] font-black text-xs text-center shadow-md transition flex items-center justify-center gap-2">
           <span>👀</span>
-          <span>Ver Demonstração do Resgate</span>
+          <span>Ver Módulo de Resgate ao Vivo</span>
         </a>
-      </div>
+      </article>
 
-      <!-- MÓDULO 2: REDE SOCIAL & DIÁRIO -->
-      <div class="bg-gradient-to-b from-[#4A0E52] to-[#2D0735] rounded-3xl p-6 sm:p-8 border-2 border-amber-400 card-hover-lift flex flex-col justify-between space-y-6 shadow-2xl relative">
+      <!-- MÓDULO 2: REDE SOCIAL ESTILO INSTAGRAM -->
+      <article class="bg-gradient-to-b from-[#4D0E54] to-[#2B0530] rounded-3xl p-6 sm:p-8 border-2 border-amber-400 flex flex-col justify-between space-y-6 shadow-2xl relative reveal-on-scroll">
         <div class="absolute -top-3.5 right-6 bg-gradient-to-r from-amber-400 to-yellow-300 text-[#4A0E52] text-[10px] font-black uppercase px-3 py-1 rounded-full shadow-md">
           ⭐ Maior Engajamento
         </div>
@@ -361,249 +449,242 @@
             📸
           </div>
           <div class="space-y-1">
-            <span class="text-[10px] font-black uppercase tracking-wider text-amber-300">Módulo 2 &bull; Fidelização Diária</span>
+            <span class="text-[10px] font-black uppercase tracking-wider text-amber-300">Pilar 2 &bull; Comunidade &amp; Fidelização</span>
             <h3 class="text-2xl font-black font-poetic text-white">Rede Social &amp; Diário de Aventuras</h3>
           </div>
           <p class="text-xs text-amber-100/90 leading-relaxed">
-            Uma rede social própria inspirada no Instagram! O tutor posta fotos com <strong>ajuste automático de proporção</strong>, publica stories em tela cheia (9:16), recebe patinhas de carinho e comentários da comunidade.
+            Uma rede social própria da Terranova Pet! O tutor publica fotos e vídeos com <strong>ajuste automático de proporção sem cortes</strong>, posta stories em tela cheia (9:16), envia patinhas e comenta.
           </p>
 
-          <ul class="space-y-2 text-xs text-stone-200 pt-2 border-t border-amber-500/20">
+          <ul class="space-y-2 text-xs text-stone-200 pt-3 border-t border-amber-500/20 font-medium">
             <li class="flex items-center gap-2">
-              <span class="text-amber-300 font-bold">✓</span> Feed com envio de patinhas flutuantes
+              <span class="text-amber-300 font-bold">✓</span> Feed estilo Instagram com patinhas flutuantes
             </li>
             <li class="flex items-center gap-2">
-              <span class="text-amber-300 font-bold">✓</span> Stories em vídeo e foto com passador
+              <span class="text-amber-300 font-bold">✓</span> Stories dinâmicos 9:16 com passador de toque
             </li>
             <li class="flex items-center gap-2">
-              <span class="text-amber-300 font-bold">✓</span> Perfil com edição instantânea e exclusão
+              <span class="text-amber-300 font-bold">✓</span> Botões de exclusão e edição completa de perfil
             </li>
           </ul>
         </div>
 
-        <a href="social.html" target="_blank" class="w-full py-3 rounded-2xl bg-gradient-to-r from-amber-400 to-yellow-300 hover:brightness-110 text-[#4A0E52] font-black text-xs text-center shadow-lg transition flex items-center justify-center gap-2">
+        <a href="social.html" target="_blank" class="w-full py-3.5 rounded-2xl bg-gradient-to-r from-amber-400 to-yellow-300 hover:brightness-110 text-[#4A0E52] font-black text-xs text-center shadow-lg transition flex items-center justify-center gap-2">
           <span>🚀</span>
           <span>Abrir Rede Social ao Vivo</span>
         </a>
-      </div>
+      </article>
 
-      <!-- MÓDULO 3: MEMORIAL E CEMITÉRIO VIRTUAL -->
-      <div class="bg-gradient-to-b from-[#380C42] to-[#200424] rounded-3xl p-6 sm:p-8 border border-amber-400/40 card-hover-lift flex flex-col justify-between space-y-6">
+      <!-- MÓDULO 3: MEMORIAL JARDIM DAS ESTRELINHAS -->
+      <article class="glass-card-luxury rounded-3xl p-6 sm:p-8 flex flex-col justify-between space-y-6 reveal-on-scroll">
         <div class="space-y-4">
           <div class="w-14 h-14 rounded-2xl bg-amber-400 text-[#4A0E52] flex items-center justify-center text-3xl shadow-lg">
             🕊️
           </div>
           <div class="space-y-1">
-            <span class="text-[10px] font-black uppercase tracking-wider text-amber-300">Módulo 3 &bull; Ciclo Completo</span>
+            <span class="text-[10px] font-black uppercase tracking-wider text-amber-300">Pilar 3 &bull; Memória &amp; Acolhimento</span>
             <h3 class="text-2xl font-black font-poetic text-white">Jardim das Estrelinhas &amp; Memorial</h3>
           </div>
           <p class="text-xs text-amber-100/80 leading-relaxed">
-            Quando o companheiro parte, a tag ganha um propósito sagrado de homenagem. A página transiciona para o memorial solene em mármore creme, com <strong>acendimento de velas virtuais da saudade</strong> e música reconfortante.
+            Quando o pet parte, a tag transiciona com respeito e beleza para o memorial perpétuo em mármore creme, com paleta solene equilibrada em Roxo Nobre e Ouro, <strong>acendimento de velas virtuais da saudade</strong> e música reconfortante.
           </p>
 
-          <ul class="space-y-2 text-xs text-stone-200 pt-2 border-t border-amber-500/20">
+          <ul class="space-y-2 text-xs text-stone-200 pt-3 border-t border-amber-500/20 font-medium">
             <li class="flex items-center gap-2">
-              <span class="text-amber-300 font-bold">✓</span> Velas com efeito de chama viva
+              <span class="text-amber-300 font-bold">✓</span> Velas interativas com chama viva pulsante
             </li>
             <li class="flex items-center gap-2">
-              <span class="text-amber-300 font-bold">✓</span> Jazigos virtuais com biografia e fotos
+              <span class="text-amber-300 font-bold">✓</span> Jazigos digitais com homenagens e fotos
             </li>
             <li class="flex items-center gap-2">
-              <span class="text-amber-300 font-bold">✓</span> Conexão direta com o crematório Terranova
+              <span class="text-amber-300 font-bold">✓</span> Integração com o plano crematório Terranova
             </li>
           </ul>
         </div>
 
-        <a href="mural.html" target="_blank" class="w-full py-3 rounded-2xl bg-[#4A0E52] hover:bg-[#601269] text-amber-200 border border-amber-400/50 font-black text-xs text-center shadow-md transition flex items-center justify-center gap-2">
+        <a href="mural.html" target="_blank" class="w-full py-3.5 rounded-2xl bg-[#4A0E52] hover:bg-[#63126D] text-amber-200 border border-amber-400/50 font-black text-xs text-center shadow-md transition flex items-center justify-center gap-2">
           <span>✨</span>
           <span>Visitar Jardim das Estrelinhas</span>
         </a>
-      </div>
+      </article>
 
     </div>
 
   </section>
 
   <!-- ========================================================================= -->
-  <!-- SEÇÃO CRÍTICA: DOMÍNIO FLEXÍVEL & ZERO MENSALIDADES -->
+  <!-- SEÇÃO DE DOMÍNIO FLEXÍVEL & ZERO MENSALIDADES (VANTAGEM COMERCIAL MÁXIMA) -->
   <!-- ========================================================================= -->
-  <section id="dominio" class="max-w-7xl mx-auto px-4 sm:px-6 py-12">
-    <div class="bg-gradient-to-r from-[#2F0635] via-[#450C4F] to-[#2F0635] border-2 border-amber-400 rounded-3xl p-6 sm:p-12 shadow-2xl relative">
+  <section id="dominio" class="max-w-7xl mx-auto px-4 sm:px-6 py-14 reveal-on-scroll">
+    <div class="bg-gradient-to-r from-[#320738] via-[#460C4E] to-[#320738] border-2 border-amber-400 rounded-3xl p-6 sm:p-12 shadow-2xl relative glow-purple-box">
       
       <div class="max-w-3xl mx-auto text-center space-y-4 mb-10">
-        <span class="text-xs font-black uppercase tracking-widest text-[#4A0E52] bg-amber-400 px-4 py-1 rounded-full">
-          Diferencial Técnico &amp; Financeiro Imbatível
+        <span class="text-xs font-black uppercase tracking-widest text-[#4A0E52] bg-amber-400 px-4 py-1 rounded-full shadow-xs">
+          Liberdade Tecnológica e Propriedade Total
         </span>
-        <h2 class="text-3xl sm:text-4xl font-black font-poetic text-white">
-          Total Liberdade de Domínio: Use o Site Atual da Terranova ou Crie um Novo sem Mensalidade!
+        <h2 class="text-2xl sm:text-4xl font-black font-poetic text-white">
+          A Terranova Pet Escolhe o Domínio e Nunca Paga Mensalidades por Pet!
         </h2>
-        <p class="text-xs sm:text-sm text-amber-100/90 leading-relaxed">
-          Muitas empresas cobram mensalidades abusivas de R$ 15 a R$ 35 por mês <strong>por cada pet cadastrado</strong>. Com as nossas 100 Tags NFC, a <strong>Terranova é dona da aplicação</strong> e não paga absolutamente nada por animal ativo!
+        <p class="text-xs sm:text-sm text-amber-100/90 leading-relaxed font-normal">
+          Outras empresas cobram mensalidades caras de <strong>R$ 15 a R$ 35 por mês por cada pet ativo</strong>. Com o nosso lote de 100 Tags NFC, a Terranova Pet adquire o sistema com <strong>código livre de taxas recorrentes</strong>.
         </p>
       </div>
 
-      <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
-        
-        <!-- OPÇÃO 1 -->
-        <div class="bg-[#19021D]/90 p-6 rounded-2xl border border-amber-400/40 space-y-3">
-          <div class="flex items-center gap-2 text-amber-300 font-bold text-sm">
-            <span class="text-lg">🌐</span>
-            <span>Opção 1: Subdomínio Gratuito</span>
-          </div>
-          <p class="text-xs text-stone-300 leading-relaxed">
-            Podemos colocar no ar em um subdomínio oficial como:
-            <code class="block bg-black/50 p-2 rounded-lg text-amber-300 font-mono text-[11px] mt-1">tag.terranovapet.com.br</code>
-            ou <code class="text-amber-300 font-mono text-[11px]">memorial.terranovapet.com.br</code> com <strong>ZERO custo mensal de servidor</strong>.
-          </p>
-        </div>
-
-        <!-- OPÇÃO 2 -->
-        <div class="bg-[#19021D]/90 p-6 rounded-2xl border border-amber-400/40 space-y-3">
-          <div class="flex items-center gap-2 text-amber-300 font-bold text-sm">
-            <span class="text-lg">🔗</span>
-            <span>Opção 2: Domínio Atual da Terranova</span>
-          </div>
-          <p class="text-xs text-stone-300 leading-relaxed">
-            Se a empresa já tiver um site institucional, podemos integrar tudo de forma invisível e profissional com apontamento DNS em apenas 5 minutos.
-          </p>
-        </div>
-
-        <!-- OPÇÃO 3 -->
-        <div class="bg-[#19021D]/90 p-6 rounded-2xl border border-amber-400/40 space-y-3">
-          <div class="flex items-center gap-2 text-amber-300 font-bold text-sm">
-            <span class="text-lg">⭐</span>
-            <span>Opção 3: Domínio Novo (.com ou .com.br)</span>
-          </div>
-          <p class="text-xs text-stone-300 leading-relaxed">
-            Caso prefiram lançar uma marca exclusiva de tecnologia pet, é possível registrar um novo domínio dedicado como <code class="text-amber-300 font-mono text-[11px]">terranovatag.com.br</code>.
-          </p>
-        </div>
-
-      </div>
-
-      <!-- Comparativo de Custo -->
-      <div class="mt-8 p-4 rounded-2xl bg-black/40 border border-amber-400/30 flex flex-col sm:flex-row items-center justify-between gap-4 text-xs">
-        <div class="flex items-center gap-3">
-          <span class="text-2xl">💡</span>
-          <div>
-            <strong class="text-amber-300 block text-sm">Economia Anual de até R$ 42.000,00 para a Terranova</strong>
-            <span class="text-stone-300">Enquanto concorrentes pagam mensalidades recorrentes por pet, aqui o lucro fica 100% no caixa da Terranova Pet.</span>
-          </div>
-        </div>
-        <span class="px-4 py-2 rounded-xl bg-emerald-500 text-white font-black whitespace-nowrap shadow-sm">
-          Sem Taxa Mensal
-        </span>
-      </div>
-
-    </div>
-  </section>
-
-  <!-- ========================================================================= -->
-  <!-- CALCULADORA DE RETORNO COMERCIAL & LUCRATIVIDADE (ROI) -->
-  <!-- ========================================================================= -->
-  <section id="lucratividade" class="max-w-5xl mx-auto px-4 py-16">
-    <div class="bg-gradient-to-b from-[#380C42] to-[#1E0323] border-2 border-amber-400/80 rounded-3xl p-6 sm:p-10 shadow-2xl text-center space-y-8">
-      
-      <div class="space-y-3 max-w-2xl mx-auto">
-        <span class="text-xs uppercase tracking-widest font-black text-amber-400 bg-amber-400/10 px-4 py-1.5 rounded-full border border-amber-400/30">
-          Projeção Financeira Realista
-        </span>
-        <h2 class="text-3xl sm:text-4xl font-black font-poetic text-white">
-          Quanto a Terranova Pet pode Lucrar com essas 100 Tags?
-        </h2>
-        <p class="text-xs sm:text-sm text-amber-100/80">
-          Veja abaixo como o lote se paga rapidamente e gera uma nova fonte substancial de faturamento imediato e retenção de longo prazo.
-        </p>
-      </div>
-
+      <!-- As 3 Opções de Domínio que a Terranova Pode Escolher -->
       <div class="grid grid-cols-1 md:grid-cols-3 gap-6 text-left">
         
-        <!-- Cenário 1 -->
-        <div class="bg-[#1A031F]/90 p-6 rounded-2xl border border-amber-400/40 space-y-3">
-          <div class="flex items-center justify-between">
-            <span class="text-xs font-bold text-amber-300 uppercase">Cenário Conservador</span>
-            <span class="text-[10px] bg-stone-700 px-2 py-0.5 rounded text-stone-200">Venda Balcão</span>
+        <!-- Opção 1: Subdomínio Sem Mensalidade -->
+        <div class="bg-[#18011D]/90 p-6 rounded-2xl border border-amber-400/40 space-y-3 glass-card-luxury">
+          <div class="flex items-center gap-2 text-amber-300 font-bold text-sm">
+            <span class="text-xl">🌐</span>
+            <span>Opção 1: Subdomínio Próprio</span>
           </div>
-          <p class="text-xs text-stone-300">Venda direta da Tag NFC para o tutor a <strong>R$ 69,90</strong>.</p>
-          <div class="pt-3 border-t border-stone-800">
-            <p class="text-xs text-stone-400">Faturamento Bruto:</p>
-            <p class="text-2xl font-black text-yellow-300">R$ 6.990,00</p>
-          </div>
+          <p class="text-xs text-stone-300 leading-relaxed">
+            Pode ser hospedado gratuitamente sem nenhum custo de servidor em um subdomínio como:
+            <code class="block bg-black/60 p-2 rounded-lg text-amber-300 font-mono text-[11px] mt-1.5 border border-amber-400/20">tag.terranovapet.com.br</code>
+            ou <code class="text-amber-300 font-mono text-[11px]">memorial.terranovapet.com.br</code>.
+          </p>
         </div>
 
-        <!-- Cenário 2 (Destaque) -->
-        <div class="bg-gradient-to-b from-[#52115B] to-[#36083C] p-6 rounded-2xl border-2 border-amber-400 space-y-3 shadow-xl relative">
-          <span class="absolute -top-3 right-4 bg-amber-400 text-[#4A0E52] text-[9px] font-black uppercase px-2.5 py-0.5 rounded-full">
-            Mais Recomendado
-          </span>
-          <div class="flex items-center justify-between">
-            <span class="text-xs font-bold text-amber-200 uppercase">Cenário Adesão de Planos</span>
-            <span class="text-[10px] bg-amber-400/20 text-amber-300 px-2 py-0.5 rounded">Upsell de Plano</span>
+        <!-- Opção 2: Domínio Atual da Terranova -->
+        <div class="bg-[#18011D]/90 p-6 rounded-2xl border border-amber-400/40 space-y-3 glass-card-luxury">
+          <div class="flex items-center gap-2 text-amber-300 font-bold text-sm">
+            <span class="text-xl">🔗</span>
+            <span>Opção 2: Domínio Atual da Empresa</span>
           </div>
-          <p class="text-xs text-amber-100">Tag como brinde na adesão de plano assistencial a <strong>R$ 39,90/mês</strong>.</p>
-          <div class="pt-3 border-t border-amber-400/30">
-            <p class="text-xs text-amber-200">Receita Anual Gerada:</p>
-            <p class="text-2xl font-black text-amber-300">R$ 47.880,00</p>
-          </div>
+          <p class="text-xs text-stone-300 leading-relaxed">
+            Se a Terranova Pet já possui o domínio institucional registrado, conectamos a plataforma diretamente ao site oficial em menos de 10 minutos via apontamento DNS simples.
+          </p>
         </div>
 
-        <!-- Cenário 3 -->
-        <div class="bg-[#1A031F]/90 p-6 rounded-2xl border border-amber-400/40 space-y-3">
-          <div class="flex items-center justify-between">
-            <span class="text-xs font-bold text-amber-300 uppercase">Cenário Memorial &amp; Cremação</span>
-            <span class="text-[10px] bg-stone-700 px-2 py-0.5 rounded text-stone-200">Plano Póstumo</span>
+        <!-- Opção 3: Domínio Novo (.com ou .com.br) -->
+        <div class="bg-[#18011D]/90 p-6 rounded-2xl border border-amber-400/40 space-y-3 glass-card-luxury">
+          <div class="flex items-center gap-2 text-amber-300 font-bold text-sm">
+            <span class="text-xl">⭐</span>
+            <span>Opção 3: Novo Domínio Dedicado</span>
           </div>
-          <p class="text-xs text-stone-300">Inclusão da Tag com jazigo perpétuo no Jardim das Estrelinhas a <strong>R$ 149,00</strong>.</p>
-          <div class="pt-3 border-t border-stone-800">
-            <p class="text-xs text-stone-400">Faturamento Bruto:</p>
-            <p class="text-2xl font-black text-yellow-300">R$ 14.900,00</p>
-          </div>
+          <p class="text-xs text-stone-300 leading-relaxed">
+            Caso queiram criar uma divisão específica para tecnologia de tags e coleiras inteligentes, pode-se registrar um domínio exclusivo como <code class="text-amber-300 font-mono text-[11px]">terranovatag.com.br</code>.
+          </p>
         </div>
 
       </div>
 
-      <div class="p-4 bg-amber-500/10 border border-amber-400/40 rounded-2xl max-w-xl mx-auto text-xs text-amber-200">
-        ✨ <strong>Conclusão Comercial:</strong> Com a venda de apenas 15 a 20 tags, o lote inteiro de 100 unidades já está 100% pago. Todo o restante é lucro líquido direto para a Terranova Pet.
+      <!-- Tarja de Comparativo Financeiro -->
+      <div class="mt-8 p-5 rounded-2xl bg-black/50 border border-amber-400/40 flex flex-col sm:flex-row items-center justify-between gap-4 text-xs">
+        <div class="flex items-center gap-3">
+          <span class="text-3xl">💰</span>
+          <div>
+            <strong class="text-amber-300 text-sm block">Economia Anual de mais de R$ 36.000,00 para a Terranova</strong>
+            <span class="text-stone-300">Sem royalties por tag, sem taxas de software e sem intermediários. Toda a receita gerada pertence à Terranova Pet.</span>
+          </div>
+        </div>
+        <span class="px-5 py-2.5 rounded-full bg-emerald-500 text-white font-black text-xs whitespace-nowrap shadow-md">
+          Zero Custo Recorrente
+        </span>
       </div>
 
     </div>
   </section>
 
   <!-- ========================================================================= -->
-  <!-- ESPECIFICAÇÕES TÉCNICAS DO LOTE DE 100 TAGS FÍSICAS -->
+  <!-- CALCULADORA INTERATIVA DE RETORNO (ROI) PARA A TERRANOVA -->
   <!-- ========================================================================= -->
-  <section class="max-w-6xl mx-auto px-4 py-12">
+  <section id="lucro" class="max-w-5xl mx-auto px-4 py-16 reveal-on-scroll">
+    <div class="bg-gradient-to-b from-[#380C42] to-[#1B0220] border-2 border-amber-400/80 rounded-3xl p-6 sm:p-10 shadow-2xl space-y-8 text-center">
+      
+      <div class="space-y-3 max-w-2xl mx-auto">
+        <span class="text-xs uppercase tracking-widest font-black text-amber-400 bg-amber-400/15 px-4 py-1 rounded-full border border-amber-400/30">
+          Simulador Comercial ao Vivo
+        </span>
+        <h2 class="text-3xl sm:text-4xl font-black font-poetic text-white">
+          Simule o Faturamento das 100 Tags NFC
+        </h2>
+        <p class="text-xs sm:text-sm text-amber-100/80 font-medium">
+          Mova o controle deslizante abaixo e veja quanto a Terranova Pet pode faturar imediatamente:
+        </p>
+      </div>
+
+      <!-- Controle Deslizante Interativo -->
+      <div class="max-w-xl mx-auto bg-black/40 p-6 rounded-2xl border border-amber-400/30 space-y-4">
+        <div class="flex justify-between items-center text-xs font-bold text-amber-200">
+          <span>Preço de Venda da Tag Sugerido:</span>
+          <span id="valorPrecoTagTexto" class="text-lg font-black text-yellow-300">R$ 79,90</span>
+        </div>
+
+        <input type="range" id="sliderPrecoTag" min="49" max="149" step="10" value="79" oninput="atualizarCalculadoraLucro(this.value)" class="w-full accent-amber-400 cursor-pointer h-2 bg-stone-700 rounded-lg">
+
+        <div class="flex justify-between text-[11px] text-stone-400 font-semibold">
+          <span>R$ 49,00 (Acessível)</span>
+          <span>R$ 79,00 (Padrão)</span>
+          <span>R$ 149,00 (Premium/Com Memorial)</span>
+        </div>
+      </div>
+
+      <!-- Resultados Dinâmicos Calculados -->
+      <div class="grid grid-cols-1 sm:grid-cols-3 gap-6 text-left">
+        
+        <div class="glass-card-luxury p-5 rounded-2xl space-y-2">
+          <span class="text-xs text-stone-400 font-bold uppercase">100 Tags Vendidas</span>
+          <p class="text-xs text-stone-300">Faturamento Bruto Direto:</p>
+          <p id="totalFaturamentoVenda" class="text-2xl sm:text-3xl font-black text-yellow-300">R$ 7.900,00</p>
+          <span class="text-[10px] text-emerald-400 font-semibold block">Liquidez Imediata</span>
+        </div>
+
+        <div class="bg-gradient-to-b from-[#56135F] to-[#36083C] p-5 rounded-2xl border-2 border-amber-400 space-y-2 shadow-xl">
+          <span class="text-xs text-amber-200 font-black uppercase">Ponto de Equilíbrio</span>
+          <p class="text-xs text-amber-100">Tags para Pagar o Lote:</p>
+          <p class="text-2xl sm:text-3xl font-black text-amber-300">~ 18 Tags</p>
+          <span class="text-[10px] text-amber-200 font-bold block">As outras 82 tags são puro lucro</span>
+        </div>
+
+        <div class="glass-card-luxury p-5 rounded-2xl space-y-2">
+          <span class="text-xs text-stone-400 font-bold uppercase">Se Agregada a Planos</span>
+          <p class="text-xs text-stone-300">Receita Anual de 100 Planos:</p>
+          <p class="text-2xl sm:text-3xl font-black text-amber-400">R$ 47.880,00</p>
+          <span class="text-[10px] text-emerald-400 font-semibold block">Recorrência garantida</span>
+        </div>
+
+      </div>
+
+    </div>
+  </section>
+
+  <!-- ========================================================================= -->
+  <!-- ESPECIFICAÇÕES FÍSICAS DETALHADAS DAS 100 UNIDADES -->
+  <!-- ========================================================================= -->
+  <section class="max-w-6xl mx-auto px-4 py-12 reveal-on-scroll">
     <div class="bg-[#1A021D] border border-amber-400/40 rounded-3xl p-6 sm:p-10 shadow-xl space-y-8">
       
       <div class="flex flex-col sm:flex-row items-center justify-between gap-4 border-b border-amber-400/30 pb-6 text-center sm:text-left">
         <div>
-          <h2 class="text-2xl font-black font-poetic text-white">Especificações Físicas das 100 Tags</h2>
-          <p class="text-xs text-stone-400">Material de alta durabilidade feito especificamente para cães e gatos agitados</p>
+          <h2 class="text-2xl font-black font-poetic text-white">Ficha Técnica do Produto Físico</h2>
+          <p class="text-xs text-stone-400">Desenvolvido sob padrões rigorosos de durabilidade e estética pet</p>
         </div>
         <span class="px-4 py-1.5 rounded-full bg-amber-400 text-[#4A0E52] text-xs font-black shadow-xs">
-          Lote com 100 Peças Testadas
+          100 Peças Testadas com Leitor NFC
         </span>
       </div>
 
       <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-6 text-xs">
         <div class="space-y-1.5 p-4 rounded-xl bg-stone-900/60 border border-stone-800">
-          <strong class="text-amber-300 block text-sm">🟡 Design Anatômico</strong>
-          <p class="text-stone-300">Formato de patinha emborrachada amarela com almofadinhas pretas e relevo NFC em 3D.</p>
+          <strong class="text-amber-300 block text-sm">🐾 Design Patinha 3D</strong>
+          <p class="text-stone-300">Amarelo vibrante solar e preto de alto contraste com textura em alto relevo.</p>
         </div>
 
         <div class="space-y-1.5 p-4 rounded-xl bg-stone-900/60 border border-stone-800">
-          <strong class="text-amber-300 block text-sm">⚡ Chip NTAG Embutido</strong>
-          <p class="text-stone-300">Chip selado hermeticamente, imune à água, poeira, lama, banho de mar ou piscina.</p>
+          <strong class="text-amber-300 block text-sm">⚡ Chip NTAG de Resposta</strong>
+          <p class="text-stone-300">Microchip blindado hermeticamente contra mordidas, água, lama e calor.</p>
         </div>
 
         <div class="space-y-1.5 p-4 rounded-xl bg-stone-900/60 border border-stone-800">
           <strong class="text-amber-300 block text-sm">🔒 Aço Cirúrgico</strong>
-          <p class="text-stone-300">Argola dupla reforçada e corrente de alta tensão anti-rompimento e anti-ferrugem.</p>
+          <p class="text-stone-300">Argola dupla reforçada anti-rompimento para suportar puxões e brincadeiras.</p>
         </div>
 
         <div class="space-y-1.5 p-4 rounded-xl bg-stone-900/60 border border-stone-800">
           <strong class="text-amber-300 block text-sm">📱 QR Code Backup</strong>
-          <p class="text-stone-300">Gravado a laser no verso para garantir compatibilidade com 100% dos smartphones do planeta.</p>
+          <p class="text-stone-300">Gravação precisa no verso garantindo compatibilidade com qualquer celular antigo.</p>
         </div>
       </div>
 
@@ -611,75 +692,71 @@
   </section>
 
   <!-- ========================================================================= -->
-  <!-- CRONOGRAMA DE IMPLANTAÇÃO IMEDIATA: ZERO TRABALHO PARA A TERRANOVA -->
+  <!-- CRONOGRAMA DE IMPLANTAÇÃO IMEDIATA (3 PASSOS) -->
   <!-- ========================================================================= -->
-  <section class="max-w-4xl mx-auto px-4 py-12 text-center space-y-8">
+  <section class="max-w-4xl mx-auto px-4 py-12 text-center space-y-8 reveal-on-scroll">
     <div class="space-y-2">
-      <h2 class="text-2xl sm:text-3xl font-black font-poetic text-white">Como Funciona a Entrega &amp; Ativação?</h2>
-      <p class="text-xs sm:text-sm text-stone-300">Tudo pronto e entregue chave na mão para a equipe da Terranova Pet começar a vender no mesmo dia.</p>
+      <h2 class="text-2xl sm:text-3xl font-black font-poetic text-white">Como Funciona a Entrega para a Terranova?</h2>
+      <p class="text-xs sm:text-sm text-stone-300">Tudo pronto e entregue chave na mão para a equipe começar a distribuir imediatamente.</p>
     </div>
 
     <div class="grid grid-cols-1 sm:grid-cols-3 gap-6 text-left text-xs">
-      <div class="bg-[#240529] p-5 rounded-2xl border border-amber-400/30 space-y-2">
-        <span class="text-2xl">📦</span>
-        <h4 class="font-bold text-amber-300 text-sm">1. Entrega Física</h4>
-        <p class="text-stone-300">Entrega das 100 tags lacradas, testadas e com seus respectivos chaveiros e argolas na sede da Terranova.</p>
+      <div class="bg-[#240529] p-5 rounded-2xl border border-amber-400/30 space-y-2 glass-card-luxury">
+        <span class="text-3xl">📦</span>
+        <h4 class="font-bold text-amber-300 text-sm">1. Entrega do Lote</h4>
+        <p class="text-stone-300">Entrega das 100 tags físicas lacradas com chaveiros e argolas na sede da Terranova Pet.</p>
       </div>
 
-      <div class="bg-[#240529] p-5 rounded-2xl border border-amber-400/30 space-y-2">
-        <span class="text-2xl">🎓</span>
+      <div class="bg-[#240529] p-5 rounded-2xl border border-amber-400/30 space-y-2 glass-card-luxury">
+        <span class="text-3xl">🎓</span>
         <h4 class="font-bold text-amber-300 text-sm">2. Treinamento de 10 min</h4>
-        <p class="text-stone-300">Instruções simples para os consultores e recepcionistas orientarem o tutor na ativação do pet.</p>
+        <p class="text-stone-300">Instruções simples para os consultores de atendimento demonstrarem a aproximação NFC.</p>
       </div>
 
-      <div class="bg-[#240529] p-5 rounded-2xl border border-amber-400/30 space-y-2">
-        <span class="text-2xl">🎉</span>
-        <h4 class="font-bold text-amber-300 text-sm">3. Ativação em 60s</h4>
-        <p class="text-stone-300">O cliente encosta o celular, digita seu WhatsApp e o nome do pet, e a tag já está ativa e protegida!</p>
+      <div class="bg-[#240529] p-5 rounded-2xl border border-amber-400/30 space-y-2 glass-card-luxury">
+        <span class="text-3xl">🎉</span>
+        <h4 class="font-bold text-amber-300 text-sm">3. Ativação em 60 Segundos</h4>
+        <p class="text-stone-300">O tutor encosta o celular, preenche o WhatsApp e o pet já está protegido e cadastrado na rede social.</p>
       </div>
     </div>
   </section>
 
   <!-- ========================================================================= -->
-  <!-- SEÇÃO DE FECHAMENTO COMERCIAL & BOTÃO DE WHATSAPP (CTA FINAL) -->
+  <!-- CTA FINAL DE FECHAMENTO COMERCIAL (WHATSAPP DIRETO) -->
   <!-- ========================================================================= -->
-  <section class="max-w-5xl mx-auto px-4 py-16 mb-16">
+  <section class="max-w-5xl mx-auto px-4 py-16 mb-16 reveal-on-scroll">
     <div class="bg-gradient-to-r from-amber-400 via-yellow-300 to-amber-500 rounded-3xl p-8 sm:p-14 text-center text-[#4A0E52] space-y-6 shadow-2xl relative overflow-hidden">
       
-      <!-- Detalhes de Fundo -->
-      <div class="absolute -top-10 -left-10 w-40 h-40 bg-white/20 rounded-full blur-2xl pointer-events-none"></div>
-      <div class="absolute -bottom-10 -right-10 w-40 h-40 bg-[#740568]/20 rounded-full blur-2xl pointer-events-none"></div>
-
       <span class="inline-block px-4 py-1 rounded-full bg-[#4A0E52] text-yellow-300 text-xs font-black uppercase tracking-wider shadow-sm">
-        Oportunidade Única para a Terranova Pet
+        Oportunidade Comercial Limitada
       </span>
 
       <h2 class="text-3xl sm:text-5xl font-black font-poetic tracking-tight leading-tight">
-        Vamos levar essa inovação para os clientes da Terranova Pet?
+        Vamos fechar o lote de 100 Tags NFC para a Terranova Pet?
       </h2>
 
-      <p class="text-sm sm:text-base font-semibold max-w-2xl mx-auto leading-relaxed text-[#3D0A46]">
-        O lote exclusivo de <strong>100 Tags Inteligentes com NFC</strong> já está pronto para ser configurado no nome e marca da Terranova Pet. Garanta este diferencial antes de qualquer outro concorrente da região.
+      <p class="text-sm sm:text-base font-semibold max-w-2xl mx-auto leading-relaxed text-[#380A40]">
+        Este lote exclusivo de <strong>100 Tags Inteligentes</strong> já está montado, testado e pronto para ser configurado com o domínio e a marca oficial da Terranova Pet. Garanta essa inovação pioneira para a sua empresa hoje mesmo!
       </p>
 
       <div class="pt-4 flex flex-col sm:flex-row items-center justify-center gap-4">
         <a href="https://wa.me/5538997263620?text=Ol%C3%A1%21%20Quero%20fechar%20o%20lote%20de%20100%20Tags%20NFC%20para%20a%20Terranova%20Pet%20agora%20mesmo%21" target="_blank" class="w-full sm:w-auto px-10 py-5 rounded-full bg-[#4A0E52] hover:bg-[#36083C] text-yellow-300 font-black text-base shadow-2xl transition hover:scale-105 active:scale-95 flex items-center justify-center gap-3">
-          <span class="text-xl">💬</span>
+          <span class="text-2xl">💬</span>
           <span>Conversar no WhatsApp e Fechar o Lote</span>
         </a>
 
-        <a href="social.html" target="_blank" class="w-full sm:w-auto px-8 py-5 rounded-full bg-white/70 hover:bg-white text-[#4A0E52] font-black text-base shadow-md transition flex items-center justify-center gap-2">
+        <a href="social.html" target="_blank" class="w-full sm:w-auto px-8 py-5 rounded-full bg-white hover:bg-stone-50 text-[#4A0E52] font-black text-base shadow-md transition flex items-center justify-center gap-2">
           <span>👀</span>
-          <span>Testar Aplicativo ao Vivo</span>
+          <span>Testar Diário &amp; Rede Social</span>
         </a>
       </div>
 
-      <div class="pt-4 flex items-center justify-center gap-6 text-xs font-bold text-[#4A0E52]/80">
+      <div class="pt-4 flex items-center justify-center gap-6 text-xs font-bold text-[#4A0E52]/85">
         <span>✓ 100 Tags Físicas Testadas</span>
         <span>&bull;</span>
-        <span>✓ Código NFC Gravado</span>
+        <span>✓ Sem Taxas Mensais</span>
         <span>&bull;</span>
-        <span>✓ Zero Mensalidade</span>
+        <span>✓ Pronta-Entrega</span>
       </div>
 
     </div>
@@ -691,32 +768,114 @@
   <footer class="border-t border-amber-500/20 py-8 px-4 text-center text-xs text-stone-400 space-y-2">
     <div class="flex items-center justify-center gap-2 font-cinzel font-bold text-amber-300 text-sm">
       <img src="logo_terranova.png" class="w-4 h-4 rounded-full object-cover">
-      <span>Terranova Pet &bull; Soluções Tecnológicas e Afetivas para Animais de Estimação</span>
+      <span>Terranova Pet &bull; Identificação Inteligente &amp; Memorial Coletivo</span>
     </div>
-    <p>Montes Claros - MG &bull; Suporte Direto: (38) 99726-3620</p>
+    <p>Montes Claros - MG &bull; Contato Comercial: (38) 99726-3620</p>
   </footer>
 
   <!-- ========================================================================= -->
-  <!-- SCRIPT DE SIMULAÇÃO NFC & EFEITOS -->
+  <!-- JAVASCRIPT DINÂMICO: DIGITAÇÃO HERO, SIMULADOR NFC E CALCULADORA -->
   <!-- ========================================================================= -->
   <script>
-    function acionarSimulacaoNfc() {
-      const btn = document.getElementById("btnSimularToque");
-      const box = document.getElementById("mockupNotificacaoNfc");
+    // 1. EFEITO DE DIGITAÇÃO DINÂMICA (LETRAS QUE APARECEM E SE TRANSFORMAM)
+    const frasesHero = [
+      "Segurança Inteligente 24h",
+      "Diário Social Estilo Instagram",
+      "Memorial Eterno Jardim das Estrelinhas",
+      "Fidelização Perpétua da Família Pet"
+    ];
+
+    let indiceFrase = 0;
+    let indiceLetra = 0;
+    let apagando = false;
+    const elementoTexto = document.getElementById("textoDinamicoHero");
+
+    function digitarHero() {
+      const fraseAtual = frasesHero[indiceFrase];
+
+      if (!apagando) {
+        elementoTexto.innerText = fraseAtual.substring(0, indiceLetra + 1);
+        indiceLetra++;
+        if (indiceLetra === fraseAtual.length) {
+          apagando = true;
+          setTimeout(digitarHero, 2200); // Pausa quando a frase estiver completa
+          return;
+        }
+      } else {
+        elementoTexto.innerText = fraseAtual.substring(0, indiceLetra - 1);
+        indiceLetra--;
+        if (indiceLetra === 0) {
+          apagando = false;
+          indiceFrase = (indiceFrase + 1) % frasesHero.length;
+        }
+      }
+
+      const velocidade = apagando ? 35 : 75;
+      setTimeout(digitarHero, velocidade);
+    }
+
+    document.addEventListener("DOMContentLoaded", () => {
+      digitarHero();
+      iniciarAnimacaoScroll();
+    });
+
+    // 2. SIMULAÇÃO DO TOQUE NFC INTERATIVO
+    function simularToqueNfcNaTela() {
+      const btn = document.getElementById("btnAcaoSimularNfc");
+      const box = document.getElementById("boxNotificacaoToque");
 
       btn.innerText = "⚡ Lendo Chip NFC...";
       btn.className = "w-full py-2.5 bg-emerald-400 text-[#4A0E52] font-black text-xs rounded-xl shadow-md transition";
 
       setTimeout(() => {
-        btn.innerText = "✓ Tag NFC Reconhecida com Sucesso!";
+        btn.innerText = "✓ Tag NFC Reconhecida!";
         box.classList.remove("hidden");
         box.scrollIntoView({ behavior: "smooth", block: "nearest" });
 
-        // Vibração tátil se suportada pelo smartphone
         if (navigator.vibrate) {
-          navigator.vibrate([100, 50, 100]);
+          navigator.vibrate([80, 40, 80]);
         }
-      }, 700);
+      }, 600);
+    }
+
+    // 3. CALCULADORA DINÂMICA DE LUCRO
+    function atualizarCalculadoraLucro(valor) {
+      document.getElementById("valorPrecoTagTexto").innerText = `R$ ${valor},00`;
+      const faturamentoTotal = valor * 100;
+      document.getElementById("totalFaturamentoVenda").innerText = `R$ ${faturamentoTotal.toLocaleString("pt-BR")},00`;
+    }
+
+    // 4. ANIMAÇÃO DE ELEMENTOS AO ROLAR A PÁGINA (INTERSECTION OBSERVER)
+    function iniciarAnimacaoScroll() {
+      const observados = document.querySelectorAll(".reveal-on-scroll");
+      const observer = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+          if (entry.isIntersecting) {
+            entry.target.classList.add("is-visible");
+            // Se tiver contadores numéricos, anima
+            const contadores = entry.target.querySelectorAll(".counter-val");
+            contadores.forEach(c => animarContador(c));
+          }
+        });
+      }, { threshold: 0.15 });
+
+      observados.forEach(el => observer.observe(el));
+    }
+
+    function animarContador(el) {
+      if (el.dataset.animado === "true") return;
+      el.dataset.animado = "true";
+      const target = parseInt(el.dataset.target, 10);
+      let count = 0;
+      const step = Math.ceil(target / 40);
+      const timer = setInterval(() => {
+        count += step;
+        if (count >= target) {
+          count = target;
+          clearInterval(timer);
+        }
+        el.innerText = count;
+      }, 25);
     }
   </script>
 
