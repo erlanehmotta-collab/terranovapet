@@ -11,9 +11,198 @@
   <style>
     body { font-family: 'Plus Jakarta Sans', sans-serif; }
     .font-poetic { font-family: 'Playfair Display', serif; }
+    @keyframes shake {
+      0%, 100% { transform: translateX(0); }
+      20%, 60% { transform: translateX(-6px); }
+      40%, 80% { transform: translateX(6px); }
+    }
+    .animate-shake { animation: shake 0.4s ease-in-out; }
   </style>
 </head>
 <body class="bg-[#FAF7F2] text-[#2D231E] min-h-screen py-8 px-4 sm:px-6">
+
+  <!-- ========================================================================= -->
+  <!-- TELA DE ACESSO MESTRE (LOGIN WALL ADMINISTRATIVO) -->
+  <!-- ========================================================================= -->
+  <div id="telaAcessoMestre" class="fixed inset-0 z-50 bg-gradient-to-br from-[#2D0228] via-[#4F0447] to-[#1F011C] flex items-center justify-center p-4">
+    <div class="bg-white/95 backdrop-blur-xl max-w-md w-full rounded-3xl p-7 md:p-9 shadow-2xl border-2 border-amber-400/90 space-y-6 relative overflow-hidden">
+      
+      <!-- Detalhe decorativo nobre -->
+      <div class="absolute -top-12 -right-12 w-36 h-36 bg-amber-400/20 rounded-full blur-2xl pointer-events-none"></div>
+      <div class="absolute -bottom-12 -left-12 w-36 h-36 bg-[#740568]/20 rounded-full blur-2xl pointer-events-none"></div>
+
+      <!-- Cabeçalho do Login -->
+      <div class="text-center space-y-3">
+        <div class="w-18 h-18 mx-auto rounded-2xl p-1 bg-gradient-to-tr from-amber-400 via-yellow-200 to-amber-500 shadow-xl border-2 border-white flex items-center justify-center">
+          <img src="logo_terranova.png" alt="Terranova Pet" class="w-16 h-16 object-cover rounded-xl shadow-inner">
+        </div>
+        <div>
+          <span class="inline-block px-3 py-1 bg-amber-100 text-[#740568] border border-amber-300 rounded-full text-[10px] font-black tracking-widest uppercase mb-1">
+            🔒 Área Restrita Administrativa
+          </span>
+          <h2 class="text-2xl md:text-3xl font-black text-[#520349] tracking-tight">Acesso Mestre</h2>
+          <p class="text-xs text-stone-600 mt-1 font-medium">Informe suas credenciais para gerenciar tags e memoriais</p>
+        </div>
+      </div>
+
+      <!-- Formulário de Login -->
+      <form id="formLoginMestre" onsubmit="realizarLoginMestre(event)" class="space-y-4">
+        
+        <div>
+          <label class="block text-xs font-bold text-stone-700 mb-1">E-mail Administrativo:</label>
+          <div class="relative">
+            <span class="absolute left-3.5 top-1/2 -translate-y-1/2 text-stone-400 text-sm">📧</span>
+            <input type="email" id="loginEmailMestre" required value="erlanehmotta@gmail.com" placeholder="erlanehmotta@gmail.com" class="w-full bg-stone-50 border border-stone-300 focus:border-amber-500 rounded-2xl pl-10 pr-4 py-3 text-xs text-stone-800 font-bold focus:outline-none focus:ring-2 focus:ring-amber-400/30 transition">
+          </div>
+        </div>
+
+        <div>
+          <label class="block text-xs font-bold text-stone-700 mb-1">Senha Mestre:</label>
+          <div class="relative">
+            <span class="absolute left-3.5 top-1/2 -translate-y-1/2 text-stone-400 text-sm">🔑</span>
+            <input type="password" id="loginSenhaMestre" required value="Emia2026" placeholder="Digite sua senha mestre" class="w-full bg-stone-50 border border-stone-300 focus:border-amber-500 rounded-2xl pl-10 pr-10 py-3 text-xs text-stone-800 font-bold focus:outline-none focus:ring-2 focus:ring-amber-400/30 transition">
+            <button type="button" onclick="toggleSenhaLogin()" class="absolute right-3 top-1/2 -translate-y-1/2 text-stone-400 hover:text-stone-700 text-xs p-1" title="Ver / Ocultar Senha">
+              👁️
+            </button>
+          </div>
+        </div>
+
+        <!-- Alerta de Erro -->
+        <div id="erroLoginMestre" class="hidden p-3 rounded-2xl bg-rose-50 border border-rose-300 text-rose-800 text-xs font-bold text-center flex items-center justify-center gap-2 animate-shake">
+          <span>⚠️</span>
+          <span id="erroLoginTexto">E-mail ou senha incorretos.</span>
+        </div>
+
+        <!-- Botão Entrar -->
+        <button type="submit" class="w-full py-4 rounded-2xl bg-gradient-to-r from-amber-500 via-amber-400 to-yellow-300 hover:brightness-105 text-[#740568] font-black text-sm shadow-xl shadow-amber-500/20 transition active:scale-95 flex items-center justify-center gap-2 cursor-pointer">
+          <span>🚀</span>
+          <span>Entrar no Painel Mestre</span>
+        </button>
+      </form>
+
+      <div class="pt-2 border-t border-stone-200 text-center">
+        <p class="text-[11px] text-stone-400">Terranova Pet &bull; Sistema Seguro de Gestão de Memoriais</p>
+      </div>
+
+    </div>
+  </div>
+
+  
+  <!-- ========================================================================= -->
+  <!-- MODAL: GESTÃO & GERAÇÃO DE ACESSOS MESTRES -->
+  <!-- ========================================================================= -->
+  <div id="modalGestaoAcessosMestres" class="fixed inset-0 z-50 bg-black/80 backdrop-blur-md hidden flex items-center justify-center p-4">
+    <div class="bg-white max-w-2xl w-full rounded-3xl shadow-2xl border-2 border-amber-400 overflow-hidden flex flex-col max-h-[90vh]" onclick="event.stopPropagation()">
+      
+      <!-- Cabeçalho do Modal -->
+      <div class="p-5 md:p-6 bg-gradient-to-r from-[#740568] via-[#520349] to-[#8C077E] text-white flex items-center justify-between border-b-2 border-amber-400">
+        <div class="flex items-center gap-3">
+          <div class="w-10 h-10 rounded-xl bg-amber-400 text-[#740568] flex items-center justify-center text-xl font-bold shadow-md">
+            🔑
+          </div>
+          <div>
+            <h3 class="font-black text-lg md:text-xl text-amber-100 leading-tight">Gestão de Acessos Mestres</h3>
+            <p class="text-xs text-amber-200/80">Cadastre e gerencie e-mails e senhas de administradores</p>
+          </div>
+        </div>
+        <button type="button" onclick="fecharModalAcessosMestres()" class="w-8 h-8 rounded-full bg-white/10 hover:bg-white/20 text-white flex items-center justify-center text-sm font-bold transition">
+          ✕
+        </button>
+      </div>
+
+      <!-- Conteúdo do Modal com Scroll -->
+      <div class="p-5 md:p-6 space-y-6 overflow-y-auto">
+
+        <!-- ========================================== -->
+        <!-- PARTE 1: FORMULÁRIO DE GERAÇÃO DE ACESSO -->
+        <!-- ========================================== -->
+        <div class="p-5 rounded-2xl bg-amber-50/70 border border-amber-300 space-y-4">
+          <div class="flex items-center justify-between">
+            <h4 class="font-black text-xs text-[#740568] uppercase tracking-wider flex items-center gap-1.5">
+              <span>✨</span> Gerar Novo Acesso Mestre
+            </h4>
+            <span class="text-[10px] bg-amber-200 text-[#740568] font-bold px-2 py-0.5 rounded-full">Novo Administrador</span>
+          </div>
+
+          <form id="formCriarMestre" onsubmit="salvarNovoAcessoMestre(event)" class="space-y-3">
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+              <div>
+                <label class="block text-xs font-bold text-stone-700 mb-1">Nome / Identificação *</label>
+                <input type="text" id="novoMestreNome" required placeholder="Ex: Dra. Mariana (Veterinária)" class="w-full bg-white border border-stone-300 rounded-xl px-3 py-2 text-xs font-bold text-stone-800 focus:outline-none focus:border-amber-500">
+              </div>
+              <div>
+                <label class="block text-xs font-bold text-stone-700 mb-1">Cargo / Função *</label>
+                <input type="text" id="novoMestreCargo" required value="Administrador Mestre" placeholder="Ex: Gestor de Memoriais" class="w-full bg-white border border-stone-300 rounded-xl px-3 py-2 text-xs font-bold text-stone-800 focus:outline-none focus:border-amber-500">
+              </div>
+            </div>
+
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+              <div>
+                <label class="block text-xs font-bold text-stone-700 mb-1">E-mail do Novo Mestre *</label>
+                <input type="email" id="novoMestreEmail" required placeholder="usuario@exemplo.com" class="w-full bg-white border border-stone-300 rounded-xl px-3 py-2 text-xs font-bold text-stone-800 focus:outline-none focus:border-amber-500">
+              </div>
+              <div>
+                <div class="flex items-center justify-between mb-1">
+                  <label class="block text-xs font-bold text-stone-700">Senha de Acesso *</label>
+                  <button type="button" onclick="gerarSenhaForteAleatoria()" class="text-[10px] text-[#740568] hover:underline font-bold flex items-center gap-0.5">
+                    <span>⚡</span> Gerar Senha
+                  </button>
+                </div>
+                <div class="relative">
+                  <input type="text" id="novoMestreSenha" required placeholder="Ex: Terranova#2026" class="w-full bg-white border border-stone-300 rounded-xl px-3 py-2 text-xs font-mono font-bold text-purple-900 focus:outline-none focus:border-amber-500">
+                </div>
+              </div>
+            </div>
+
+            <button type="submit" class="w-full py-3 rounded-xl bg-gradient-to-r from-amber-500 via-amber-400 to-yellow-300 hover:brightness-105 text-[#740568] font-black text-xs shadow-md transition active:scale-95 flex items-center justify-center gap-2 cursor-pointer">
+              <span>✨</span>
+              <span>Cadastrar &amp; Ativar Acesso Mestre</span>
+            </button>
+          </form>
+
+          <!-- Banner de Credenciais Geradas para Copiar -->
+          <div id="bannerCredenciaisGeradas" class="hidden p-3.5 rounded-xl bg-emerald-50 border border-emerald-300 text-emerald-900 space-y-2">
+            <div class="flex items-center justify-between">
+              <span class="text-xs font-black flex items-center gap-1.5">
+                <span>🎉</span> Acesso Mestre Criado com Sucesso!
+              </span>
+              <button type="button" onclick="copiarCredenciaisMestreRecentes()" class="px-2.5 py-1 bg-emerald-600 hover:bg-emerald-700 text-white rounded-lg text-[10px] font-bold shadow-xs flex items-center gap-1 transition">
+                <span>📋</span> Copiar para WhatsApp
+              </button>
+            </div>
+            <p id="textoCredenciaisRecentes" class="text-[11px] font-mono bg-white p-2 rounded-lg border border-emerald-200 select-all"></p>
+          </div>
+        </div>
+
+        <!-- ========================================== -->
+        <!-- PARTE 2: LISTA DE ACESSOS MESTRES ATIVOS -->
+        <!-- ========================================== -->
+        <div class="space-y-3">
+          <div class="flex items-center justify-between">
+            <h4 class="font-black text-xs text-stone-700 uppercase tracking-wider flex items-center gap-1.5">
+              <span>👥</span> Acessos Mestres Ativos no Sistema
+            </h4>
+            <span id="contadorAcessosAtivos" class="text-xs font-bold text-stone-500">1 cadastrado</span>
+          </div>
+
+          <div id="listaAcessosMestresContainer" class="space-y-2.5">
+            <!-- Renderizado dinamicamente via JavaScript -->
+          </div>
+        </div>
+
+      </div>
+
+      <!-- Rodapé do Modal -->
+      <div class="p-4 bg-stone-50 border-t border-stone-200 flex justify-end">
+        <button type="button" onclick="fecharModalAcessosMestres()" class="px-5 py-2 rounded-xl bg-stone-200 hover:bg-stone-300 text-stone-800 text-xs font-bold transition">
+          Fechar
+        </button>
+      </div>
+
+    </div>
+  </div>
+  <!-- CONTAINER PRINCIPAL DO APLICATIVO (PROTEGIDO) -->
+  <div id="conteudoPrincipalApp" style="display: none;">
 
   <div class="max-w-6xl mx-auto space-y-8">
     
@@ -30,11 +219,25 @@
         </div>
       </div>
 
-      <div class="flex items-center gap-2.5">
-        <span class="px-4 py-2 bg-black/40 border border-amber-300/50 text-amber-200 rounded-full text-xs font-bold shadow-md flex items-center gap-1.5">
-          <span>🔒</span>
-          <span>Acesso Interno Terranova Pet</span>
-        </span>
+      <div class="flex flex-wrap items-center gap-2">
+        <!-- Badge do Usuário Logado -->
+        <div class="px-3.5 py-1.5 bg-black/40 border border-amber-300/40 text-amber-200 rounded-2xl text-xs font-bold flex items-center gap-2 shadow-inner">
+          <span class="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span>
+          <span id="labelUsuarioMestreLogado" class="font-mono text-[11px]">erlanehmotta@gmail.com</span>
+        </div>
+
+        <!-- Botão Abrir Gestor de Acessos Mestres -->
+        <button type="button" onclick="abrirModalAcessosMestres()" class="px-3.5 py-2 bg-gradient-to-r from-amber-400 to-yellow-300 hover:brightness-110 text-[#740568] rounded-2xl text-xs font-black shadow-md flex items-center gap-1.5 transition active:scale-95 cursor-pointer">
+          <span>🔑</span>
+          <span>Acessos Mestres</span>
+          <span id="badgeQtdMestres" class="bg-[#740568] text-amber-200 text-[10px] px-1.5 py-0.2 rounded-full ml-0.5">1</span>
+        </button>
+
+        <!-- Botão Logout -->
+        <button type="button" onclick="realizarLogoutMestre()" class="px-3 py-2 bg-white/10 hover:bg-white/20 border border-white/20 text-white rounded-2xl text-xs font-bold transition active:scale-95 cursor-pointer flex items-center gap-1" title="Encerrar Sessão Mestre">
+          <span>🚪</span>
+          <span class="hidden sm:inline">Sair</span>
+        </button>
       </div>
     </header>
 
@@ -1166,11 +1369,278 @@
       alert("📋 Link da página copiado com sucesso!");
     }
 
+    
+    // =========================================================================
+    // SISTEMA DE ACESSO MESTRE & GESTÃO DE CREDENCIAIS (TERRANOVA PET)
+    // =========================================================================
+    const MESTRE_PADRAO = {
+      email: "erlanehmotta@gmail.com",
+      senha: "Emia2026",
+      nome: "Erlane Motta",
+      cargo: "Administrador Mestre Principal",
+      dataCriacao: "2026-09-02",
+      superAdmin: true
+    };
+
+    let credenciaisRecentesFormatadas = "";
+
+    // Inicializa a base de acessos mestres se vazia
+    function obterListaAcessosMestres() {
+      let lista = [];
+      try {
+        lista = JSON.parse(localStorage.getItem("terranova_master_accounts")) || [];
+      } catch(e) {
+        lista = [];
+      }
+
+      // Garante que o mestre oficial sempre esteja presente
+      const existePrincipal = lista.some(u => u.email.toLowerCase() === MESTRE_PADRAO.email.toLowerCase());
+      if (!existePrincipal) {
+        lista.unshift(MESTRE_PADRAO);
+        salvarListaAcessosMestres(lista);
+      }
+      return lista;
+    }
+
+    function salvarListaAcessosMestres(lista) {
+      localStorage.setItem("terranova_master_accounts", JSON.stringify(lista));
+      atualizarContadorEModalMestres();
+    }
+
+    // Validação de Sessão ao Carregar
+    function verificarSessaoMestre() {
+      const sessaoStr = localStorage.getItem("terranova_master_session");
+      const telaLogin = document.getElementById("telaAcessoMestre");
+      const appConteudo = document.getElementById("conteudoPrincipalApp");
+      const labelUser = document.getElementById("labelUsuarioMestreLogado");
+
+      if (sessaoStr) {
+        try {
+          const sessao = JSON.parse(sessaoStr);
+          const lista = obterListaAcessosMestres();
+          const userValido = lista.find(u => u.email.toLowerCase() === (sessao.email || "").toLowerCase());
+
+          if (userValido) {
+            if (telaLogin) telaLogin.style.display = "none";
+            if (appConteudo) appConteudo.style.display = "block";
+            if (labelUser) labelUser.innerText = userValido.email;
+            atualizarContadorEModalMestres();
+            return true;
+          }
+        } catch(e) {}
+      }
+
+      // Se não autenticado
+      if (telaLogin) telaLogin.style.display = "flex";
+      if (appConteudo) appConteudo.style.display = "none";
+      return false;
+    }
+
+    // Ação de Login
+    function realizarLoginMestre(e) {
+      if (e) e.preventDefault();
+      const emailInput = document.getElementById("loginEmailMestre").value.trim().toLowerCase();
+      const senhaInput = document.getElementById("loginSenhaMestre").value;
+      const erroBox = document.getElementById("erroLoginMestre");
+      const erroTxt = document.getElementById("erroLoginTexto");
+
+      const lista = obterListaAcessosMestres();
+      const userEncontrado = lista.find(u => u.email.toLowerCase() === emailInput && u.senha === senhaInput);
+
+      if (userEncontrado) {
+        if (erroBox) erroBox.classList.add("hidden");
+        // Salva sessão
+        const novaSessao = {
+          email: userEncontrado.email,
+          nome: userEncontrado.nome,
+          dataLogin: new Date().toISOString()
+        };
+        localStorage.setItem("terranova_master_session", JSON.stringify(novaSessao));
+        verificarSessaoMestre();
+      } else {
+        if (erroBox) {
+          erroBox.classList.remove("hidden");
+          if (erroTxt) erroTxt.innerText = "E-mail ou senha incorretos. Verifique suas credenciais.";
+        }
+      }
+    }
+
+    // Ação de Logout
+    function realizarLogoutMestre() {
+      if (confirm("Deseja realmente encerrar a sessão do Painel Mestre?")) {
+        localStorage.removeItem("terranova_master_session");
+        verificarSessaoMestre();
+      }
+    }
+
+    function toggleSenhaLogin() {
+      const campo = document.getElementById("loginSenhaMestre");
+      if (campo) {
+        campo.type = campo.type === "password" ? "text" : "password";
+      }
+    }
+
+    // Modal de Gestão de Acessos
+    function abrirModalAcessosMestres() {
+      const modal = document.getElementById("modalGestaoAcessosMestres");
+      if (modal) {
+        modal.classList.remove("hidden");
+        renderizarListaAcessosMestres();
+      }
+    }
+
+    function fecharModalAcessosMestres() {
+      const modal = document.getElementById("modalGestaoAcessosMestres");
+      if (modal) modal.classList.add("hidden");
+    }
+
+    function gerarSenhaForteAleatoria() {
+      const chars = "ABCDEFGHJKLMNPQRSTUVWXYZabcdefghijkmnpqrstuvwxyz23456789!@#$%&*";
+      let senha = "TN#";
+      for (let i = 0; i < 8; i++) {
+        senha += chars.charAt(Math.floor(Math.random() * chars.length));
+      }
+      const campo = document.getElementById("novoMestreSenha");
+      if (campo) campo.value = senha;
+    }
+
+    function salvarNovoAcessoMestre(e) {
+      if (e) e.preventDefault();
+      const nome = document.getElementById("novoMestreNome").value.trim();
+      const cargo = document.getElementById("novoMestreCargo").value.trim() || "Administrador Mestre";
+      const email = document.getElementById("novoMestreEmail").value.trim().toLowerCase();
+      const senha = document.getElementById("novoMestreSenha").value.trim();
+
+      if (!email || !senha) return;
+
+      const lista = obterListaAcessosMestres();
+      const idxExistente = lista.findIndex(u => u.email.toLowerCase() === email);
+
+      const novoRegistro = {
+        email,
+        senha,
+        nome: nome || "Colaborador Mestre",
+        cargo,
+        dataCriacao: new Date().toLocaleDateString("pt-BR"),
+        superAdmin: false
+      };
+
+      if (idxExistente !== -1) {
+        if (lista[idxExistente].superAdmin) {
+          alert("Não é possível alterar a conta Mestre Principal diretamente.");
+          return;
+        }
+        lista[idxExistente] = novoRegistro;
+      } else {
+        lista.push(novoRegistro);
+      }
+
+      salvarListaAcessosMestres(lista);
+      renderizarListaAcessosMestres();
+
+      // Exibe banner com dados para copiar
+      const banner = document.getElementById("bannerCredenciaisGeradas");
+      const texto = document.getElementById("textoCredenciaisRecentes");
+      credenciaisRecentesFormatadas = `🐾 *ACESSO MESTRE TERRANOVA PET*\n🌐 *Link do Painel:* ${window.location.origin}\n👤 *Nome:* ${nome}\n📧 *E-mail:* ${email}\n🔑 *Senha:* ${senha}\n🔒 *Nível:* ${cargo}`;
+
+      if (texto) texto.innerText = `E-mail: ${email} | Senha: ${senha} (Link: ${window.location.origin})`;
+      if (banner) banner.classList.remove("hidden");
+
+      // Limpar formulário
+      document.getElementById("novoMestreNome").value = "";
+      document.getElementById("novoMestreEmail").value = "";
+      document.getElementById("novoMestreSenha").value = "";
+    }
+
+    function copiarCredenciaisMestreRecentes() {
+      if (navigator.clipboard && credenciaisRecentesFormatadas) {
+        navigator.clipboard.writeText(credenciaisRecentesFormatadas);
+        alert("📋 Credenciais copiadas! Você já pode colar no WhatsApp do novo administrador.");
+      }
+    }
+
+    function excluirAcessoMestre(email) {
+      if (email.toLowerCase() === MESTRE_PADRAO.email.toLowerCase()) {
+        alert("A conta Mestre Principal não pode ser removida.");
+        return;
+      }
+
+      if (confirm(`Deseja realmente remover o acesso mestre de "${email}"?`)) {
+        let lista = obterListaAcessosMestres();
+        lista = lista.filter(u => u.email.toLowerCase() !== email.toLowerCase());
+        salvarListaAcessosMestres(lista);
+        renderizarListaAcessosMestres();
+      }
+    }
+
+    function copiarCredenciaisItem(email, senha, nome) {
+      const msg = `🐾 *ACESSO MESTRE TERRANOVA PET*\n🌐 *Link do Painel:* ${window.location.origin}\n👤 *Nome:* ${nome}\n📧 *E-mail:* ${email}\n🔑 *Senha:* ${senha}`;
+      if (navigator.clipboard) {
+        navigator.clipboard.writeText(msg);
+        alert(`📋 Credenciais de ${nome} copiadas para a área de transferência!`);
+      }
+    }
+
+    function renderizarListaAcessosMestres() {
+      const container = document.getElementById("listaAcessosMestresContainer");
+      if (!container) return;
+
+      const lista = obterListaAcessosMestres();
+      container.innerHTML = "";
+
+      lista.forEach(u => {
+        const isPrincipal = u.superAdmin || u.email.toLowerCase() === MESTRE_PADRAO.email.toLowerCase();
+        const card = document.createElement("div");
+        card.className = "p-3.5 rounded-2xl border flex items-center justify-between gap-3 " + 
+          (isPrincipal ? "bg-amber-50/80 border-amber-300" : "bg-white border-stone-200 hover:border-stone-300");
+
+        card.innerHTML = `
+          <div class="flex items-center gap-3 min-w-0">
+            <div class="w-10 h-10 rounded-xl ${isPrincipal ? 'bg-[#740568] text-amber-200' : 'bg-stone-100 text-stone-600'} flex items-center justify-center font-bold text-base flex-shrink-0">
+              ${isPrincipal ? '👑' : '👤'}
+            </div>
+            <div class="min-w-0">
+              <div class="flex items-center gap-2">
+                <p class="font-bold text-xs text-stone-900 truncate">${u.nome || u.email}</p>
+                ${isPrincipal ? '<span class="text-[9px] bg-amber-200 text-[#740568] px-2 py-0.2 rounded-full font-black">Principal</span>' : ''}
+              </div>
+              <p class="text-[11px] font-mono text-stone-600 truncate">${u.email}</p>
+              <p class="text-[10px] text-stone-400">Senha: <span class="font-mono font-bold">${u.senha}</span> &bull; ${u.cargo || 'Mestre'}</p>
+            </div>
+          </div>
+
+          <div class="flex items-center gap-1.5 flex-shrink-0">
+            <button type="button" onclick="copiarCredenciaisItem('${u.email}', '${u.senha}', '${u.nome || u.email}')" class="p-2 rounded-xl bg-stone-100 hover:bg-stone-200 text-stone-700 text-xs transition" title="Copiar Credenciais">
+              📋
+            </button>
+            ${!isPrincipal ? `
+              <button type="button" onclick="excluirAcessoMestre('${u.email}')" class="p-2 rounded-xl bg-rose-50 hover:bg-rose-100 text-rose-700 text-xs transition" title="Excluir Acesso">
+                🗑️
+              </button>
+            ` : ''}
+          </div>
+        `;
+        container.appendChild(card);
+      });
+
+      atualizarContadorEModalMestres();
+    }
+
+    function atualizarContadorEModalMestres() {
+      const lista = obterListaAcessosMestres();
+      const badgeQtd = document.getElementById("badgeQtdMestres");
+      const contador = document.getElementById("contadorAcessosAtivos");
+      if (badgeQtd) badgeQtd.innerText = lista.length;
+      if (contador) contador.innerText = `${lista.length} cadastrado${lista.length > 1 ? 's' : ''}`;
+    }
+  
     window.addEventListener("DOMContentLoaded", () => {
+      verificarSessaoMestre();
       renderizarEditorMidias();
       selecionarModo("coleira");
       atualizarMockup();
     });
   </script>
+</div>
 </body>
 </html>
