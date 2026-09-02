@@ -3,310 +3,1157 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Terranova Pet — Identificação &amp; Memorial</title>
+  <title>Gerador Terranova Pet &bull; Coleira, Rede Social &amp; Memorial</title>
   <script src="https://cdn.tailwindcss.com"></script>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=Playfair+Display:ital,wght@0,500;0,600;0,700;1,400&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800;900&family=Playfair+Display:ital,wght@0,600;0,700;1,600&display=swap" rel="stylesheet">
   <style>
     body { font-family: 'Plus Jakarta Sans', sans-serif; }
     .font-poetic { font-family: 'Playfair Display', serif; }
-    @keyframes pulseAlert {
-      0%, 100% { transform: scale(1); opacity: 1; }
-      50% { transform: scale(1.05); opacity: 0.9; }
-    }
-    .pulse-alert { animation: pulseAlert 2s infinite ease-in-out; }
-    @keyframes flameFlicker {
-      0%, 100% { transform: scale(1) rotate(-1deg); opacity: 0.95; filter: drop-shadow(0 0 10px rgba(230, 126, 34, 0.7)); }
-      25% { transform: scale(1.08, 0.96) rotate(1deg); opacity: 1; filter: drop-shadow(0 0 14px rgba(243, 156, 18, 0.9)); }
-      50% { transform: scale(0.95, 1.05) rotate(-2deg); opacity: 0.9; filter: drop-shadow(0 0 8px rgba(207, 113, 31, 0.7)); }
-      75% { transform: scale(1.04, 0.98) rotate(1.5deg); opacity: 0.98; filter: drop-shadow(0 0 12px rgba(235, 152, 78, 0.8)); }
-    }
-    .flame-animation { animation: flameFlicker 1.8s infinite ease-in-out; transform-origin: bottom center; }
   </style>
 </head>
-<body class="antialiased min-h-screen bg-[#FBF9F5]">
+<body class="bg-[#FAF7F2] text-[#2D231E] min-h-screen py-8 px-4 sm:px-6">
 
-  <div id="appContainer">
-    <!-- Renderizado dinamicamente via app.js -->
-  </div>
-
-  <!-- MODAL DO TUTOR PARA EDITAR CONTATOS (CÃO VIVO) -->
-  <div id="modalEdicaoTutor" class="fixed inset-0 z-50 bg-black/80 backdrop-blur-sm hidden flex items-center justify-center p-4">
-    <div class="bg-white max-w-md w-full rounded-3xl p-6 shadow-2xl space-y-4" onclick="event.stopPropagation()">
-      <div class="flex justify-between items-center border-b border-stone-200 pb-3">
-        <h3 class="font-bold text-[#384852] text-sm flex items-center gap-2">
-          <span>⚙️</span> Atualizar Meus Telefones e Informações
-        </h3>
-        <button onclick="fecharModalEdicao()" class="text-stone-400 hover:text-stone-700 text-lg font-bold">&times;</button>
+  <div class="max-w-6xl mx-auto space-y-8">
+    
+    <!-- CABEÇALHO DO GERADOR -->
+    <header class="bg-gradient-to-r from-[#740568] via-[#520349] to-[#8C077E] text-white p-6 md:p-8 rounded-3xl shadow-xl border-2 border-amber-400/80 flex flex-wrap items-center justify-between gap-4">
+      <div class="flex items-center gap-4">
+        <div class="w-14 h-14 rounded-2xl overflow-hidden border-2 border-amber-300 shadow-lg bg-[#FFD700] p-0.5 flex-shrink-0">
+          <img src="logo_terranova.png" alt="Terranova Pet" class="w-full h-full object-cover rounded-xl">
+        </div>
+        <div>
+          <span class="text-xs font-bold text-amber-300 uppercase tracking-widest">Painel Administrativo &bull; Terranova Pet</span>
+          <h1 class="text-2xl md:text-3xl font-black tracking-tight text-amber-100">Gerador de Páginas &amp; Tags</h1>
+          <p class="text-xs text-amber-200/80 mt-0.5">Crie Coleiras Inteligentes, Posts no Diário Social ou Memoriais Solenes</p>
+        </div>
       </div>
 
-      <form onsubmit="salvarEdicaoTutor(event)" class="space-y-3 text-xs">
-        <div>
-          <label class="block font-semibold text-stone-700 mb-1">Telefone Principal (Ligação Direta) *</label>
-          <input type="tel" id="editTelefone" required class="w-full bg-[#FAF7F2] border border-[#DDD4C5] rounded-xl px-3 py-2 text-stone-800 focus:outline-none focus:border-[#E67E22]">
-        </div>
+      <div class="flex items-center gap-2.5">
+        <span class="px-4 py-2 bg-black/40 border border-amber-300/50 text-amber-200 rounded-full text-xs font-bold shadow-md flex items-center gap-1.5">
+          <span>🔒</span>
+          <span>Acesso Interno Terranova Pet</span>
+        </span>
+      </div>
+    </header>
 
-        <div>
-          <label class="block font-semibold text-stone-700 mb-1">WhatsApp (DDD + Número) *</label>
-          <input type="tel" id="editWhatsapp" required placeholder="Ex: 38998124455" class="w-full bg-[#FAF7F2] border border-[#DDD4C5] rounded-xl px-3 py-2 text-stone-800 focus:outline-none focus:border-[#E67E22]">
-        </div>
-
-        <div>
-          <div class="flex items-center justify-between mb-1">
-            <label class="font-semibold text-stone-700">Endereço do Pet</label>
-            <label class="flex items-center gap-1.5 cursor-pointer text-[11px] text-stone-500">
-              <input type="checkbox" id="editExibirEndereco" class="rounded text-[#E67E22] focus:ring-0">
-              <span>Exibir na Tag?</span>
-            </label>
+    <!-- ========================================================================= -->
+    <!-- OS 3 BOTÕES DE DESTINO (COLEIRA, REDE SOCIAL E MEMORIAL) -->
+    <!-- ========================================================================= -->
+    <div class="bg-white p-4 sm:p-5 rounded-3xl border-2 border-amber-300/80 shadow-md">
+      <span class="block text-center text-xs font-extrabold uppercase tracking-wider text-stone-500 mb-3">
+        1. Escolha o Destino da Página que Você Deseja Criar:
+      </span>
+      
+      <div class="grid grid-cols-1 sm:grid-cols-3 gap-3.5 max-w-3xl mx-auto">
+        
+        <!-- BOTÃO 1: COLEIRA / IDENTIFICAÇÃO (PET VIVO) -->
+        <button type="button" onclick="selecionarModo('coleira')" id="btnModoColeira" class="p-4 rounded-2xl border-2 border-stone-200 hover:border-amber-400 bg-stone-50 text-stone-700 flex flex-col items-center justify-between text-center gap-2 transition duration-200 group">
+          <div class="w-12 h-12 rounded-2xl bg-amber-100 text-[#E67E22] flex items-center justify-center text-2xl group-hover:scale-105 transition">
+            🏷️
           </div>
-          <input type="text" id="editEndereco" placeholder="Rua, Bairro, Cidade..." class="w-full bg-[#FAF7F2] border border-[#DDD4C5] rounded-xl px-3 py-2 text-stone-800 focus:outline-none focus:border-[#E67E22]">
-          <p class="text-[10px] text-stone-400 mt-0.5">Se desmarcado, apenas seu telefone e WhatsApp serão exibidos para quem encontrar o pet.</p>
-        </div>
+          <div>
+            <h4 class="font-black text-sm text-[#384852]">Coleira Inteligente</h4>
+            <p class="text-[11px] text-stone-500 font-medium mt-0.5">Tag QR Code de Identificação &amp; Proteção</p>
+          </div>
+          <span class="text-[10px] font-bold px-2.5 py-0.5 rounded-full bg-stone-200 text-stone-700">Pet Vivo</span>
+        </button>
 
-        <div>
-          <label class="block font-semibold text-stone-700 mb-1">Cuidados Especiais / Alergias / Medicamentos</label>
-          <textarea id="editCuidados" rows="2" placeholder="Ex: É dócil, toma remédio diário, tem alergia..." class="w-full bg-[#FAF7F2] border border-[#DDD4C5] rounded-xl px-3 py-2 text-stone-800 focus:outline-none focus:border-[#E67E22]"></textarea>
-        </div>
+        <!-- BOTÃO 2: REDE SOCIAL & DIÁRIO DOS PETS VIVOS -->
+        <button type="button" onclick="selecionarModo('social')" id="btnModoSocial" class="p-4 rounded-2xl border-2 border-amber-400 bg-amber-50 text-[#740568] flex flex-col items-center justify-between text-center gap-2 transition duration-200 group shadow-sm ring-2 ring-amber-400/40">
+          <div class="w-12 h-12 rounded-2xl bg-gradient-to-tr from-amber-400 to-yellow-200 text-[#740568] flex items-center justify-center text-2xl group-hover:scale-105 transition">
+            📸
+          </div>
+          <div>
+            <h4 class="font-black text-sm text-[#740568]">Rede Social &amp; Diário</h4>
+            <p class="text-[11px] text-stone-600 font-medium mt-0.5">Feed de Fotos, Aventuras &amp; Patinhas</p>
+          </div>
+          <span class="text-[10px] font-black px-2.5 py-0.5 rounded-full bg-amber-400 text-[#740568]">Mural Pet Vivo</span>
+        </button>
 
-        <div>
-          <label class="block font-semibold text-stone-700 mb-1">Recompensa (Opcional)</label>
-          <input type="text" id="editRecompensa" placeholder="Ex: Recompensa-se com gratidão" class="w-full bg-[#FAF7F2] border border-[#DDD4C5] rounded-xl px-3 py-2 text-stone-800 focus:outline-none focus:border-[#E67E22]">
-        </div>
+        <!-- BOTÃO 3: MEMORIAL DE AMOR (ESTRELINHA NO CÉU) -->
+        <button type="button" onclick="selecionarModo('memorial')" id="btnModoMemorial" class="p-4 rounded-2xl border-2 border-stone-200 hover:border-amber-400 bg-stone-50 text-stone-700 flex flex-col items-center justify-between text-center gap-2 transition duration-200 group">
+          <div class="w-12 h-12 rounded-2xl bg-stone-200 text-stone-700 flex items-center justify-center text-2xl group-hover:scale-105 transition">
+            🕊️
+          </div>
+          <div>
+            <h4 class="font-black text-sm text-[#384852]">Memorial de Amor</h4>
+            <p class="text-[11px] text-stone-500 font-medium mt-0.5">Homenagem Póstuma, Vídeo &amp; Certificado</p>
+          </div>
+          <span class="text-[10px] font-bold px-2.5 py-0.5 rounded-full bg-stone-200 text-stone-700">Estrelinha</span>
+        </button>
 
-        <div class="pt-2 flex justify-end gap-2">
-          <button type="button" onclick="fecharModalEdicao()" class="px-4 py-2 rounded-xl border border-stone-300 text-stone-600 font-semibold">Cancelar</button>
-          <button type="submit" class="px-5 py-2 rounded-xl bg-[#E67E22] text-white font-bold hover:bg-[#CF711F]">Salvar Alterações</button>
-        </div>
-      </form>
+      </div>
     </div>
-  </div>
 
-  <script src="app.js"></script>
-  <script>
-    let petAtual = null;
-
-    window.addEventListener("DOMContentLoaded", () => {
-      const params = new URLSearchParams(window.location.search);
-      const petId = (params.get("id") || params.get("pet") || params.get("m") || "TN-THOR-3620").toLowerCase().trim();
+    <!-- FORMULÁRIO PRINCIPAL DE ENTRADA DE DADOS -->
+    <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
       
-      let lista = [];
-      try { lista = JSON.parse(localStorage.getItem("terranova_pets_store_v3")) || []; } catch(e) {}
-      
-      petAtual = lista.find(p => 
-        (p.id && p.id.toLowerCase() === petId) || 
-        (p.nfcCode && p.nfcCode.toLowerCase() === petId) || 
-        (p.nome && p.nome.toLowerCase() === petId)
-      );
-      
-      if (!petAtual && typeof TerranovaApp !== "undefined" && TerranovaApp.getPets) {
-        petAtual = TerranovaApp.getPetById(petId) || TerranovaApp.getPets()[0];
-      }
+      <!-- COLUNA DA ESQUERDA: FORMULÁRIO -->
+      <div class="lg:col-span-7 bg-white rounded-3xl p-6 md:p-8 border border-stone-200 shadow-xl space-y-6">
+        
+        <div class="border-b border-stone-200 pb-3 flex items-center justify-between">
+          <h3 class="font-black text-base text-[#384852] flex items-center gap-2" id="tituloSecaoForm">
+            <span>📸</span> Formulário da Rede Social &amp; Diário Pet
+          </h3>
+          <span class="text-[11px] text-amber-800 bg-amber-100 font-bold px-3 py-1 rounded-full" id="tagModoBadge">
+            Rede Social Pet
+          </span>
+        </div>
 
-      if (!petAtual) {
-        petAtual = {
-          id: petId,
-          status: "vivo",
-          tipo: "coleira",
-          nome: "Thor",
-          raca: "Golden Retriever",
-          nfcCode: "TN-THOR-3620",
-          tutorNome: "Família Miranda",
-          tutorTelefone: "(38) 99812-4455",
-          tutorWhatsapp: "5538998124455",
-          fotoPrincipal: "https://images.unsplash.com/photo-1552053831-71594a27632d?auto=format&fit=crop&w=400&q=80",
-          exibirEndereco: true,
-          tutorEndereco: "Rua das Flores, 123 - Montes Claros - MG",
-          cuidadosMedicos: "Muito dócil, atende pelo nome. Se me encontrar, avise minha família!"
-        };
-      }
-
-      // Garante que a página da tag de coleira sempre renderize os dados de identificação e resgate
-      renderizarPaginaColeira(petAtual);
-    });
-
-    function renderizarPaginaColeira(pet) {
-      const container = document.getElementById("appContainer");
-      document.title = `Terranova Pet — Tag de Identificação de ${pet.nome}`;
-      document.body.className = "antialiased min-h-screen bg-[#F4F6F8]";
-
-      const whatsDigits = (pet.tutorWhatsapp || pet.tutorTelefone || "").replace(/\D/g, "");
-      const telDigits = (pet.tutorTelefone || "").replace(/\D/g, "");
-      const mensagemWhats = encodeURIComponent(`Olá! Encontrei o(a) ${pet.nome} através da tag da coleira Terranova Pet. Estou com ele(a) aqui, podemos combinar a entrega?`);
-
-      container.innerHTML = `
-        <div class="max-w-md mx-auto min-h-screen bg-white shadow-2xl flex flex-col justify-between relative pb-12">
+        <form id="formPrincipal" onsubmit="gerarPaginaFinal(event)" class="space-y-6 text-xs">
           
-          <!-- CABEÇALHO DO PLANO TERRANOVA PET COM LOGO E NAVEGAÇÃO INTEGRADA -->
-          <header class="bg-gradient-to-r from-amber-400 via-yellow-400 to-amber-500 text-[#740568] p-3.5 flex items-center justify-between shadow-md border-b-2 border-[#740568]/20">
-            <div class="flex items-center gap-2.5">
-              <div class="w-10 h-10 rounded-xl overflow-hidden border border-[#740568]/30 bg-[#740568] p-0.5 flex-shrink-0 shadow-sm">
-                <img src="logo_terranova.png" alt="Terranova Pet" class="w-full h-full object-cover rounded-lg">
-              </div>
+          <!-- ========================================================================= -->
+          <!-- EDITOR DE FOTOS, VÍDEOS & LEGENDAS INDIVIDUAIS -->
+          <!-- ========================================================================= -->
+          <div class="space-y-4 bg-stone-50 p-5 rounded-3xl border-2 border-amber-300/70">
+            <div class="flex items-center justify-between">
               <div>
-                <h1 class="font-bold text-sm tracking-tight leading-tight text-[#740568]">Terranova Pet</h1>
-                <p class="text-[10px] text-[#740568]/80 font-bold">Tag Inteligente &bull; Identificação e Resgate</p>
+                <label class="block font-black text-stone-800 text-sm">
+                  📸 Fotos, Vídeos &amp; Legendas das Aventuras
+                </label>
+                <p class="text-[11px] text-stone-500 font-medium">
+                  Suba as fotos/vídeos e escreva a legenda personalizada de cada aventura abaixo
+                </p>
               </div>
-            </div>
-            <div class="flex items-center">
-              <span class="px-3 py-1 rounded-full bg-[#740568] text-yellow-300 font-black text-[10px] uppercase tracking-wider shadow-xs">
-                🚨 Pet Perdido
+              <span id="contadorFotos" class="text-[11px] font-black text-[#740568] bg-amber-200 px-3 py-1 rounded-full">
+                0 mídias
               </span>
             </div>
-          </header>
 
-          <main class="p-5 space-y-5 flex-1">
-            
-            <!-- ALERTA VISUAL DE LOCALIZAÇÃO E RESGATE -->
-            <div class="bg-purple-50/70 border-2 border-[#740568]/40 rounded-2xl p-4 text-center shadow-sm">
-              <span class="inline-block text-2xl mb-1">📢</span>
-              <h2 class="text-sm font-black text-[#740568] uppercase tracking-wide">
-                Se você me encontrou, avise minha família!
-              </h2>
-              <p class="text-xs text-stone-600 mt-0.5 leading-relaxed">
-                Estou longe de casa e com saudades. Por favor, entre em contato imediatamente pelos botões abaixo:
+            <!-- Botão de Upload -->
+            <label for="inputFotosMultiplas" class="group flex flex-col items-center justify-center p-6 border-2 border-dashed border-amber-400 hover:border-amber-500 bg-white hover:bg-amber-50/50 rounded-2xl cursor-pointer transition text-center shadow-xs">
+              <input type="file" id="inputFotosMultiplas" multiple accept="image/*,video/*" onchange="processarMidiasMultiplas(event)" class="hidden">
+              
+              <div class="w-12 h-12 rounded-2xl bg-amber-100 text-[#8C077E] flex items-center justify-center text-2xl group-hover:scale-110 transition mb-2">
+                📷
+              </div>
+              <p class="text-sm font-black text-[#740568]">
+                Clique aqui para adicionar fotos ou vídeos
               </p>
+              <p class="text-xs text-stone-500 mt-0.5">
+                Pode selecionar do celular ou computador &bull; Você poderá editar a legenda de cada uma
+              </p>
+            </label>
+
+            <!-- LISTA EDITÁVEL DE FOTOS & LEGENDAS INDIVIDUAIS -->
+            <div id="listaEditorMidias" class="space-y-3 pt-2">
+              <!-- Cards gerados via JS com campo de legenda para cada foto -->
+            </div>
+          </div>
+
+          <!-- NOME E RAÇA -->
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+            <div>
+              <label class="block font-bold text-stone-700 mb-1">Nome do Pet *</label>
+              <input type="text" id="campoNome" required value="Thor" placeholder="Ex: Bob, Mel, Thor..." class="w-full bg-[#FAF7F2] border border-stone-300 rounded-xl px-3.5 py-2.5 text-sm font-semibold text-stone-800 focus:outline-none focus:border-amber-500">
+            </div>
+            <div>
+              <label class="block font-bold text-stone-700 mb-1">Espécie / Raça *</label>
+              <input type="text" id="campoRaca" required value="Golden Retriever" placeholder="Ex: Golden, Poodle, SRD..." class="w-full bg-[#FAF7F2] border border-stone-300 rounded-xl px-3.5 py-2.5 text-sm font-semibold text-stone-800 focus:outline-none focus:border-amber-500">
+            </div>
+          </div>
+
+          <!-- TUTOR, E-MAIL, SENHA E CIDADE -->
+          <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3">
+            <div>
+              <label class="block font-bold text-stone-700 mb-1">Nome do Tutor(a) *</label>
+              <input type="text" id="campoTutorNome" required value="Família Miranda" placeholder="Nome do proprietário" class="w-full bg-[#FAF7F2] border border-stone-300 rounded-xl px-3.5 py-2.5 text-sm font-semibold text-stone-800 focus:outline-none focus:border-amber-500">
+            </div>
+            <div>
+              <label class="block font-bold text-stone-700 mb-1">E-mail do Tutor(a) *</label>
+              <input type="email" id="campoTutorEmail" required value="familia.miranda@gmail.com" placeholder="seu.email@exemplo.com" class="w-full bg-[#FAF7F2] border border-stone-300 rounded-xl px-3.5 py-2.5 text-sm font-semibold text-stone-800 focus:outline-none focus:border-amber-500">
+            </div>
+            <div>
+              <label class="block font-bold text-stone-700 mb-1">Senha de Acesso *</label>
+              <input type="password" id="campoTutorSenha" required value="123" placeholder="Sua senha" class="w-full bg-[#FAF7F2] border border-stone-300 rounded-xl px-3.5 py-2.5 text-sm font-semibold text-stone-800 focus:outline-none focus:border-amber-500">
+            </div>
+            <div>
+              <label class="block font-bold text-stone-700 mb-1">Cidade / Estado</label>
+              <input type="text" id="campoCidade" value="Montes Claros - MG" placeholder="Cidade onde mora" class="w-full bg-[#FAF7F2] border border-stone-300 rounded-xl px-3.5 py-2.5 text-sm font-semibold text-stone-800 focus:outline-none focus:border-amber-500">
+            </div>
+          </div>
+
+          <!-- ======================================================= -->
+          <!-- BLOCO A: REDE SOCIAL & DIÁRIO PET (PET VIVO) -->
+          <!-- ======================================================= -->
+          <div id="blocoCamposSocial" class="space-y-4 p-5 rounded-2xl bg-amber-50/80 border border-amber-300">
+            <div class="flex items-center justify-between">
+              <span class="font-black text-[#520349] text-xs uppercase tracking-wide">Publicação no Diário Social</span>
+              <span class="text-[10px] text-amber-900 bg-amber-200 px-2 py-0.5 rounded-full font-bold">Comunidade Pet</span>
             </div>
 
-            <!-- FOTO DO PET & NOME -->
-            <div class="text-center space-y-2.5">
-              <div class="w-36 h-36 rounded-full mx-auto p-1.5 border-4 border-[#740568] bg-white shadow-xl overflow-hidden">
-                <img src="${pet.fotoPrincipal || 'https://images.unsplash.com/photo-1552053831-71594a27632d?auto=format&fit=crop&w=400&q=80'}" alt="${pet.nome}" class="w-full h-full object-cover rounded-full">
+            <div>
+              <label class="block font-bold text-stone-800 mb-1">Legenda Principal do Post de Hoje:</label>
+              <textarea id="campoLegendaSocial" rows="3" placeholder="Conte como foi o dia, o passeio, uma travessura ou momento especial..." class="w-full bg-white border border-stone-300 rounded-xl p-3 text-stone-800 focus:outline-none focus:border-amber-500 font-medium">Hoje foi dia de muita diversão no parque! Corremos atrás da bolinha e ganhamos picolé canino. É puro amor e alegria! 🐶💛 #GoldenRetriever #AlegriaPet</textarea>
+            </div>
+          </div>
+
+          <!-- ======================================================= -->
+          <!-- BLOCO B: COLEIRA DE IDENTIFICAÇÃO (ANTI-PERDA) -->
+          <!-- ======================================================= -->
+          <div id="blocoCamposColeira" class="hidden space-y-4 p-5 rounded-2xl bg-blue-50/70 border border-blue-200">
+            <div class="flex items-center justify-between">
+              <span class="font-black text-blue-900 text-xs uppercase tracking-wide">Contatos de Emergência &amp; Identificação (Anti-Perda)</span>
+              <span class="text-[10px] text-blue-900 bg-blue-100 px-2.5 py-0.5 rounded-full font-bold">Tag de Proteção</span>
+            </div>
+
+            <!-- CÓDIGO DA TAG PARA LINKAR -->
+            <div>
+              <label class="block font-bold text-stone-700 mb-1">Código / Número da Tag da Coleira (NFC/QR Code) *</label>
+              <input type="text" id="campoNfc" required value="TN-THOR-3620" placeholder="Ex: TN-0012, TN-THOR-3620" class="w-full bg-white border border-stone-300 rounded-xl px-3.5 py-2.5 text-sm font-mono font-bold text-blue-800 focus:outline-none focus:border-blue-500">
+              <p class="text-[10px] text-stone-500 mt-1">Este código é o identificador único gravado na medalha/plaquinha do pet.</p>
+            </div>
+
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+              <div>
+                <label class="block font-bold text-stone-700 mb-1">Telefone Principal (Ligação Direta) *</label>
+                <input type="tel" id="campoTelefone" value="(38) 99812-4455" class="w-full bg-white border border-stone-300 rounded-xl px-3.5 py-2 text-stone-800 focus:outline-none focus:border-blue-500">
               </div>
               <div>
-                <h3 class="text-3xl font-black font-poetic text-amber-500 tracking-tight leading-none">${pet.nome}</h3>
-                <p class="text-xs text-stone-500 font-bold mt-1">${pet.raca || "Companheiro Leal"}</p>
-                <div class="mt-1.5">
-                  <span class="inline-block bg-purple-50 text-[#740568] px-3 py-1 rounded-full text-xs font-mono font-bold border border-purple-200">
-                    Tag NFC: <strong>${pet.nfcCode || ("TN-" + (pet.nome || "PET").toUpperCase() + "-3620")}</strong>
+                <label class="block font-bold text-stone-700 mb-1">WhatsApp de Emergência *</label>
+                <input type="tel" id="campoWhatsapp" value="5538998124455" class="w-full bg-white border border-stone-300 rounded-xl px-3.5 py-2 text-stone-800 focus:outline-none focus:border-blue-500">
+              </div>
+            </div>
+
+            <!-- ENDEREÇO RESIDENCIAL COM OPÇÃO DE MOSTRAR OU NÃO NA TELA DA TAG -->
+            <div class="bg-white p-4 rounded-xl border border-stone-200 space-y-2.5">
+              <div class="flex items-center justify-between">
+                <label class="font-bold text-stone-800 text-xs">Endereço Residencial para Devolução:</label>
+                
+                <!-- CAIXINHA DE HABILITAR / DESABILITAR EXIBIÇÃO NA TAG -->
+                <label class="flex items-center gap-2 cursor-pointer bg-stone-100 hover:bg-stone-200 px-3 py-1 rounded-xl border border-stone-300 transition select-none">
+                  <input type="checkbox" id="campoExibirEndereco" checked class="w-4 h-4 text-amber-500 rounded focus:ring-0 accent-amber-500 cursor-pointer">
+                  <span class="font-bold text-xs text-stone-800">Mostrar na Tag</span>
+                </label>
+              </div>
+              
+              <input type="text" id="campoEndereco" value="Rua das Flores, 123 - Bairro Ibituruna, Montes Claros - MG" placeholder="Rua, número, bairro, cidade..." class="w-full bg-stone-50 border border-stone-300 rounded-xl px-3.5 py-2 text-xs text-stone-800 focus:outline-none focus:border-blue-500 font-medium">
+              <p class="text-[10px] text-stone-500">Se desmarcado, quem encontrar o pet verá apenas seus botões de ligação e WhatsApp, preservando o endereço.</p>
+            </div>
+
+            <div>
+              <label class="block font-bold text-stone-700 mb-1">Cuidados Médicos / Alergias / Temperamento</label>
+              <input type="text" id="campoCuidados" value="Toma remédio para alergia. É muito dócil!" class="w-full bg-white border border-stone-300 rounded-xl px-3.5 py-2 text-stone-800 focus:outline-none">
+            </div>
+          </div>
+
+          <!-- ======================================================= -->
+          <!-- BLOCO C: MEMORIAL DE AMOR (PÓS-MORTE / ESTRELINHA) -->
+          <!-- ======================================================= -->
+          <div id="blocoCamposMemorial" class="hidden space-y-4 p-5 rounded-2xl bg-amber-50/70 border border-amber-300">
+            <div class="flex items-center justify-between">
+              <span class="font-black text-[#520349] text-xs uppercase tracking-wide">Homenagem Póstuma do Memorial</span>
+              <span class="text-[10px] text-amber-900 bg-amber-200 px-2 py-0.5 rounded-full font-bold">Estrelinha</span>
+            </div>
+
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+              <div>
+                <label class="block font-bold text-stone-700 mb-1">Ano de Chegada (Nascimento) *</label>
+                <input type="text" id="campoNasc" value="2012" class="w-full bg-white border border-stone-300 rounded-xl px-3.5 py-2 text-stone-800 focus:outline-none">
+              </div>
+              <div>
+                <label class="block font-bold text-stone-700 mb-1">Ano de Despedida *</label>
+                <input type="text" id="campoPartida" value="2026" class="w-full bg-white border border-stone-300 rounded-xl px-3.5 py-2 text-stone-800 focus:outline-none">
+              </div>
+            </div>
+
+            <!-- CARTA DO ANJINHO (COM GERADOR DE IA SENSÍVEL) -->
+            <div class="space-y-2">
+              <div class="flex flex-wrap items-center justify-between gap-2">
+                <label class="block font-bold text-stone-700">Carta do Anjinho (Mensagem consoladora do pet) *</label>
+                <button type="button" onclick="gerarCartaAnjinhoIa()" class="px-3 py-1.5 bg-gradient-to-r from-amber-500 to-[#9F0C8F] text-white rounded-xl text-xs font-black shadow-xs hover:brightness-110 flex items-center gap-1.5 transition active:scale-95">
+                  <span>✨</span>
+                  <span>Gerar Carta do Anjinho com IA</span>
+                </button>
+              </div>
+              <textarea id="campoCartaAnjinho" rows="4" class="w-full bg-white border border-stone-300 rounded-xl p-3 text-xs text-stone-800 focus:outline-none focus:border-amber-500 font-medium leading-relaxed">Mãe, Pai... Por favor, não chorem com tristeza ao pensar em mim. Sei que o silêncio da casa parece grande agora, mas quero que saibam: eu parti sentindo todo o amor do mundo! Cada carinho atrás da orelha, cada caminhada no entardecer e cada noite quentinha aos pés da cama foram os capítulos mais preciosos da minha vida. Estou correndo livre no paraíso e guardando vocês para sempre no meu coração!</textarea>
+            </div>
+
+            <div>
+              <label class="block font-bold text-stone-700 mb-1">Histórias e Lembranças Inesquecíveis:</label>
+              <textarea id="campoHistorias" rows="3" class="w-full bg-white border border-stone-300 rounded-xl p-3 text-stone-800 focus:outline-none">Ele adorava correr pelo quintal com a bolinha amarela e roubava meias só para ver a gente correr atrás dele brincando.</textarea>
+            </div>
+          </div>
+
+          <!-- BOTÃO DE ENVIO PRINCIPAL -->
+          <button type="submit" id="btnSubmitPrincipal" class="w-full py-4 rounded-2xl bg-gradient-to-r from-amber-500 via-amber-400 to-yellow-300 hover:brightness-105 text-[#740568] font-black text-sm shadow-xl transition active:scale-95 flex items-center justify-center gap-2">
+            <span>✨</span>
+            <span id="labelSubmitBtn">Publicar na Rede Social &amp; Diário Pet</span>
+          </button>
+
+        </form>
+
+      </div>
+
+      <!-- COLUNA DA DIREITA: VISUALIZADOR DA TELA QUE SERÁ GERADA (SMARTPHONE MOCKUP) -->
+      <div class="lg:col-span-5 space-y-6">
+        
+        <div class="bg-white rounded-3xl p-5 border-2 border-amber-300 shadow-xl space-y-4">
+          <div class="flex items-center justify-between border-b border-stone-100 pb-3">
+            <span class="text-xs font-black uppercase tracking-wider text-[#520349] flex items-center gap-1.5">
+              <span>📱</span>
+              <span>Visualizador da Tela que Será Gerada</span>
+            </span>
+            <span id="badgePreviewModo" class="text-[10px] bg-emerald-100 text-emerald-800 font-bold px-2 py-0.5 rounded-full">
+              Tag Coleira 24h
+            </span>
+          </div>
+
+          <!-- SIMULADOR INTERATIVO DE SMARTPHONE (EXATAMENTE COMO ANTES) -->
+          <div class="max-w-[330px] mx-auto rounded-[36px] bg-stone-900 p-3 shadow-2xl border-4 border-stone-800 relative">
+            
+            <!-- Alto-falante do Smartphone -->
+            <div class="w-14 h-1 bg-stone-700 rounded-full mx-auto mb-2"></div>
+
+            <!-- TELA DO SMARTPHONE -->
+            <div class="bg-white rounded-[24px] overflow-hidden text-left border border-stone-200">
+              
+              <!-- ========================================================= -->
+              <!-- TELA 1: TAG DE COLEIRA INTELIGENTE (MODO COLEIRA) -->
+              <!-- ========================================================= -->
+              <div id="mockupTelaColeira">
+                <!-- TOPO DA TAG: CABEÇALHO ROXO #740568 TERRANOVA -->
+                <div class="bg-gradient-to-r from-[#740568] via-[#520349] to-[#8C077E] text-white p-3 flex items-center justify-between shadow-xs border-b border-amber-400/80">
+                  <div class="flex items-center gap-2">
+                    <img src="logo_terranova.png" class="w-5 h-5 rounded-full border border-amber-300">
+                    <div>
+                      <span class="font-black text-xs leading-tight block text-amber-200">Terranova Pet</span>
+                      <span class="text-[8px] text-amber-100/80 leading-none">Tag de Proteção</span>
+                    </div>
+                  </div>
+                  <span class="text-[9px] bg-white/20 px-2 py-0.5 rounded-full font-bold uppercase tracking-wider text-white">
+                    Pet Protegido
                   </span>
                 </div>
+
+                <div class="p-3.5 space-y-3">
+                  <!-- CARD DE ALERTA DE RESGATE -->
+                  <div class="bg-purple-50/60 border border-[#740568]/40 rounded-xl p-2.5 text-center shadow-xs">
+                    <span class="text-sm">📢</span>
+                    <h4 class="text-[10px] font-black text-[#740568] uppercase leading-tight mt-0.5">
+                      Se você me encontrou, avise minha família!
+                    </h4>
+                    <p class="text-[9px] text-stone-600 mt-0.5 leading-tight">
+                      Estou com saudades de casa. Ligue pelos botões abaixo:
+                    </p>
+                  </div>
+
+                  <!-- FOTO E DADOS DO PET -->
+                  <div class="text-center space-y-1.5">
+                    <div class="w-20 h-20 rounded-full mx-auto p-1 border-2 border-[#740568] shadow-sm overflow-hidden bg-white">
+                      <img id="mockupFotoPet" src="https://images.unsplash.com/photo-1552053831-71594a27632d?auto=format&fit=crop&w=400&q=80" class="w-full h-full object-cover rounded-full">
+                    </div>
+                    <div>
+                      <h3 id="mockupNomePet" class="text-base font-black font-poetic text-amber-500 leading-tight">Thor</h3>
+                      <p id="mockupRacaPet" class="text-[10px] text-stone-500 font-semibold">Golden Retriever</p>
+                      <span class="inline-block mt-0.5 bg-purple-50 text-[#740568] px-2 py-0.2 rounded-full text-[9px] font-mono border border-purple-200">
+                        Tag NFC: <strong id="mockupCodigoNfc">TN-THOR-3620</strong>
+                      </span>
+                    </div>
+                  </div>
+
+                  <!-- BOTÕES DE RESGATE RÁPIDO -->
+                  <div class="space-y-1.5">
+                    <a id="mockupBtnLigar" href="tel:38998124455" class="w-full py-2 px-2.5 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white font-black text-[10px] shadow-xs flex items-center justify-center gap-1.5">
+                      <span>📞</span>
+                      <span>Ligar para o Tutor: <span id="mockupTelTexto">(38) 99812-4455</span></span>
+                    </a>
+
+                    <a id="mockupBtnWhats" href="https://api.whatsapp.com/send?phone=5538998124455" target="_blank" class="w-full py-2 px-2.5 rounded-xl bg-[#25D366] hover:bg-[#1EBE5D] text-white font-black text-[10px] shadow-xs flex items-center justify-center gap-1.5">
+                      <span>💬</span>
+                      <span>Chamar no WhatsApp do Tutor</span>
+                    </a>
+
+                    <div class="w-full py-1.5 px-2 rounded-xl bg-white border border-[#E67E22] text-[#E67E22] font-bold text-[9px] flex items-center justify-center gap-1">
+                      <span>📍</span>
+                      <span>Enviar Minha Localização GPS para o Dono</span>
+                    </div>
+                  </div>
+
+                  <!-- QUADRO DE INFORMAÇÕES DE CONTATO E ENDEREÇO -->
+                  <div class="bg-stone-50 border border-stone-200 rounded-xl p-2.5 text-[10px] space-y-1.5">
+                    <div class="flex justify-between border-b border-stone-200 pb-1">
+                      <span class="text-stone-500">Tutor:</span>
+                      <strong id="mockupTutorNome" class="text-stone-800">Família Miranda</strong>
+                    </div>
+
+                    <!-- Bloco de Endereço (Mostra ou Oculta Conforme Checkbox) -->
+                    <div id="mockupBlocoEndereco" class="border-b border-stone-200 pb-1">
+                      <span class="text-stone-500 block">Endereço Residencial:</span>
+                      <strong id="mockupEnderecoTexto" class="text-stone-800 text-[9px] leading-tight block">Rua das Flores, 123 - Montes Claros - MG</strong>
+                    </div>
+
+                    <!-- Cuidados Especiais -->
+                    <div id="mockupBlocoCuidados">
+                      <span class="text-[#E67E22] font-bold block">⚠️ Cuidados Especiais:</span>
+                      <p id="mockupCuidadosTexto" class="text-stone-600 text-[9px] mt-0.5 leading-tight">Muito dócil, toma remédio diário.</p>
+                    </div>
+                  </div>
+
+                  <!-- CENTRAL 24H TERRANOVA PET -->
+                  <div class="p-1.5 bg-orange-50 border border-orange-200 rounded-lg text-center text-[8px] text-stone-600">
+                    Dificuldade no contato? Ligue no plantão: <strong>(38) 99726-3620 (24h)</strong>
+                  </div>
+                </div>
+              </div>
+
+              <!-- ========================================================= -->
+              <!-- TELA 2: VISUALIZADOR DA PÁGINA DO PET NA REDE SOCIAL -->
+              <!-- ========================================================= -->
+              <div id="mockupTelaSocial" style="display: none;">
+                <!-- Cabeçalho Terranova Pet Social -->
+                <div class="bg-gradient-to-r from-[#740568] via-[#520349] to-[#8C077E] text-white p-2.5 flex items-center justify-between border-b border-amber-400/80">
+                  <div class="flex items-center gap-1.5">
+                    <img src="logo_terranova.png" class="w-5 h-5 rounded-full border border-amber-300">
+                    <div>
+                      <h5 class="font-black text-[10px] text-amber-200 leading-tight">Terranova Pet</h5>
+                      <p class="text-[8px] text-amber-100/80">Diario de Aventuras &amp; Comunidade Pet</p>
+                    </div>
+                  </div>
+                  <span class="text-[8px] bg-amber-400 text-[#740568] px-2 py-0.5 rounded-full font-black uppercase">
+                    Pet Vivo
+                  </span>
+                </div>
+
+                <!-- Capa & Foto do Perfil do Pet no Diário de Aventuras -->
+                <div class="relative bg-gradient-to-r from-[#520349] via-[#9F0C8F] to-amber-700 h-16 p-2">
+                  <div class="absolute -bottom-6 left-3 w-14 h-14 rounded-full p-0.5 bg-gradient-to-tr from-amber-400 to-yellow-300 border-2 border-white shadow-md overflow-hidden bg-white">
+                    <img id="mockupSocialFotoPet" src="https://images.unsplash.com/photo-1552053831-71594a27632d?auto=format&fit=crop&w=400&q=80" class="w-full h-full object-cover rounded-full">
+                  </div>
+                </div>
+
+                <!-- Informações do Perfil do Pet -->
+                <div class="pt-7 px-3 pb-3 space-y-2">
+                  <div class="flex items-start justify-between">
+                    <div>
+                      <div class="flex items-center gap-1">
+                        <h4 id="mockupSocialNomePet" class="font-black font-poetic text-sm text-amber-500 leading-tight">Thor</h4>
+                        <span class="text-[8px] bg-amber-100 text-amber-900 font-black px-1 py-0.2 rounded-full">✓</span>
+                      </div>
+                      <p id="mockupSocialRaca" class="text-[9px] text-stone-500 font-semibold">Golden Retriever &bull; Montes Claros</p>
+                      <p id="mockupSocialTutor" class="text-[9px] text-amber-800 font-bold">Tutor(a): Família Miranda</p>
+                    </div>
+                    <span class="text-[8px] bg-amber-100 text-amber-900 font-bold px-1.5 py-0.5 rounded-full">Diário Ativo</span>
+                  </div>
+
+                  <!-- Mini Estatísticas do Pet -->
+                  <div class="grid grid-cols-3 gap-1 py-1 border-y border-stone-200 text-center text-[8px] text-stone-500">
+                    <div><strong id="mockupSocialPostsCount" class="block font-black text-stone-800 text-[10px]">1</strong>Publicação</div>
+                    <div><strong class="block font-black text-amber-600 text-[10px]">34</strong>Patinhas</div>
+                    <div><strong class="block font-black text-emerald-600 text-[10px]">100%</strong>Leal</div>
+                  </div>
+
+                  <!-- Card do Diário de Aventuras (Post Atual do Pet) -->
+                  <div class="bg-stone-50 rounded-xl border border-stone-200 overflow-hidden shadow-xs">
+                    <div class="p-1.5 flex items-center justify-between text-[8px] text-stone-500 border-b border-stone-200">
+                      <span class="font-bold text-stone-800 flex items-center gap-1">
+                        <span>📖</span>
+                        <span>Diário de Aventuras</span>
+                      </span>
+                      <span class="text-[8px] text-stone-400">Hoje</span>
+                    </div>
+
+                    <!-- Foto Postada pelo Tutor -->
+                    <div class="w-full aspect-[4/3] bg-stone-900 overflow-hidden relative">
+                      <img id="mockupSocialPostFoto" src="https://images.unsplash.com/photo-1552053831-71594a27632d?auto=format&fit=crop&w=400&q=80" class="w-full h-full object-cover">
+                      <div class="absolute bottom-1.5 left-1.5 bg-black/60 px-2 py-0.5 rounded-full text-[8px] text-white font-bold">
+                        📸 Diário de Aventuras
+                      </div>
+                    </div>
+
+                    <div class="p-2 space-y-1">
+                      <div class="flex items-center gap-2 text-[9px] font-bold text-stone-700">
+                        <span class="flex items-center gap-1 text-amber-600"><span>🐾</span> <span>34 patinhas</span></span>
+                        <span class="flex items-center gap-1 text-stone-500"><span>💬</span> <span>2 comentários</span></span>
+                      </div>
+                      <p id="mockupSocialLegenda" class="text-[9px] text-stone-700 leading-tight">
+                        Curtindo um lindo dia com a família! 🐶💛
+                      </p>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <!-- ========================================================= -->
+              <!-- TELA 3: VISUALIZADOR DO MEMORIAL DAS ESTRELAS -->
+              <!-- ========================================================= -->
+              <div id="mockupTelaMemorial" style="display: none;">
+                <!-- Cabeçalho Memorial -->
+                <div class="bg-gradient-to-r from-[#740568] via-[#520349] to-[#8C077E] text-white p-2.5 flex items-center justify-between border-b border-amber-400">
+                  <div class="flex items-center gap-1.5">
+                    <img src="logo_terranova.png" class="w-5 h-5 rounded-full border border-amber-300">
+                    <h5 class="font-black text-[10px] text-amber-200 leading-tight">Terranova Memorial</h5>
+                  </div>
+                  <span class="text-[8px] bg-amber-400/20 text-amber-200 px-2 py-0.5 rounded-full font-bold uppercase">
+                    Estrelinha
+                  </span>
+                </div>
+
+                <!-- Foto com Auréola Dourada e Homenagem -->
+                <div class="p-3 text-center space-y-2 bg-gradient-to-b from-[#FFFDF9] to-amber-50/50">
+                  <div class="w-16 h-16 rounded-full mx-auto p-1 bg-gradient-to-tr from-[#8C077E] via-[#F59E0B] to-[#FEF08A] shadow-md border-2 border-white">
+                    <img id="mockupMemorialFotoPet" src="https://images.unsplash.com/photo-1552053831-71594a27632d?auto=format&fit=crop&w=400&q=80" class="w-full h-full object-cover rounded-full">
+                  </div>
+                  <div>
+                    <h4 id="mockupMemorialNomePet" class="font-black text-xs text-stone-900 leading-tight">Thor</h4>
+                    <p id="mockupMemorialAnos" class="text-[8px] text-amber-800 font-mono font-bold">2012 &mdash; 2026 &bull; Amor Eterno</p>
+                  </div>
+
+                  <div class="p-2 bg-white rounded-xl border border-amber-200 text-[8px] text-stone-600 italic leading-relaxed">
+                    &ldquo;Obrigado por tanto amor incondicional. Até o nosso reencontro na Ponte do Arco-Íris!&rdquo;
+                  </div>
+
+                  <div class="flex items-center justify-center gap-1 text-[9px] text-amber-700 font-bold">
+                    <span>🕯️</span>
+                    <span>1 vela acesa em memória</span>
+                  </div>
+                </div>
+              </div>
+
+            </div>
+
+            <!-- Botão Home Inferior do Smartphone -->
+            <div class="w-10 h-1 bg-stone-700 rounded-full mx-auto mt-2"></div>
+          </div>
+
+          <!-- LINK DIRETO, BOTÃO ABRIR E QR CODE -->
+          <div class="space-y-3 pt-2">
+            
+            <!-- Campo de Link com Botão Copiar -->
+            <div class="space-y-1">
+              <label class="block text-[11px] font-bold text-stone-700 text-left">Link Direto da Tag:</label>
+              <div class="flex items-center gap-1.5">
+                <input type="text" id="urlDisplay" readonly class="flex-1 bg-stone-100 border border-stone-300 rounded-xl px-2.5 py-2 text-xs font-mono font-semibold text-stone-700">
+                <button onclick="copiarUrl()" class="px-3 py-2 bg-stone-800 hover:bg-stone-900 text-white rounded-xl text-xs font-bold transition active:scale-95">
+                  Copiar
+                </button>
               </div>
             </div>
 
-            <!-- BOTÕES PRINCIPAIS DE AÇÃO IMEDIATA (LIGAR / WHATSAPP / GPS) -->
-            <div class="space-y-2.5 pt-1">
-              ${telDigits ? `
-                <a href="tel:${telDigits}" class="w-full py-3.5 px-4 rounded-2xl bg-emerald-600 hover:bg-emerald-700 text-white font-black text-sm shadow-md flex items-center justify-center gap-2 transition active:scale-98">
-                  <span class="text-lg">📞</span>
-                  <span>Ligar para o Tutor: ${pet.tutorTelefone}</span>
-                </a>
-              ` : ''}
-
-              ${whatsDigits ? `
-                <a href="https://api.whatsapp.com/send?phone=${whatsDigits}&text=${mensagemWhats}" target="_blank" class="w-full py-3.5 px-4 rounded-2xl bg-[#25D366] hover:bg-[#1EBE5D] text-white font-black text-sm shadow-md flex items-center justify-center gap-2 transition active:scale-98">
-                  <span class="text-lg">💬</span>
-                  <span>Chamar no WhatsApp do Tutor</span>
-                </a>
-              ` : ''}
-
-              <!-- BOTÃO DE ENVIAR LOCALIZAÇÃO GPS -->
-              <button type="button" onclick="enviarLocalizacaoGps('${whatsDigits}', '${pet.nome}')" class="w-full py-3 px-4 rounded-2xl bg-white border-2 border-[#E67E22] text-[#E67E22] hover:bg-amber-50 font-bold text-xs shadow-sm flex items-center justify-center gap-2 transition active:scale-98">
-                <span>📍</span>
-                <span>Enviar Minha Localização GPS para o Tutor</span>
-              </button>
-            </div>
-
-            <!-- INFORMAÇÕES ADICIONAIS DEFINIDAS PELO TUTOR -->
-            <div class="bg-stone-50 border border-stone-200 rounded-2xl p-4 space-y-2.5 text-xs">
-              
-              <div class="flex items-center justify-between border-b border-stone-200 pb-2">
-                <span class="text-stone-500 font-medium">Tutor(a) Responsável:</span>
-                <strong class="text-stone-800 font-bold">${pet.tutorNome || "Família Miranda"}</strong>
-              </div>
-
-              ${pet.exibirEndereco && pet.tutorEndereco ? `
-                <div class="border-b border-stone-200 pb-2">
-                  <span class="text-stone-500 font-medium block">Endereço Residencial:</span>
-                  <strong class="text-stone-800 font-semibold">${pet.tutorEndereco}</strong>
-                </div>
-              ` : `
-                <div class="border-b border-stone-200 pb-2 text-stone-500 italic text-[11px]">
-                  📍 O tutor optou por contato direto por telefone/WhatsApp.
-                </div>
-              `}
-
-              ${pet.cuidadosMedicos ? `
-                <div class="border-b border-stone-200 pb-2">
-                  <span class="text-[#E67E22] font-bold block mb-0.5">⚠️ Cuidados / Alergias / Temperamento:</span>
-                  <p class="text-stone-700">${pet.cuidadosMedicos}</p>
-                </div>
-              ` : ""}
-            </div>
-
-            <!-- CENTRAL DE ATENDIMENTO TERRANOVA PET -->
-            <div class="p-3 rounded-xl bg-orange-50 border border-orange-200 text-center text-[11px] text-stone-600">
-              <span>Dificuldade para contatar o tutor? Ligue para o suporte:</span><br>
-              <a href="tel:38997263620" class="text-[#E67E22] font-bold hover:underline">Central Terranova Pet: (38) 99726-3620</a>
-            </div>
-
-          </main>
-
-          <footer class="text-center pt-2 px-4">
-            <a href="gerador.html" class="text-xs text-stone-400 hover:text-[#E67E22] font-medium inline-flex items-center justify-center gap-1 mx-auto transition">
-              <span>⚙️</span>
-              <span>Abrir Gerador de Páginas &amp; Tags</span>
+            <!-- BOTÃO DIRETO EM TAG <A> QUE O NAVEGADOR NUNCA BLOQUEIA -->
+            <a id="btnAbrirLinkTag" href="index.html?id=TN-THOR-3620" target="_blank" onclick="window.open(this.href, '_blank'); return false;" class="w-full py-3.5 bg-gradient-to-r from-emerald-600 via-emerald-500 to-teal-600 hover:brightness-110 text-white rounded-2xl font-black text-xs shadow-lg flex items-center justify-center gap-2 transition active:scale-95">
+              <span>🚀</span>
+              <span id="btnAbrirTexto">Abrir Página da Tag</span>
+              <span>&rarr;</span>
             </a>
-          </footer>
+
+            <!-- Mini QR Code -->
+            <div class="p-3 bg-[#FAF7F2] rounded-2xl border border-stone-200 flex items-center justify-center gap-3">
+              <img id="qrCodeDisplay" src="https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=https://terranova-memorial.loca.lt/index.html" class="w-24 h-24 rounded-lg border border-stone-300 shadow-xs bg-white p-1">
+              <div class="text-left text-xs space-y-1">
+                <p class="font-bold text-stone-800">QR Code Oficial</p>
+                <p class="text-[10px] text-stone-500">Aproxime o celular ou grave diretamente na plaquinha NFC física.</p>
+              </div>
+            </div>
+
+          </div>
 
         </div>
-      `;
-    }
 
+      </div>
 
-    // Ações de GPS do Cão Perdido
-    function enviarLocalizacaoGps(whatsDigits, petNome) {
-      if (!navigator.geolocation) {
-        alert("Geolocalização não suportada neste dispositivo.");
-        return;
-      }
-      alert("Obtendo sua localização para enviar ao tutor...");
-      navigator.geolocation.getCurrentPosition(
-        pos => {
-          const lat = pos.coords.latitude;
-          const lng = pos.coords.longitude;
-          const mapsUrl = `https://www.google.com/maps?q=${lat},${lng}`;
-          const msg = encodeURIComponent(`Olá! Encontrei o(a) ${petNome} através da plaquinha da coleira Terranova Pet. Minha localização atual no mapa é: ${mapsUrl}`);
-          window.open(`https://api.whatsapp.com/send?phone=${whatsDigits}&text=${msg}`, "_blank");
-        },
-        err => {
-          alert("Não foi possível acessar a localização. Por favor, envie uma mensagem normal no WhatsApp.");
+    </div>
+
+  </div>
+
+  <script>
+    let modoAtual = "coleira"; // "coleira", "social", "memorial"
+    
+    // FOTOS E MÍDIAS 100% ISOLADAS POR MODO (NUNCA COMPARTILHADAS ENTRE PÁGINAS)
+    const fotosPorModo = {
+      coleira: [
+        {
+          url: "https://images.unsplash.com/photo-1552053831-71594a27632d?auto=format&fit=crop&w=400&q=80",
+          legenda: "Foto frontal do cão para coleira de identificação e resgate",
+          isPrincipal: true,
+          tipo: "foto"
         }
-      );
+      ],
+      social: [
+        {
+          url: "https://images.unsplash.com/photo-1543466835-00a7907e9de1?auto=format&fit=crop&w=600&q=80",
+          legenda: "Dia de parque com bolinha e picolé canino! #AmorPet #Golden",
+          isPrincipal: true,
+          tipo: "foto"
+        }
+      ],
+      memorial: [
+        {
+          url: "https://images.unsplash.com/photo-1583511655857-d19b40a7a54e?auto=format&fit=crop&w=600&q=80",
+          legenda: "Nossa eterna estrelinha que brilha no céu das lembranças mais puras.",
+          isPrincipal: true,
+          tipo: "foto"
+        }
+      ]
+    };
+
+    let midiasCarregadas = fotosPorModo["coleira"];
+
+    function selecionarModo(modo) {
+      modoAtual = modo;
+      
+      // Carrega ESTRITAMENTE as fotos do modo selecionado (sem misturar com as outras páginas)
+      midiasCarregadas = fotosPorModo[modoAtual];
+
+      const btnColeira = document.getElementById("btnModoColeira");
+      const btnSocial = document.getElementById("btnModoSocial");
+      const btnMemorial = document.getElementById("btnModoMemorial");
+
+      const blocoSocial = document.getElementById("blocoCamposSocial");
+      const blocoColeira = document.getElementById("blocoCamposColeira");
+      const blocoMemorial = document.getElementById("blocoCamposMemorial");
+
+      const badge = document.getElementById("tagModoBadge");
+      const tituloForm = document.getElementById("tituloSecaoForm");
+      const labelSubmit = document.getElementById("labelSubmitBtn");
+      const btnAbrir = document.getElementById("btnAbrirTexto");
+      const badgePreview = document.getElementById("badgePreviewModo");
+
+      // Reset classes
+      [btnColeira, btnSocial, btnMemorial].forEach(b => {
+        b.className = "p-4 rounded-2xl border-2 border-stone-200 hover:border-amber-400 bg-stone-50 text-stone-700 flex flex-col items-center justify-between text-center gap-2 transition duration-200 group";
+      });
+
+      blocoSocial.classList.add("hidden");
+      blocoColeira.classList.add("hidden");
+      blocoMemorial.classList.add("hidden");
+
+      if (modo === "social") {
+        btnSocial.className = "p-4 rounded-2xl border-2 border-amber-400 bg-amber-50 text-[#740568] flex flex-col items-center justify-between text-center gap-2 transition duration-200 group shadow-sm ring-2 ring-amber-400/40";
+        blocoSocial.classList.remove("hidden");
+        badge.innerText = "Rede Social Pet";
+        badge.className = "text-[11px] text-amber-900 bg-amber-200 font-bold px-3 py-1 rounded-full";
+        tituloForm.innerHTML = "<span>📸</span> Formulário da Rede Social &amp; Diário Pet";
+        labelSubmit.innerText = "Publicar na Rede Social & Diário Pet";
+        btnAbrir.innerText = "Ver na Rede Social Pet";
+        if (badgePreview) {
+          badgePreview.innerText = "Rede Social Pet";
+          badgePreview.className = "text-[10px] bg-amber-100 text-amber-900 font-bold px-2 py-0.5 rounded-full";
+        }
+      } else if (modo === "coleira") {
+        btnColeira.className = "p-4 rounded-2xl border-2 border-emerald-500 bg-emerald-50 text-emerald-950 flex flex-col items-center justify-between text-center gap-2 transition duration-200 group shadow-sm ring-2 ring-emerald-500/40";
+        blocoColeira.classList.remove("hidden");
+        badge.innerText = "Tag de Coleira (Pet Vivo)";
+        badge.className = "text-[11px] text-emerald-900 bg-emerald-100 font-bold px-3 py-1 rounded-full";
+        tituloForm.innerHTML = "<span>🏷️</span> Informações da Tag de Coleira (Pet Vivo)";
+        labelSubmit.innerText = "Gerar Tag de Coleira Inteligente";
+        btnAbrir.innerText = "Abrir Página da Tag";
+        if (badgePreview) {
+          badgePreview.innerText = "Tag Coleira 24h";
+          badgePreview.className = "text-[10px] bg-emerald-100 text-emerald-800 font-bold px-2 py-0.5 rounded-full";
+        }
+      } else if (modo === "memorial") {
+        btnMemorial.className = "p-4 rounded-2xl border-2 border-amber-600 bg-amber-50 text-[#740568] flex flex-col items-center justify-between text-center gap-2 transition duration-200 group shadow-sm ring-2 ring-amber-600/40";
+        blocoMemorial.classList.remove("hidden");
+        badge.innerText = "Memorial de Amor (Estrelinha)";
+        badge.className = "text-[11px] text-[#740568] bg-amber-300 font-bold px-3 py-1 rounded-full";
+        tituloForm.innerHTML = "<span>🕊️</span> Homenagem de Amor (Memorial de Urna)";
+        labelSubmit.innerText = "Gerar Memorial Póstumo Completo";
+        btnAbrir.innerText = "Abrir Memorial do Pet";
+        if (badgePreview) {
+          badgePreview.innerText = "Memorial das Estrelas";
+          badgePreview.className = "text-[10px] bg-yellow-100 text-[#740568] font-bold px-2 py-0.5 rounded-full";
+        }
+      }
+ 
+      // Alterna entre os 3 visualizadores no Smartphone
+      const telaColeira = document.getElementById("mockupTelaColeira");
+      const telaSocial = document.getElementById("mockupTelaSocial");
+      const telaMemorial = document.getElementById("mockupTelaMemorial");
+
+      if (telaColeira && telaSocial && telaMemorial) {
+        if (modo === "social") {
+          telaColeira.style.display = "none";
+          telaSocial.style.display = "block";
+          telaMemorial.style.display = "none";
+        } else if (modo === "memorial") {
+          telaColeira.style.display = "none";
+          telaSocial.style.display = "none";
+          telaMemorial.style.display = "block";
+        } else {
+          telaColeira.style.display = "block";
+          telaSocial.style.display = "none";
+          telaMemorial.style.display = "none";
+        }
+      }
+
+      renderizarEditorMidias();
+      atualizarMockup();
     }
 
-    // Modal de Edição dos Dados do Tutor
-    function abrirModalEdicao() {
-      if (!petAtual) return;
-      document.getElementById("editTelefone").value = petAtual.tutorTelefone || "";
-      document.getElementById("editWhatsapp").value = petAtual.tutorWhatsapp || "";
-      document.getElementById("editExibirEndereco").checked = !!petAtual.exibirEndereco;
-      document.getElementById("editEndereco").value = petAtual.tutorEndereco || "";
-      document.getElementById("editCuidados").value = petAtual.cuidadosMedicos || "";
-      document.getElementById("editRecompensa").value = petAtual.recompensa || "";
-      document.getElementById("modalEdicaoTutor").classList.remove("hidden");
+    // GERAÇÃO AUTOMÁTICA DA CARTA DO ANJINHO COM IA SENSÍVEL
+    function gerarCartaAnjinhoIa() {
+      const nome = (document.getElementById("campoNome") ? document.getElementById("campoNome").value.trim() : "") || "Thor";
+      const tutor = (document.getElementById("campoTutorNome") ? document.getElementById("campoTutorNome").value.trim() : "") || "Família Miranda";
+      const raca = (document.getElementById("campoRaca") ? document.getElementById("campoRaca").value.trim() : "") || "companheiro";
+
+      const cartas = [
+        `Querida ${tutor}...\nPor favor, não guardem meu nome com lágrimas de tristeza nos olhos. Eu vivi os dias mais felizes e abençoados do mundo ao lado de vocês! Cada afago no meu focinho, cada passeio ao entardecer e cada momento que dividimos na sala de estar foram para mim o verdadeiro paraíso na Terra.\n\nAqui nas estrelas, estou em paz, saudável e correndo leve pela grama verdejante. Nunca se esqueçam: o amor de um ${raca} nunca morre, ele se transforma numa luz quentinha que cuida de vocês todos os dias. Até o nosso reencontro! 🕊️ Com todo o meu amor, ${nome}.`,
+
+        `Mãe, Pai, ${tutor}...\nSei que vocês ainda olham para a minha caminha e sentem uma saudade imensa do barulho das minhas patinhas pela casa. Mas quero que sintam o meu carinho envolvendo o coração de vocês agora. Eu parti sentindo a pureza do amor mais profundo que um cãozinho poderia receber.\n\nGuardem com alegria as nossas brincadeiras, os meus rabinhos abanando e as manhãs de festa ao ver vocês acordarem. Eu sou a estrelinha que brilha mais forte no céu vigiando vocês. Amo vocês para sempre! 🐾 Assinado: ${nome}.`,
+
+        `Minha amada família (${tutor})...\nObrigado por terem sido meu porto seguro, meu abraço quentinho e meus melhores amigos durante toda a minha jornada terrena. Se eu pudesse falar a língua dos humanos, diria apenas uma palavra: GRATIDÃO!\n\nVocês me deram uma vida cheia de dignidade, brincadeiras e muito afeto. Estou do outro lado do arco-íris, brincando sem dor, e guardando o lugar de vocês no meu coração por toda a eternidade. Um beijo carinhoso de patinha, ${nome}. ✨`
+      ];
+
+      const cartaEscolhida = cartas[Math.floor(Math.random() * cartas.length)];
+      const campo = document.getElementById("campoCartaAnjinho");
+      if (campo) {
+        campo.value = cartaEscolhida;
+        campo.classList.add("ring-2", "ring-amber-500", "bg-amber-50");
+        setTimeout(() => campo.classList.remove("ring-2", "ring-amber-500", "bg-amber-50"), 700);
+      }
     }
 
-    function fecharModalEdicao() {
-      document.getElementById("modalEdicaoTutor").classList.add("hidden");
+    // PROCESSAMENTO DE FOTOS/VÍDEOS COM EDITOR DE LEGENDAS INDIVIDUAIS
+    async function processarMidiasMultiplas(e) {
+      const files = Array.from(e.target.files);
+      if (!files.length) return;
+
+      for (const file of files) {
+        const isVideo = file.type.startsWith("video/");
+        const base64 = await redimensionarArquivo(file);
+        fotosPorModo[modoAtual].push({
+          url: base64,
+          legenda: "",
+          isPrincipal: fotosPorModo[modoAtual].length === 0,
+          tipo: isVideo ? "video" : "foto"
+        });
+      }
+
+      midiasCarregadas = fotosPorModo[modoAtual];
+      renderizarEditorMidias();
+      atualizarMockup();
     }
 
-    async function salvarEdicaoTutor(e) {
+    function renderizarEditorMidias() {
+      const container = document.getElementById("listaEditorMidias");
+      const contador = document.getElementById("contadorFotos");
+      container.innerHTML = "";
+
+      contador.innerText = `${midiasCarregadas.length} fotos do modo ${modoAtual}`;
+
+      midiasCarregadas.forEach((item, idx) => {
+        const card = document.createElement("div");
+        card.className = "p-3 bg-white rounded-2xl border border-stone-200 shadow-xs flex flex-col sm:flex-row items-center gap-3.5";
+
+        card.innerHTML = `
+          <!-- Miniatura -->
+          <div class="relative w-20 h-20 flex-shrink-0 rounded-xl overflow-hidden bg-stone-900 border border-stone-200">
+            <img src="${item.url}" class="w-full h-full object-cover">
+            ${item.isPrincipal ? '<span class="absolute top-1 left-1 bg-amber-400 text-[#740568] text-[9px] font-black px-1.5 py-0.5 rounded shadow">CAPA</span>' : ''}
+          </div>
+
+          <!-- Campo de Edição da Legenda Individual -->
+          <div class="flex-1 w-full space-y-1">
+            <div class="flex items-center justify-between text-[11px] font-bold text-stone-600">
+              <span>✍️ Legenda da foto ${idx + 1}:</span>
+              ${!item.isPrincipal ? `<button type="button" onclick="definirFotoPrincipal(${idx})" class="text-amber-700 hover:underline">Definir como Capa</button>` : '<span class="text-amber-600 font-bold">Foto Principal</span>'}
+            </div>
+            <input type="text" value="${item.legenda}" oninput="atualizarLegendaFoto(${idx}, this.value)" placeholder="Escreva o que aconteceu nessa foto..." class="w-full bg-stone-50 border border-stone-300 rounded-xl px-3 py-1.5 text-xs text-stone-800 focus:outline-none focus:border-amber-500 font-medium">
+          </div>
+
+          <!-- Botão Remover -->
+          <button type="button" onclick="removerFoto(${idx})" class="text-stone-400 hover:text-red-500 p-2 text-sm transition" title="Remover mídia">
+            🗑️
+          </button>
+        `;
+
+        container.appendChild(card);
+      });
+    }
+
+    function atualizarLegendaFoto(idx, valor) {
+      if (fotosPorModo[modoAtual] && fotosPorModo[modoAtual][idx]) {
+        fotosPorModo[modoAtual][idx].legenda = valor;
+      }
+    }
+
+    function definirFotoPrincipal(idx) {
+      fotosPorModo[modoAtual].forEach((m, i) => m.isPrincipal = (i === idx));
+      midiasCarregadas = fotosPorModo[modoAtual];
+      renderizarEditorMidias();
+      atualizarMockup();
+    }
+
+    function removerFoto(idx) {
+      fotosPorModo[modoAtual].splice(idx, 1);
+      if (fotosPorModo[modoAtual].length > 0 && !fotosPorModo[modoAtual].some(m => m.isPrincipal)) {
+        fotosPorModo[modoAtual][0].isPrincipal = true;
+      }
+      midiasCarregadas = fotosPorModo[modoAtual];
+      renderizarEditorMidias();
+      atualizarMockup();
+    }
+
+    function redimensionarArquivo(file) {
+      return new Promise((resolve) => {
+        const reader = new FileReader();
+        reader.onload = (evt) => {
+          if (file.type.startsWith("video/")) {
+            resolve(evt.target.result);
+            return;
+          }
+          const img = new Image();
+          img.onload = () => {
+            let width = img.width;
+            let height = img.height;
+            const max = 1200;
+            if (width > max || height > max) {
+              if (width > height) {
+                height = Math.round((height * max) / width);
+                width = max;
+              } else {
+                width = Math.round((width * max) / height);
+                height = max;
+              }
+            }
+            const canvas = document.createElement("canvas");
+            canvas.width = width;
+            canvas.height = height;
+            const ctx = canvas.getContext("2d");
+            ctx.drawImage(img, 0, 0, width, height);
+            resolve(canvas.toDataURL("image/jpeg", 0.85));
+          };
+          img.src = evt.target.result;
+        };
+        reader.readAsDataURL(file);
+      });
+    }
+
+    function atualizarMockup() {
+      const nome = (document.getElementById("campoNome") ? document.getElementById("campoNome").value.trim() : "") || "Thor";
+      const raca = (document.getElementById("campoRaca") ? document.getElementById("campoRaca").value.trim() : "") || "Golden Retriever";
+      const tutor = (document.getElementById("campoTutorNome") ? document.getElementById("campoTutorNome").value.trim() : "") || "Família Miranda";
+      const nfcEl = document.getElementById("campoNfc");
+      const nfc = nfcEl ? nfcEl.value.trim() : "";
+      const slug = nome.toLowerCase().replace(/[^a-z0-9]/g, "-") || "thor";
+
+      const telEl = document.getElementById("campoTelefone");
+      const tel = telEl ? telEl.value.trim() : "(38) 99812-4455";
+      const whatsEl = document.getElementById("campoWhatsapp");
+      const whats = whatsEl ? whatsEl.value.trim() : "5538998124455";
+      const endEl = document.getElementById("campoEndereco");
+      const end = endEl ? endEl.value.trim() : "Rua das Flores, 123 - Montes Claros - MG";
+      const exibirEndEl = document.getElementById("campoExibirEndereco");
+      const exibirEnd = exibirEndEl ? exibirEndEl.checked : true;
+      const cuidEl = document.getElementById("campoCuidados");
+      const cuidados = cuidEl ? cuidEl.value.trim() : "Muito dócil, atende pelo nome.";
+
+      const itemPrincipal = midiasCarregadas.find(m => m.isPrincipal) || midiasCarregadas[0] || { url: "https://images.unsplash.com/photo-1552053831-71594a27632d?auto=format&fit=crop&w=400&q=80" };
+
+      // Atualiza elementos do Simulador de Smartphone (Visualizador da Tag)
+      const elFoto = document.getElementById("mockupFotoPet");
+      if (elFoto) elFoto.src = itemPrincipal.url;
+
+      const elNome = document.getElementById("mockupNomePet");
+      if (elNome) elNome.innerText = nome;
+
+      const elRaca = document.getElementById("mockupRacaPet");
+      if (elRaca) elRaca.innerText = raca;
+
+      const elNfc = document.getElementById("mockupCodigoNfc");
+      if (elNfc) elNfc.innerText = nfc || ("TN-" + slug.toUpperCase() + "-3620");
+
+      const elTutor = document.getElementById("mockupTutorNome");
+      if (elTutor) elTutor.innerText = tutor;
+
+      const elTelTxt = document.getElementById("mockupTelTexto");
+      if (elTelTxt) elTelTxt.innerText = tel;
+
+      const elBtnLigar = document.getElementById("mockupBtnLigar");
+      if (elBtnLigar) elBtnLigar.href = "tel:" + tel.replace(/\D/g, "");
+
+      const elBtnWhats = document.getElementById("mockupBtnWhats");
+      if (elBtnWhats) {
+        const msgW = encodeURIComponent(`Olá! Encontrei o(a) ${nome} através da tag da coleira Terranova Pet.`);
+        elBtnWhats.href = `https://api.whatsapp.com/send?phone=${whats.replace(/\D/g, "")}&text=${msgW}`;
+      }
+
+      const elEndTxt = document.getElementById("mockupEnderecoTexto");
+      if (elEndTxt) elEndTxt.innerText = end;
+
+      const elBlocoEnd = document.getElementById("mockupBlocoEndereco");
+      if (elBlocoEnd) elBlocoEnd.style.display = exibirEnd ? "block" : "none";
+
+      const elCuidTxt = document.getElementById("mockupCuidadosTexto");
+      if (elCuidTxt) elCuidTxt.innerText = cuidados || "Nenhum cuidado especial informado.";
+
+      // Atualiza Mockup da Página do Pet na Rede Social (Diário de Aventuras)
+      const elSocialFoto = document.getElementById("mockupSocialFotoPet");
+      if (elSocialFoto) elSocialFoto.src = itemPrincipal.url;
+      const elSocialPostFoto = document.getElementById("mockupSocialPostFoto");
+      if (elSocialPostFoto) elSocialPostFoto.src = itemPrincipal.url;
+      const elSocialNome = document.getElementById("mockupSocialNomePet");
+      if (elSocialNome) elSocialNome.innerText = nome;
+      const elSocialRaca = document.getElementById("mockupSocialRaca");
+      if (elSocialRaca) elSocialRaca.innerText = `${raca} • Montes Claros`;
+      const elSocialTutor = document.getElementById("mockupSocialTutor");
+      if (elSocialTutor) elSocialTutor.innerText = `Tutor(a): ${tutor}`;
+      const elSocialLegenda = document.getElementById("mockupSocialLegenda");
+      if (elSocialLegenda) {
+        const leg = (document.getElementById("campoLegendaSocial") ? document.getElementById("campoLegendaSocial").value.trim() : "") || itemPrincipal.legenda;
+        elSocialLegenda.innerText = leg || `Curtindo momentos inesquecíveis ao lado de ${tutor}! 🐶💛`;
+      }
+      const elSocialPostsCount = document.getElementById("mockupSocialPostsCount");
+      if (elSocialPostsCount) elSocialPostsCount.innerText = midiasCarregadas.length || 1;
+
+      // Atualiza Mockup do Memorial das Estrelas
+      const elMemFoto = document.getElementById("mockupMemorialFotoPet");
+      if (elMemFoto) elMemFoto.src = itemPrincipal.url;
+      const elMemNome = document.getElementById("mockupMemorialNomePet");
+      if (elMemNome) elMemNome.innerText = nome;
+      const elMemAnos = document.getElementById("mockupMemorialAnos");
+      if (elMemAnos) {
+        const nasc = document.getElementById("campoDataNascimento") ? document.getElementById("campoDataNascimento").value : "2012";
+        const part = document.getElementById("campoDataPartida") ? document.getElementById("campoDataPartida").value : "2026";
+        elMemAnos.innerText = `${nasc || "2012"} — ${part || "2026"} • Amor Eterno`;
+      }
+
+      // Determina URL final e QR Code
+      let baseUrl = window.location.href.split("?")[0].split("#")[0];
+      baseUrl = baseUrl.substring(0, baseUrl.lastIndexOf("/") + 1);
+
+      let paginaAlvo = "coleira.html";
+      let param = `id=${encodeURIComponent(nfc || slug)}`;
+
+      if (modoAtual === "coleira") {
+        paginaAlvo = "coleira.html";
+        param = `id=${encodeURIComponent(nfc || slug)}`;
+      } else if (modoAtual === "social") {
+        paginaAlvo = "social.html";
+        param = `pet=${encodeURIComponent(slug)}`;
+      } else if (modoAtual === "memorial") {
+        paginaAlvo = "memorial.html";
+        try {
+          const nascVal = (document.getElementById("campoNasc") ? document.getElementById("campoNasc").value.trim() : "") || "2012";
+          const partVal = (document.getElementById("campoPartida") ? document.getElementById("campoPartida").value.trim() : "") || "2026";
+          const historiasTxt = (document.getElementById("campoHistorias") ? document.getElementById("campoHistorias").value.trim() : "");
+          const cartaTxt = (document.getElementById("campoCartaAnjinho") ? document.getElementById("campoCartaAnjinho").value.trim() : "");
+          const dObj = {
+            id: slug,
+            nome: nome,
+            raca: raca,
+            tutorNome: tutor,
+            cidade: cidade,
+            nasc: nascVal,
+            partida: partVal,
+            fotoPrincipal: itemPrincipal.url,
+            galeria: (fotosPorModo.memorial || []).map(m => m.url),
+            historias: historiasTxt,
+            cartaPet: cartaTxt
+          };
+          const b64 = btoa(unescape(encodeURIComponent(JSON.stringify(dObj))));
+          param = `pet=${encodeURIComponent(slug)}&d=${encodeURIComponent(b64)}`;
+        } catch(err) {
+          param = `pet=${encodeURIComponent(slug)}`;
+        }
+      }
+
+      const urlFinal = `${baseUrl}${paginaAlvo}?${param}`;
+      const urlDisp = document.getElementById("urlDisplay");
+      if (urlDisp) urlDisp.value = urlFinal;
+
+      const qrDisp = document.getElementById("qrCodeDisplay");
+      if (qrDisp) qrDisp.src = `https://api.qrserver.com/v1/create-qr-code/?size=180x180&data=${encodeURIComponent(urlFinal)}`;
+
+      const btnLink = document.getElementById("btnAbrirLinkTag");
+      if (btnLink) btnLink.href = urlFinal;
+    }
+
+    // Monitoramento em tempo real de todos os campos
+    const camposMonitorados = [
+      "campoNome", "campoRaca", "campoTutorNome", "campoTelefone", 
+      "campoWhatsapp", "campoEndereco", "campoExibirEndereco", "campoNfc", "campoCuidados",
+      "campoLegendaSocial", "campoDataNascimento", "campoDataPartida", "campoCidade"
+    ];
+    camposMonitorados.forEach(id => {
+      const el = document.getElementById(id);
+      if (el) {
+        el.addEventListener("input", atualizarMockup);
+        el.addEventListener("change", atualizarMockup);
+      }
+    });
+
+    function gerarPaginaFinal(e) {
       e.preventDefault();
-      petAtual.tutorTelefone = document.getElementById("editTelefone").value.trim();
-      petAtual.tutorWhatsapp = document.getElementById("editWhatsapp").value.trim();
-      petAtual.exibirEndereco = document.getElementById("editExibirEndereco").checked;
-      petAtual.tutorEndereco = document.getElementById("editEndereco").value.trim();
-      petAtual.cuidadosMedicos = document.getElementById("editCuidados").value.trim();
-      petAtual.recompensa = document.getElementById("editRecompensa").value.trim();
+      const nome = document.getElementById("campoNome").value.trim();
+      const raca = document.getElementById("campoRaca").value.trim();
+      const tutor = document.getElementById("campoTutorNome").value.trim();
+      const email = document.getElementById("campoTutorEmail") ? document.getElementById("campoTutorEmail").value.trim() : "";
+      const cidade = document.getElementById("campoCidade").value.trim();
+      const slug = nome.toLowerCase().replace(/[^a-z0-9]/g, "-");
 
-      await TerranovaApp.savePet(petAtual);
-      fecharModalEdicao();
-      renderizarPagina(petAtual);
-      alert("✅ Seus telefones e preferências foram atualizados na plaquinha com sucesso!");
+      const itemPrincipal = midiasCarregadas.find(m => m.isPrincipal) || midiasCarregadas[0] || { url: "https://images.unsplash.com/photo-1552053831-71594a27632d?auto=format&fit=crop&w=600&q=80", legenda: "" };
+
+      const senha = document.getElementById("campoTutorSenha") ? document.getElementById("campoTutorSenha").value.trim() : "123";
+
+      // Salva no banco de tutores cadastrados com senha para login posterior
+      let tutoresDb = [];
+      try { tutoresDb = JSON.parse(localStorage.getItem("terranova_tutores_db")) || []; } catch(e) {}
+      const idxTutor = tutoresDb.findIndex(t => t.email && t.email.toLowerCase() === email.toLowerCase());
+      const dadosTutor = {
+        nome: tutor,
+        email: email,
+        senha: senha,
+        petNome: nome,
+        petFoto: itemPrincipal.url,
+        petRaca: raca,
+        cidade: cidade
+      };
+      if (idxTutor !== -1) tutoresDb[idxTutor] = dadosTutor;
+      else tutoresDb.push(dadosTutor);
+      localStorage.setItem("terranova_tutores_db", JSON.stringify(tutoresDb));
+
+      // Registra o perfil do tutor ativo para login automático na Rede Social Pet
+      localStorage.setItem("terranova_tutor_logado", JSON.stringify(dadosTutor));
+
+      // =====================================================================
+      // 1. CASO MODO REDE SOCIAL PET (ISOLADO PARA O FEED SOCIAL)
+      // =====================================================================
+      if (modoAtual === "social") {
+        const legendaSocial = document.getElementById("campoLegendaSocial").value.trim() || itemPrincipal.legenda || "Momento inesquecível de muito amor!";
+        
+        let postsSociais = [];
+        try {
+          postsSociais = JSON.parse(localStorage.getItem("terranova_social_posts")) || [];
+        } catch(err) {}
+
+        const novoPost = {
+          id: "post_" + Date.now(),
+          petNome: nome,
+          petFoto: itemPrincipal.url,
+          midiaUrl: itemPrincipal.url,
+          tutor: tutor,
+          tutorEmail: email,
+          cidade: cidade,
+          horario: "Agora mesmo",
+          legenda: legendaSocial,
+          patinhas: 1,
+          curtido: true,
+          comentarios: []
+        };
+
+        postsSociais.unshift(novoPost);
+        localStorage.setItem("terranova_social_posts", JSON.stringify(postsSociais));
+      }
+
+      // =====================================================================
+      // 2. CASO MODO COLEIRA INTELIGENTE (ISOLADO PARA IDENTIFICAÇÃO DO CÃO VIVO)
+      // =====================================================================
+      else if (modoAtual === "coleira") {
+        const nfcCode = document.getElementById("campoNfc").value.trim() || ("TN-" + slug.toUpperCase() + "-3620");
+        const dadosPetColeira = {
+          id: slug,
+          status: "vivo",
+          tipo: "coleira",
+          nome,
+          raca,
+          nfcCode: nfcCode,
+          tutorNome: tutor,
+          tutorEmail: email,
+          cidade: cidade,
+          tutorTelefone: document.getElementById("campoTelefone").value.trim(),
+          tutorWhatsapp: document.getElementById("campoWhatsapp").value.trim(),
+          exibirEndereco: document.getElementById("campoExibirEndereco").checked,
+          tutorEndereco: document.getElementById("campoEndereco").value.trim(),
+          cuidadosMedicos: document.getElementById("campoCuidados").value.trim(),
+          fotoPrincipal: itemPrincipal.url,
+          galeria: fotosPorModo.coleira.map(m => m.url)
+        };
+
+        let listaPets = [];
+        try {
+          listaPets = JSON.parse(localStorage.getItem("terranova_pets_store_v3")) || [];
+        } catch(e) {}
+        
+        const idx = listaPets.findIndex(p => p.id === slug || (p.nfcCode && p.nfcCode === nfcCode));
+        if (idx !== -1) listaPets[idx] = dadosPetColeira;
+        else listaPets.unshift(dadosPetColeira);
+        localStorage.setItem("terranova_pets_store_v3", JSON.stringify(listaPets));
+      }
+
+      // =====================================================================
+      // 3. CASO MODO MEMORIAL (ISOLADO PARA O JARDIM DAS ESTRELAS / CEMITÉRIO VIRTUAL)
+      // =====================================================================
+      else if (modoAtual === "memorial") {
+        const cartaTexto = document.getElementById("campoCartaAnjinho") ? document.getElementById("campoCartaAnjinho").value.trim() : "";
+        const historiasTexto = document.getElementById("campoHistorias") ? document.getElementById("campoHistorias").value.trim() : "";
+        const nascVal = (document.getElementById("campoNasc") ? document.getElementById("campoNasc").value.trim() : "") || "2012";
+        const partVal = (document.getElementById("campoPartida") ? document.getElementById("campoPartida").value.trim() : "") || "2026";
+
+        const dadosMemorial = {
+          id: slug,
+          status: "memorial",
+          tipo: "memorial",
+          nome,
+          raca,
+          tutorNome: tutor,
+          tutorEmail: email,
+          cidade: cidade,
+          nasc: nascVal,
+          partida: partVal,
+          subtitulo: "Nosso leal companheiro e eterno anjo da família",
+          frase: historiasTexto,
+          historias: historiasTexto,
+          cartaPet: cartaTexto,
+          fotoPrincipal: itemPrincipal.url,
+          galeria: (fotosPorModo.memorial && fotosPorModo.memorial.length) ? fotosPorModo.memorial.map(m => m.url) : [itemPrincipal.url],
+          velas: 1
+        };
+
+        // 1. Salva na base de dados de pets do memorial pessoal (terranova_pets_store_v3)
+        let listaPets = [];
+        try {
+          listaPets = JSON.parse(localStorage.getItem("terranova_pets_store_v3")) || [];
+        } catch(e) {}
+        const idxPet = listaPets.findIndex(p => p.id === slug);
+        if (idxPet !== -1) listaPets[idxPet] = dadosMemorial;
+        else listaPets.unshift(dadosMemorial);
+        localStorage.setItem("terranova_pets_store_v3", JSON.stringify(listaPets));
+
+        // 2. Salva na base do mural coletivo (terranova_mural_publico_pets)
+        let petsMural = [];
+        try {
+          petsMural = JSON.parse(localStorage.getItem("terranova_mural_publico_pets")) || [];
+        } catch(e) {}
+        const idxMural = petsMural.findIndex(p => p.id === slug);
+        if (idxMural !== -1) petsMural[idxMural] = dadosMemorial;
+        else petsMural.unshift(dadosMemorial);
+        localStorage.setItem("terranova_mural_publico_pets", JSON.stringify(petsMural));
+
+        // 3. Sincroniza com a API do backend para acesso imediato em outros dispositivos
+        try {
+          fetch('/api/pets', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(dadosMemorial)
+          }).catch(err => console.log('Erro sync API:', err));
+        } catch(err) {}
+      }
+
+      atualizarMockup();
+
+      const urlDestino = document.getElementById("urlDisplay").value;
+      const win = window.open(urlDestino, "_blank");
+      if (!win) {
+        alert(`🎉 Página de ${nome} gerada com sucesso! Clique no botão verde 'Abrir Página da Tag' para visualizá-la.`);
+      }
     }
 
+    function copiarUrl() {
+      const input = document.getElementById("urlDisplay");
+      input.select();
+      navigator.clipboard.writeText(input.value);
+      alert("📋 Link da página copiado com sucesso!");
+    }
 
+    window.addEventListener("DOMContentLoaded", () => {
+      renderizarEditorMidias();
+      selecionarModo("coleira");
+      atualizarMockup();
+    });
   </script>
 </body>
 </html>

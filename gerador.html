@@ -915,11 +915,11 @@
       let baseUrl = window.location.href.split("?")[0].split("#")[0];
       baseUrl = baseUrl.substring(0, baseUrl.lastIndexOf("/") + 1);
 
-      let paginaAlvo = "index.html";
+      let paginaAlvo = "coleira.html";
       let param = `id=${encodeURIComponent(nfc || slug)}`;
 
       if (modoAtual === "coleira") {
-        paginaAlvo = "index.html";
+        paginaAlvo = "coleira.html";
         param = `id=${encodeURIComponent(nfc || slug)}`;
       } else if (modoAtual === "social") {
         paginaAlvo = "social.html";

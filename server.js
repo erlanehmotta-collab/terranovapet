@@ -104,11 +104,12 @@ const server = http.createServer((req, res) => {
     }
 
     // --- ROTAS AMIGÁVEIS E ARQUIVOS ESTÁTICOS ---
-    if (pathname === "/" || pathname === "/mural" || pathname === "/estrelinhas") pathname = "/mural.html";
+    if (pathname === "/" || pathname === "/gerador") pathname = "/index.html";
+    if (pathname === "/mural" || pathname === "/estrelinhas") pathname = "/mural.html";
     if (pathname === "/memorial") pathname = "/memorial.html";
     if (pathname === "/social") pathname = "/social.html";
-    if (pathname === "/gerador") pathname = "/gerador.html";
     if (pathname === "/vendas") pathname = "/vendas.html";
+    if (pathname === "/coleira" || pathname === "/tag") pathname = "/coleira.html";
 
     let filePath = path.join(__dirname, pathname);
 
