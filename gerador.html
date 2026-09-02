@@ -926,7 +926,29 @@
         param = `pet=${encodeURIComponent(slug)}`;
       } else if (modoAtual === "memorial") {
         paginaAlvo = "memorial.html";
-        param = `pet=${encodeURIComponent(slug)}`;
+        try {
+          const nascVal = (document.getElementById("campoNasc") ? document.getElementById("campoNasc").value.trim() : "") || "2012";
+          const partVal = (document.getElementById("campoPartida") ? document.getElementById("campoPartida").value.trim() : "") || "2026";
+          const historiasTxt = (document.getElementById("campoHistorias") ? document.getElementById("campoHistorias").value.trim() : "");
+          const cartaTxt = (document.getElementById("campoCartaAnjinho") ? document.getElementById("campoCartaAnjinho").value.trim() : "");
+          const dObj = {
+            id: slug,
+            nome: nome,
+            raca: raca,
+            tutorNome: tutor,
+            cidade: cidade,
+            nasc: nascVal,
+            partida: partVal,
+            fotoPrincipal: itemPrincipal.url,
+            galeria: (fotosPorModo.memorial || []).map(m => m.url),
+            historias: historiasTxt,
+            cartaPet: cartaTxt
+          };
+          const b64 = btoa(unescape(encodeURIComponent(JSON.stringify(dObj))));
+          param = `pet=${encodeURIComponent(slug)}&d=${encodeURIComponent(b64)}`;
+        } catch(err) {
+          param = `pet=${encodeURIComponent(slug)}`;
+        }
       }
 
       const urlFinal = `${baseUrl}${paginaAlvo}?${param}`;
@@ -1057,6 +1079,10 @@
       // =====================================================================
       else if (modoAtual === "memorial") {
         const cartaTexto = document.getElementById("campoCartaAnjinho") ? document.getElementById("campoCartaAnjinho").value.trim() : "";
+        const historiasTexto = document.getElementById("campoHistorias") ? document.getElementById("campoHistorias").value.trim() : "";
+        const nascVal = (document.getElementById("campoNasc") ? document.getElementById("campoNasc").value.trim() : "") || "2012";
+        const partVal = (document.getElementById("campoPartida") ? document.getElementById("campoPartida").value.trim() : "") || "2026";
+
         const dadosMemorial = {
           id: slug,
           status: "memorial",
@@ -1066,24 +1092,45 @@
           tutorNome: tutor,
           tutorEmail: email,
           cidade: cidade,
-          nasc: document.getElementById("campoNasc").value.trim(),
-          partida: document.getElementById("campoPartida").value.trim(),
-          frase: document.getElementById("campoHistorias").value.trim(),
+          nasc: nascVal,
+          partida: partVal,
+          subtitulo: "Nosso leal companheiro e eterno anjo da família",
+          frase: historiasTexto,
+          historias: historiasTexto,
           cartaPet: cartaTexto,
           fotoPrincipal: itemPrincipal.url,
-          galeria: fotosPorModo.memorial.map(m => m.url),
+          galeria: (fotosPorModo.memorial && fotosPorModo.memorial.length) ? fotosPorModo.memorial.map(m => m.url) : [itemPrincipal.url],
           velas: 1
         };
 
+        // 1. Salva na base de dados de pets do memorial pessoal (terranova_pets_store_v3)
+        let listaPets = [];
+        try {
+          listaPets = JSON.parse(localStorage.getItem("terranova_pets_store_v3")) || [];
+        } catch(e) {}
+        const idxPet = listaPets.findIndex(p => p.id === slug);
+        if (idxPet !== -1) listaPets[idxPet] = dadosMemorial;
+        else listaPets.unshift(dadosMemorial);
+        localStorage.setItem("terranova_pets_store_v3", JSON.stringify(listaPets));
+
+        // 2. Salva na base do mural coletivo (terranova_mural_publico_pets)
         let petsMural = [];
         try {
           petsMural = JSON.parse(localStorage.getItem("terranova_mural_publico_pets")) || [];
         } catch(e) {}
-
         const idxMural = petsMural.findIndex(p => p.id === slug);
         if (idxMural !== -1) petsMural[idxMural] = dadosMemorial;
         else petsMural.unshift(dadosMemorial);
         localStorage.setItem("terranova_mural_publico_pets", JSON.stringify(petsMural));
+
+        // 3. Sincroniza com a API do backend para acesso imediato em outros dispositivos
+        try {
+          fetch('/api/pets', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(dadosMemorial)
+          }).catch(err => console.log('Erro sync API:', err));
+        } catch(err) {}
       }
 
       atualizarMockup();

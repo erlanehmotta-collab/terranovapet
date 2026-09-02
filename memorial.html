@@ -894,17 +894,112 @@
       }
     ];
 
+    // APLICAÇÃO DOS DADOS DO PET NA TELA
+    function aplicarDadosPetNaTela(pet) {
+      if (!pet) return;
+      petAtual = pet;
+
+      // Perfil
+      const elNome = document.getElementById("petNome");
+      if (elNome) elNome.innerText = pet.nome;
+      const elVidNome = document.getElementById("videoNomePet");
+      if (elVidNome) elVidNome.innerText = pet.nome;
+      const elAnos = document.getElementById("petAnos");
+      if (elAnos) elAnos.innerText = `${pet.nasc || "2012"} — ${pet.partida || "2026"} • Amor Incondicional`;
+      const elSub = document.getElementById("petSubtitulo");
+      if (elSub) elSub.innerText = pet.subtitulo || "Nosso leal companheiro e eterno anjo da família";
+      const elFoto = document.getElementById("petFotoCapa");
+      if (elFoto) elFoto.src = pet.fotoPrincipal;
+      const elVidA = document.getElementById("videoSlideImgA");
+      if (elVidA) elVidA.src = pet.fotoPrincipal;
+      const elVidBg = document.getElementById("videoSlideImgBg");
+      if (elVidBg) elVidBg.src = pet.fotoPrincipal;
+
+      // Cápsula
+      const elNasc = document.getElementById("anoChegadaCapsula");
+      if (elNasc) elNasc.innerText = pet.nasc || "2012";
+      const elPart = document.getElementById("anoPartidaCapsula");
+      if (elPart) elPart.innerText = pet.partida || "2026";
+
+      // Textos da Carta
+      const elCarta = document.getElementById("textoCartaPet");
+      if (elCarta) {
+        const paragrafos = (pet.cartaPet || "").split("\n\n").map(p => `<p>&ldquo;${p}&rdquo;</p>`).join("");
+        elCarta.innerHTML = paragrafos;
+      }
+
+      // Inicializa o Passador de Histórias Interativo
+      inicializarPassadorHistorias();
+
+      // Álbum HD
+      renderizarAlbumFotos();
+
+      // Atualiza status no mural
+      verificarStatusPublicoMural();
+    }
+
     // OBTENÇÃO SEGURA DOS DADOS
     function obterPetSeguro() {
       try {
         const params = new URLSearchParams(window.location.search);
+        
+        // 1. Decodificação Direta do Payload d da URL (Funciona em QUALQUER dispositivo imediatamente)
+        const encodedData = params.get("d");
+        if (encodedData) {
+          try {
+            const jsonStr = decodeURIComponent(escape(atob(encodedData)));
+            const d = JSON.parse(jsonStr);
+            if (d && (d.nome || d.n)) {
+              const petFromUrl = {
+                id: d.id || (d.nome || d.n).toLowerCase().replace(/[^a-z0-9]/g, "-"),
+                status: "memorial",
+                tipo: "memorial",
+                nome: d.nome || d.n,
+                raca: d.raca || d.r || "Anjinho Amado",
+                nasc: d.nasc || d.na || "2012",
+                partida: d.partida || d.pa || "2026",
+                subtitulo: d.subtitulo || "Nosso leal companheiro e eterno anjo da família",
+                tutorNome: d.tutorNome || d.t || "Família",
+                cidade: d.cidade || d.c || "Montes Claros - MG",
+                fotoPrincipal: d.fotoPrincipal || d.f || "https://images.unsplash.com/photo-1552053831-71594a27632d?auto=format&fit=crop&w=1200&q=95",
+                galeria: (d.galeria && d.galeria.length) ? d.galeria : (d.g && d.g.length ? d.g : [d.fotoPrincipal || d.f]),
+                historias: d.historias || d.h || "Ele adorava correr pelo quintal com a bolinha amarela...",
+                cartaPet: d.cartaPet || d.cp || "Mãe, Pai... Por favor, não chorem com tristeza ao pensar em mim. Estou em paz no céu dos animaizinhos!"
+              };
+              try {
+                let store = JSON.parse(localStorage.getItem("terranova_pets_store_v3")) || [];
+                const idx = store.findIndex(item => item.id === petFromUrl.id);
+                if (idx !== -1) store[idx] = petFromUrl;
+                else store.unshift(petFromUrl);
+                localStorage.setItem("terranova_pets_store_v3", JSON.stringify(store));
+              } catch(e) {}
+              return petFromUrl;
+            }
+          } catch(err) {
+            console.warn("Erro ao decodificar d:", err);
+          }
+        }
+
         const petId = (params.get("pet") || params.get("id") || "thor").toLowerCase().trim();
+        
+        // 2. Busca na base de pets local
         let lista = [];
         try { lista = JSON.parse(localStorage.getItem("terranova_pets_store_v3")) || []; } catch(e) {}
-        let p = lista.find(item => item.id === petId || (item.nome && item.nome.toLowerCase() === petId));
+        let p = lista.find(item => (item.id && item.id.toLowerCase() === petId) || (item.nome && item.nome.toLowerCase() === petId));
+        
+        // 3. Busca no mural público
+        if (!p) {
+          try {
+            const listaMural = JSON.parse(localStorage.getItem("terranova_mural_publico_pets")) || [];
+            p = listaMural.find(item => (item.id && item.id.toLowerCase() === petId) || (item.nome && item.nome.toLowerCase() === petId));
+          } catch(e) {}
+        }
+
+        // 4. Busca no módulo TerranovaApp
         if (!p && typeof TerranovaApp !== "undefined" && TerranovaApp.getPets) {
           p = TerranovaApp.getPetById(petId) || TerranovaApp.getPets()[0];
         }
+
         if (!p) {
           p = {
             id: "thor",
@@ -921,7 +1016,7 @@
               "https://images.unsplash.com/photo-1583337130417-3346a1be7dee?auto=format&fit=crop&w=1200&q=95"
             ],
             historias: "Ele adorava correr pelo quintal com a bolinha amarela e quando eu chegava cansado do trabalho, vinha apoiar a cabecinha no meu colo. O apelido carinhoso dele era 'Gordinho' e ele roubava meias só para ver a gente correr atrás dele brincando.",
-            cartaPet: "Mãe, Pai... Por favor, não chorem com tristeza ao pensar em mim. Sei que o silêncio da casa parece grande agora...\n\nEu nunca vou esquecer tudo o que a gente viveu: cada passeio na praça, cada abraço apertado e o amor puro que compartilhamos.\n\nObrigado por cuidarem tão bem de mim até o último segundo. Aqui no céu dos animaizinhos, eu corro livre nos campos dourados. Serei a estrelinha protetora de vocês para sempre!"
+            cartaPet: "Mãe, Pai... Por favor, não chorem com tristeza ao pensar em mim. Sei que o silêncio da casa parece grande agora, mas quero que saibam: eu parti sentindo todo o amor do mundo! Cada carinho atrás da orelha, cada caminhada no entardecer e cada noite quentinha aos pés da cama foram os capítulos mais preciosos da minha vida. Estou correndo livre no paraíso e guardando vocês para sempre no meu coração!"
           };
         }
         return p;
@@ -938,29 +1033,20 @@
     // INICIALIZAÇÃO
     window.addEventListener("DOMContentLoaded", () => {
       petAtual = obterPetSeguro();
+      aplicarDadosPetNaTela(petAtual);
 
-      // Perfil
-      document.getElementById("petNome").innerText = petAtual.nome;
-      document.getElementById("videoNomePet").innerText = petAtual.nome;
-      document.getElementById("petAnos").innerText = `${petAtual.nasc || "2012"} — ${petAtual.partida || "2026"} • Amor Incondicional`;
-      document.getElementById("petSubtitulo").innerText = petAtual.subtitulo || "Nosso leal companheiro e eterno anjo da família";
-      document.getElementById("petFotoCapa").src = petAtual.fotoPrincipal;
-      document.getElementById("videoSlideImgA").src = petAtual.fotoPrincipal;
-      document.getElementById("videoSlideImgBg").src = petAtual.fotoPrincipal;
-
-      // Cápsula
-      document.getElementById("anoChegadaCapsula").innerText = petAtual.nasc || "2012";
-      document.getElementById("anoPartidaCapsula").innerText = petAtual.partida || "2026";
-
-      // Textos
-      const paragrafos = (petAtual.cartaPet || "").split("\n\n").map(p => `<p>&ldquo;${p}&rdquo;</p>`).join("");
-      document.getElementById("textoCartaPet").innerHTML = paragrafos;
-      
-      // Inicializa o Passador de Histórias Interativo
-      inicializarPassadorHistorias();
-
-      // Álbum HD
-      renderizarAlbumFotos();
+      // Busca na API do servidor em background caso esteja em outro dispositivo
+      const paramsBusca = new URLSearchParams(window.location.search);
+      const petIdBusca = (paramsBusca.get("pet") || paramsBusca.get("id") || "").toLowerCase().trim();
+      if (petIdBusca && petIdBusca !== "thor" && (!petAtual || petAtual.id === "thor")) {
+        fetch('/api/pets?id=' + encodeURIComponent(petIdBusca))
+          .then(res => res.json())
+          .then(serverPet => {
+            if (serverPet && serverPet.nome) {
+              aplicarDadosPetNaTela(serverPet);
+            }
+          }).catch(e => console.log('Fetch API error:', e));
+      }
 
       // Carrega player de áudio real
       carregarFonteAudio(0);
@@ -968,7 +1054,6 @@
       // Carrega Mural de Mensagens
       carregarMuralMensagens();
       initCanvasParticulas();
-      verificarStatusPublicoMural();
     });
 
     // =========================================================================

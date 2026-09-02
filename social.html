@@ -350,7 +350,7 @@
             <button onclick="alternarPausaStory(event)" id="btnPausaStory" class="w-7 h-7 rounded-full bg-white/20 hover:bg-white/30 flex items-center justify-center text-xs font-bold text-white transition cursor-pointer" title="Pausar / Retomar">
               ⏸️
             </button>
-            <button onclick="apagarStoryAtual(event)" id="btnApagarStory" class="w-7 h-7 rounded-full bg-white/20 hover:bg-rose-600 text-white flex items-center justify-center text-xs font-bold transition cursor-pointer" title="Apagar este Story">
+            <button onclick="apagarStoryAtual(event)" id="btnApagarStory" class="hidden w-7 h-7 rounded-full bg-white/20 hover:bg-rose-600 text-white flex items-center justify-center text-xs font-bold transition cursor-pointer" title="Apagar este Story">
               🗑️
             </button>
             <button onclick="fecharStory()" class="w-7 h-7 rounded-full bg-white/20 hover:bg-white/30 flex items-center justify-center text-xs font-bold text-white transition cursor-pointer" title="Fechar Story">
@@ -1150,6 +1150,22 @@
 
       document.getElementById("btnPausaStory").innerText = "⏸️";
 
+      // Controle do Botão de Exclusão do Story: SÓ O DONO DO STORY PODE APAGAR ELE!
+      const btnApagarStory = document.getElementById("btnApagarStory");
+      if (btnApagarStory) {
+        let tutorLogado = null;
+        try { tutorLogado = JSON.parse(localStorage.getItem("terranova_tutor_logado")); } catch(e) {}
+        const petDoTutor = (tutorLogado && tutorLogado.petNome) ? tutorLogado.petNome.trim().toLowerCase() : "";
+        const storyPet = (pet.petNome || "").trim().toLowerCase();
+        const ehDonoDoStory = tutorLogado && (petDoTutor === storyPet || tutorLogado.isAdmin);
+        
+        if (ehDonoDoStory) {
+          btnApagarStory.classList.remove("hidden");
+        } else {
+          btnApagarStory.classList.add("hidden");
+        }
+      }
+
       // Renderiza os segmentos da barra de progresso no topo
       const progressContainer = document.getElementById("storyProgressContainer");
       progressContainer.innerHTML = "";
@@ -1256,9 +1272,33 @@
 
     function apagarStoryAtual(e) {
       if (e) e.stopPropagation();
+
+      let tutorLogado = null;
+      try {
+        tutorLogado = JSON.parse(localStorage.getItem("terranova_tutor_logado"));
+      } catch(err) {}
+
+      if (!tutorLogado || !tutorLogado.nome) {
+        alert("🔒 Acesso restrito: Você precisa estar conectado à sua conta de tutor para gerenciar seus stories.");
+        abrirModalLogin();
+        return;
+      }
+
       if (indicePetAtual < 0 || indicePetAtual >= listaStoriesData.length) return;
       const pet = listaStoriesData[indicePetAtual];
       if (!pet || !pet.stories || !pet.stories.length) return;
+
+      const petDoTutor = (tutorLogado.petNome || "").trim().toLowerCase();
+      const storyPet = (pet.petNome || "").trim().toLowerCase();
+
+      if (petDoTutor !== storyPet && !tutorLogado.isAdmin) {
+        alert("⚠️ Você só tem permissão para apagar stories do seu próprio pet!");
+        return;
+      }
+
+      if (!confirm(`Tem certeza de que deseja apagar este story de ${pet.petNome}?\nEsta ação não poderá ser desfeita.`)) {
+        return;
+      }
 
       pet.stories.splice(indiceStorySubAtual, 1);
 
@@ -1275,7 +1315,7 @@
       if (indiceStorySubAtual >= pet.stories.length) {
         indiceStorySubAtual = pet.stories.length - 1;
       }
-      atualizarStoryModal();
+      renderizarStoryAtual();
     }
 
     function enviarCarinhoStory(e) {
