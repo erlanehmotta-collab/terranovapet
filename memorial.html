@@ -913,98 +913,75 @@
     // APLICAÇÃO DOS DADOS DO PET NA TELA
     
     // =========================================================================
-    // SISTEMA DE ACESSO DO TUTOR, CONTROLE DE DOWNLOAD & PRIVACIDADE
     // =========================================================================
-    let tutorAutenticadoMemorial = false;
+    // SISTEMA DE AUTENTICAÇÃO DO TUTOR (EXATAMENTE COMO NO MODO SOCIAL)
+    // =========================================================================
+    let acaoPendenteAposLogin = null;
+    let tutorMemorialEmRecuperacao = null;
+    let tipoContaRecuperacaoMemorial = "tutor";
 
-    function verificarSeEhTutorOuAdmin() {
-      if (tutorAutenticadoMemorial) return true;
-
-      // 1. Checa se o usuário está logado como Administrador Mestre
+    function obterTutoresDbMemorial() {
       try {
-        const sessaoMestre = localStorage.getItem("terranova_master_session");
-        if (sessaoMestre) {
-          const sess = JSON.parse(sessaoMestre);
-          if (sess && sess.email) return true;
-        }
-      } catch(e) {}
-
-      // 2. Checa se o usuário é o tutor logado deste pet
-      try {
-        const sessaoTutor = localStorage.getItem("terranova_tutor_logado");
-        if (sessaoTutor) {
-          const t = JSON.parse(sessaoTutor);
-          if (t && petAtual) {
-            const petNome = (petAtual.nome || "").trim().toLowerCase();
-            const tutorPet = (t.petNome || "").trim().toLowerCase();
-            if (petNome === tutorPet || t.isAdmin) return true;
+        return JSON.parse(localStorage.getItem("terranova_tutores_db")) || [
+          {
+            nome: "Família Miranda",
+            email: "familia.miranda@gmail.com",
+            senha: "123",
+            petNome: "Thor"
           }
-        }
-      } catch(e) {}
-
-      // 3. Checa sessão temporária específica deste memorial
-      try {
-        const key = "terranova_tutor_autenticado_" + (petAtual ? petAtual.id : "thor");
-        if (sessionStorage.getItem(key) === "true") return true;
-      } catch(e) {}
-
-      return false;
-    }
-
-    function atualizarEstadoVisualTutor() {
-      const containerTopo = document.getElementById("containerAcessoTutorTopo");
-      const btnBaixar = document.getElementById("btnBaixarVideoControle");
-      const ehTutor = verificarSeEhTutorOuAdmin();
-
-      if (containerTopo) {
-        if (ehTutor) {
-          containerTopo.innerHTML = `
-            <div class="flex items-center gap-1.5 bg-gradient-to-r from-amber-400 to-yellow-300 px-3 py-1.5 rounded-full border border-white/80 shadow-md">
-              <span class="text-xs">👑</span>
-              <span class="text-xs font-black text-[#740568]">Modo Tutor</span>
-              <button type="button" onclick="abrirPainelTutorMemorial()" class="ml-1 px-2 py-0.5 rounded-md bg-[#740568] hover:bg-[#520349] text-amber-200 text-[10px] font-bold transition">
-                Editar
-              </button>
-              <button type="button" onclick="logoutTutorMemorial()" class="text-stone-700 hover:text-red-700 text-xs px-1" title="Sair do Modo Tutor">
-                ✕
-              </button>
-            </div>
-          `;
-        } else {
-          containerTopo.innerHTML = `
-            <button type="button" onclick="abrirModalLoginTutor()" class="px-3.5 py-2 rounded-full bg-black/40 hover:bg-black/60 border border-amber-300/70 text-amber-200 text-xs font-bold transition flex items-center gap-1.5 shadow-sm">
-              <span>🔐</span>
-              <span>Acesso do Tutor</span>
-            </button>
-          `;
-        }
+        ];
+      } catch(e) {
+        return [];
       }
-
-      // Controle de exibição do botão de baixar vídeo para visitantes
-      const permitirDownload = petAtual ? (petAtual.permitirDownloadVideo !== false) : true;
-      const btnDownloadGeral = document.querySelectorAll("button[onclick='baixarVideoTributo()']");
-      
-      btnDownloadGeral.forEach(btn => {
-        if (!permitirDownload && !ehTutor) {
-          btn.innerHTML = "<span>🔒</span> <span>Vídeo Reservado</span>";
-          btn.classList.add("opacity-70");
-          btn.title = "O tutor deste memorial configurou o download do vídeo como restrito à família.";
-        } else {
-          btn.innerHTML = "<span>📥</span> <span>Baixar Vídeo</span>";
-          btn.classList.remove("opacity-70");
-          btn.title = "Baixar vídeo tributo em alta definição";
-        }
-      });
     }
 
-    function abrirModalLoginTutor() {
+    function alternarVisibilidadeSenhaAuth(inputId, btn) {
+      const input = document.getElementById(inputId);
+      if (input.type === "password") {
+        input.type = "text";
+        btn.innerText = "🙈 Ocultar";
+      } else {
+        input.type = "password";
+        btn.innerText = "👁️ Ver";
+      }
+    }
+
+    function trocarAbaAuthMemorial(aba) {
+      const btnLogin = document.getElementById("tabBtnLoginMemorial");
+      const btnCad = document.getElementById("tabBtnCadastroMemorial");
+      const formLogin = document.getElementById("formLoginAuthMemorial");
+      const formCad = document.getElementById("formCadastroAuthMemorial");
+
+      if (aba === "login") {
+        btnLogin.className = "flex-1 py-2 rounded-xl text-xs font-black bg-white shadow-xs text-[#740568] transition";
+        btnCad.className = "flex-1 py-2 rounded-xl text-xs font-bold text-stone-600 hover:text-stone-900 transition";
+        formLogin.classList.remove("hidden");
+        formCad.classList.add("hidden");
+      } else {
+        btnCad.className = "flex-1 py-2 rounded-xl text-xs font-black bg-white shadow-xs text-[#740568] transition";
+        btnLogin.className = "flex-1 py-2 rounded-xl text-xs font-bold text-stone-600 hover:text-stone-900 transition";
+        formCad.classList.remove("hidden");
+        formLogin.classList.add("hidden");
+      }
+    }
+
+    function abrirModalLoginTutor(acaoAoConcluir = null) {
+      acaoPendenteAposLogin = acaoAoConcluir;
       const modal = document.getElementById("modalLoginTutorMemorial");
-      const dica = document.getElementById("dicaCodigoTagLogin");
-      if (dica && petAtual) {
-        dica.innerText = petAtual.tagCode || petAtual.nfcCode || "TN-THOR-3620";
+      const erroBox = document.getElementById("erroLoginTutorMemorial");
+      if (erroBox) erroBox.classList.add("hidden");
+
+      // Pré-preenche se o pet já tiver um tutor cadastrado
+      const emailInput = document.getElementById("loginTutorEmailMemorial");
+      if (emailInput && !emailInput.value && petAtual && petAtual.tutorEmail) {
+        emailInput.value = petAtual.tutorEmail;
       }
-      document.getElementById("erroLoginTutorMemorial").classList.add("hidden");
-      document.getElementById("senhaTutorMemorialInput").value = "";
+      const cadPet = document.getElementById("cadNomePetMemorial");
+      if (cadPet && petAtual) {
+        cadPet.value = petAtual.nome;
+      }
+
+      trocarAbaAuthMemorial("login");
       if (modal) modal.classList.remove("hidden");
     }
 
@@ -1013,134 +990,258 @@
       if (modal) modal.classList.add("hidden");
     }
 
-    function alternarVisibilidadeSenhaTutor() {
-      const inp = document.getElementById("senhaTutorMemorialInput");
-      if (inp) inp.type = (inp.type === "password") ? "text" : "password";
-    }
-
     function executarLoginTutorMemorial(e) {
       if (e) e.preventDefault();
-      const senhaDigitada = (document.getElementById("senhaTutorMemorialInput").value || "").trim();
+      const email = (document.getElementById("loginTutorEmailMemorial").value || "").trim().toLowerCase();
+      const senha = (document.getElementById("loginTutorSenhaMemorial").value || "").trim();
       const erroBox = document.getElementById("erroLoginTutorMemorial");
 
-      if (!petAtual) petAtual = obterPetSeguro();
+      let tutorEncontrado = null;
 
-      const tagVal = (petAtual.tagCode || petAtual.nfcCode || petAtual.id || "").toLowerCase();
-      const senhaPet = (petAtual.senhaTutor || "123").toLowerCase();
-      const senhaMestre = "emia2026";
+      // 1. Busca na base de tutores compartilhada (mesma do Social)
+      const tutoresDb = obterTutoresDbMemorial();
+      tutorEncontrado = tutoresDb.find(t => t.email && t.email.toLowerCase() === email && t.senha === senha);
 
-      const digitadoLower = senhaDigitada.toLowerCase();
+      // 2. Busca na base de contas mestres (Admin)
+      if (!tutorEncontrado) {
+        let mestres = [];
+        try { mestres = JSON.parse(localStorage.getItem("terranova_master_accounts")) || []; } catch(err) {}
+        const mestre = mestres.find(m => m.email && m.email.toLowerCase() === email && m.senha === senha);
+        if (mestre) {
+          tutorEncontrado = {
+            nome: mestre.nome || "Administrador Mestre",
+            email: mestre.email,
+            isAdmin: true,
+            petNome: petAtual ? petAtual.nome : "Thor"
+          };
+        }
+      }
 
-      // Validação: aceita senha do pet, código da tag ou senha mestre Emia2026
-      if (digitadoLower === senhaPet || digitadoLower === tagVal || digitadoLower === senhaMestre) {
+      // 3. Suporte especial à conta mestre padrão
+      if (!tutorEncontrado && email === "erlanehmotta@gmail.com" && senha === "Emia2026") {
+        tutorEncontrado = {
+          nome: "Erlane Motta",
+          email: "erlanehmotta@gmail.com",
+          isAdmin: true,
+          petNome: petAtual ? petAtual.nome : "Thor"
+        };
+      }
+
+      // 4. Suporte especial para o pet padrão Thor se credenciais forem padrão
+      if (!tutorEncontrado && email === "familia.miranda@gmail.com" && (senha === "123" || senha === "emia2026")) {
+        tutorEncontrado = {
+          nome: "Família Miranda",
+          email: "familia.miranda@gmail.com",
+          petNome: "Thor"
+        };
+      }
+
+      if (tutorEncontrado) {
+        // Salva na mesma sessão oficial de tutor do Social
+        localStorage.setItem("terranova_tutor_logado", JSON.stringify(tutorEncontrado));
         tutorAutenticadoMemorial = true;
-        const key = "terranova_tutor_autenticado_" + petAtual.id;
-        sessionStorage.setItem(key, "true");
 
+        if (erroBox) erroBox.classList.add("hidden");
         fecharModalLoginTutor();
         atualizarEstadoVisualTutor();
-        abrirPainelTutorMemorial();
+
+        alert(`👑 Bem-vindo(a), ${tutorEncontrado.nome}!\n\nVocê agora está no Modo de Edição do Memorial.`);
+
+        if (acaoPendenteAposLogin && typeof acaoPendenteAposLogin === "function") {
+          const fn = acaoPendenteAposLogin;
+          acaoPendenteAposLogin = null;
+          fn();
+        } else {
+          abrirPainelTutorMemorial();
+        }
       } else {
         if (erroBox) {
           erroBox.classList.remove("hidden");
-          erroBox.innerText = "Senha incorreta. Você pode usar a sua senha de tutor, a senha mestre ou o código da tag.";
+          erroBox.innerText = "E-mail ou senha incorretos. Use o link 'Esqueceu a senha?' se precisar redefinir.";
         }
       }
     }
 
-    function recuperarSenhaTutorMemorial() {
-      if (!petAtual) petAtual = obterPetSeguro();
-      const tag = petAtual.tagCode || petAtual.nfcCode || "TN-THOR-3620";
-      const campo = document.getElementById("senhaTutorMemorialInput");
-      if (campo) {
-        campo.value = tag;
-        campo.type = "text";
-        alert(`🔑 Código da Tag preenchido automaticamente: ${tag}\n\nClique em 'Acessar Modo de Edição do Tutor' para continuar.`);
-      }
-    }
+    function executarCadastroTutorMemorial(e) {
+      if (e) e.preventDefault();
+      const nome = document.getElementById("cadNomeTutorMemorial").value.trim();
+      const email = document.getElementById("cadEmailTutorMemorial").value.trim().toLowerCase();
+      const senha = document.getElementById("cadSenhaTutorMemorial").value.trim();
+      const confirma = document.getElementById("cadConfirmaSenhaTutorMemorial").value.trim();
+      const petNome = document.getElementById("cadNomePetMemorial").value.trim() || (petAtual ? petAtual.nome : "Thor");
 
-    function logoutTutorMemorial() {
-      if (confirm("Deseja sair do Modo de Edição do Tutor?")) {
-        tutorAutenticadoMemorial = false;
-        if (petAtual) {
-          sessionStorage.removeItem("terranova_tutor_autenticado_" + petAtual.id);
-        }
-        atualizarEstadoVisualTutor();
-        alert("Modo de Edição encerrado. Você agora está no modo de visualização pública.");
+      if (senha.length < 3) {
+        alert("A senha deve ter no mínimo 3 dígitos.");
+        return;
       }
-    }
-
-    function abrirPainelTutorMemorial() {
-      if (!verificarSeEhTutorOuAdmin()) {
-        abrirModalLoginTutor();
+      if (senha !== confirma) {
+        alert("As senhas digitadas não coincidem. Verifique usando o botão Ver 👁️.");
         return;
       }
 
-      if (!petAtual) petAtual = obterPetSeguro();
+      let db = obterTutoresDbMemorial();
+      const jaExiste = db.find(t => t.email.toLowerCase() === email);
+      if (jaExiste) {
+        alert("Este e-mail já está cadastrado. Faça login na aba ao lado.");
+        trocarAbaAuthMemorial("login");
+        document.getElementById("loginTutorEmailMemorial").value = email;
+        return;
+      }
 
-      // Preenche os campos do painel com os dados atuais
-      document.getElementById("tutorPermitirDownloadVideo").checked = (petAtual.permitirDownloadVideo !== false);
-      document.getElementById("tutorEditNome").value = petAtual.nome || "Thor";
-      document.getElementById("tutorEditSubtitulo").value = petAtual.subtitulo || "Nosso leal companheiro e eterno anjo da família";
-      document.getElementById("tutorEditNasc").value = petAtual.nasc || "2012";
-      document.getElementById("tutorEditPartida").value = petAtual.partida || "2026";
-      document.getElementById("tutorEditCarta").value = petAtual.cartaPet || "";
-      document.getElementById("tutorEditSenha").value = petAtual.senhaTutor || "123";
+      const novoTutor = {
+        nome,
+        email,
+        senha,
+        petNome,
+        cidade: petAtual ? petAtual.cidade : "Montes Claros - MG"
+      };
 
-      document.getElementById("modalPainelTutorMemorial").classList.remove("hidden");
-    }
+      db.push(novoTutor);
+      localStorage.setItem("terranova_tutores_db", JSON.stringify(db));
+      localStorage.setItem("terranova_tutor_logado", JSON.stringify(novoTutor));
+      tutorAutenticadoMemorial = true;
 
-    function fecharPainelTutorMemorial() {
-      document.getElementById("modalPainelTutorMemorial").classList.add("hidden");
-    }
-
-    function salvarEdicoesTutorMemorial(e) {
-      if (e) e.preventDefault();
-      if (!petAtual) petAtual = obterPetSeguro();
-
-      const permitirDownload = document.getElementById("tutorPermitirDownloadVideo").checked;
-      const novoNome = document.getElementById("tutorEditNome").value.trim();
-      const novoSub = document.getElementById("tutorEditSubtitulo").value.trim();
-      const novoNasc = document.getElementById("tutorEditNasc").value.trim();
-      const novaPartida = document.getElementById("tutorEditPartida").value.trim();
-      const novaCarta = document.getElementById("tutorEditCarta").value.trim();
-      const novaSenha = document.getElementById("tutorEditSenha").value.trim();
-
-      petAtual.permitirDownloadVideo = permitirDownload;
-      petAtual.nome = novoNome;
-      petAtual.subtitulo = novoSub;
-      petAtual.nasc = novoNasc;
-      petAtual.partida = novaPartida;
-      petAtual.cartaPet = novaCarta;
-      if (novaSenha) petAtual.senhaTutor = novaSenha;
-
-      // 1. Atualiza na tela imediatamente
-      aplicarDadosPetNaTela(petAtual);
-
-      // 2. Salva localmente
-      salvarPetAtualizadoNoStorage();
-
-      // 3. Sincroniza na Nuvem (Cloudflare D1)
-      try {
-        fetch('/api/pets', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify(petAtual)
-        }).catch(err => console.log('Sync D1:', err));
-      } catch(err) {}
-
-      fecharPainelTutorMemorial();
+      fecharModalLoginTutor();
       atualizarEstadoVisualTutor();
 
-      alert(`🎉 Memorial de ${novoNome} atualizado com sucesso!\n\n🛡️ Download de Terceiros: ${permitirDownload ? 'Liberado para visitantes' : 'Privado / Bloqueado para visitantes'}\nAs alterações foram salvas e sincronizadas na nuvem.`);
+      alert(`🎉 Cadastro realizado com sucesso!\nBem-vindo(a), ${nome}. O Modo de Edição do Memorial de ${petNome} está liberado.`);
+
+      if (acaoPendenteAposLogin && typeof acaoPendenteAposLogin === "function") {
+        const fn = acaoPendenteAposLogin;
+        acaoPendenteAposLogin = null;
+        fn();
+      } else {
+        abrirPainelTutorMemorial();
+      }
     }
 
+    // =========================================================================
+    // FLUXO DE ESQUECEU A SENHA NO MEMORIAL (IDÊNTICO AO SOCIAL)
+    // =========================================================================
+    function abrirModalEsqueceuSenhaMemorial() {
+      const modal = document.getElementById("modalEsqueceuSenhaMemorial");
+      const inputEmail = document.getElementById("recuperarMemorialEmailInput");
+      const loginEmail = document.getElementById("loginTutorEmailMemorial");
+
+      if (inputEmail && loginEmail) {
+        inputEmail.value = loginEmail.value.trim();
+      }
+
+      document.getElementById("etapaMemorialLocalizar").classList.remove("hidden");
+      document.getElementById("etapaMemorialRedefinir").classList.add("hidden");
+      document.getElementById("erroRecuperarMemorial").classList.add("hidden");
+
+      if (modal) modal.classList.remove("hidden");
+    }
+
+    function fecharModalEsqueceuSenhaMemorial() {
+      const modal = document.getElementById("modalEsqueceuSenhaMemorial");
+      if (modal) modal.classList.add("hidden");
+    }
+
+    function verificarEmailMemorialRecuperacao() {
+      const email = (document.getElementById("recuperarMemorialEmailInput").value || "").trim().toLowerCase();
+      const erroBox = document.getElementById("erroRecuperarMemorial");
+
+      // 1. Busca na base de tutores
+      const tutores = obterTutoresDbMemorial();
+      tutorMemorialEmRecuperacao = tutores.find(t => t.email && t.email.toLowerCase() === email);
+      tipoContaRecuperacaoMemorial = "tutor";
+
+      // 2. Se não achar, busca na base de contas mestres
+      if (!tutorMemorialEmRecuperacao) {
+        let mestres = [];
+        try { mestres = JSON.parse(localStorage.getItem("terranova_master_accounts")) || []; } catch(e) {}
+        tutorMemorialEmRecuperacao = mestres.find(m => m.email && m.email.toLowerCase() === email);
+        if (tutorMemorialEmRecuperacao) tipoContaRecuperacaoMemorial = "master";
+      }
+
+      // 3. Suporte especial às contas padrão
+      if (!tutorMemorialEmRecuperacao && (email === "familia.miranda@gmail.com" || email === "erlanehmotta@gmail.com")) {
+        tutorMemorialEmRecuperacao = {
+          nome: email === "erlanehmotta@gmail.com" ? "Erlane Motta (Mestre)" : "Família Miranda",
+          email: email,
+          senha: email === "erlanehmotta@gmail.com" ? "Emia2026" : "123",
+          petNome: petAtual ? petAtual.nome : "Thor"
+        };
+      }
+
+      if (tutorMemorialEmRecuperacao) {
+        if (erroBox) erroBox.classList.add("hidden");
+        document.getElementById("etapaMemorialLocalizar").classList.add("hidden");
+        document.getElementById("etapaMemorialRedefinir").classList.remove("hidden");
+
+        const infoEl = document.getElementById("recuperarMemorialInfo");
+        if (infoEl) {
+          infoEl.innerHTML = `Tutor(a): <strong>${tutorMemorialEmRecuperacao.nome}</strong> (${tutorMemorialEmRecuperacao.petNome || 'Pet'})<br>E-mail: <strong>${tutorMemorialEmRecuperacao.email}</strong>`;
+        }
+
+        const inputNova = document.getElementById("recuperarMemorialNovaSenhaInput");
+        if (inputNova) {
+          inputNova.value = tutorMemorialEmRecuperacao.senha || "123";
+          inputNova.focus();
+        }
+      } else {
+        if (erroBox) {
+          erroBox.classList.remove("hidden");
+          erroBox.innerText = `O e-mail "${email}" não foi encontrado. Verifique a digitação ou cadastre-se.`;
+        }
+      }
+    }
+
+    function salvarNovaSenhaMemorialRecuperada() {
+      if (!tutorMemorialEmRecuperacao) return;
+      const novaSenha = (document.getElementById("recuperarMemorialNovaSenhaInput").value || "").trim();
+      if (!novaSenha || novaSenha.length < 3) {
+        alert("A senha deve conter no mínimo 3 dígitos.");
+        return;
+      }
+
+      // Atualiza na base de dados correspondente
+      if (tipoContaRecuperacaoMemorial === "master") {
+        let mestres = [];
+        try { mestres = JSON.parse(localStorage.getItem("terranova_master_accounts")) || []; } catch(e) {}
+        const idxM = mestres.findIndex(m => m.email.toLowerCase() === tutorMemorialEmRecuperacao.email.toLowerCase());
+        if (idxM !== -1) {
+          mestres[idxM].senha = novaSenha;
+          localStorage.setItem("terranova_master_accounts", JSON.stringify(mestres));
+        }
+      } else {
+        let tutores = obterTutoresDbMemorial();
+        const idxT = tutores.findIndex(t => t.email.toLowerCase() === tutorMemorialEmRecuperacao.email.toLowerCase());
+        if (idxT !== -1) {
+          tutores[idxT].senha = novaSenha;
+        } else {
+          tutores.push({ ...tutorMemorialEmRecuperacao, senha: novaSenha });
+        }
+        localStorage.setItem("terranova_tutores_db", JSON.stringify(tutores));
+      }
+
+      tutorMemorialEmRecuperacao.senha = novaSenha;
+      localStorage.setItem("terranova_tutor_logado", JSON.stringify(tutorMemorialEmRecuperacao));
+      tutorAutenticadoMemorial = true;
+
+      // Atualiza campos do formulário de login
+      const emailLogin = document.getElementById("loginTutorEmailMemorial");
+      const senhaLogin = document.getElementById("loginTutorSenhaMemorial");
+      if (emailLogin) emailLogin.value = tutorMemorialEmRecuperacao.email;
+      if (senhaLogin) senhaLogin.value = novaSenha;
+
+      fecharModalEsqueceuSenhaMemorial();
+      fecharModalLoginTutor();
+      atualizarEstadoVisualTutor();
+
+      alert(`🎉 Senha redefinida com sucesso para ${tutorMemorialEmRecuperacao.nome}! Você já está no Modo de Edição.`);
+    }
+
+    // =========================================================================
+    // PROTEÇÃO DAS PARTES EDITÁVEIS
+    // =========================================================================
     function checarPermissaoTutorEExecutar(acao) {
       if (verificarSeEhTutorOuAdmin()) {
         acao();
       } else {
-        alert("🔒 Esta funcionalidade é reservada ao tutor deste pet. Informe a senha de acesso para continuar.");
-        abrirModalLoginTutor();
+        abrirModalLoginTutor(acao);
       }
     }
 
@@ -2203,60 +2304,211 @@
   </script>
 
   <!-- ========================================================================= -->
-  <!-- MODAL 1: AUTENTICAÇÃO DO TUTOR DO MEMORIAL -->
+  <!-- ========================================================================= -->
+  <!-- MODAL: AUTENTICAÇÃO DO TUTOR (IDÊNTICO AO MODO SOCIAL COM LOGIN E CADASTRO) -->
   <!-- ========================================================================= -->
   <div id="modalLoginTutorMemorial" class="hidden fixed inset-0 z-50 bg-black/80 backdrop-blur-md flex items-center justify-center p-4">
-    <div class="bg-white max-w-md w-full rounded-3xl p-6 md:p-8 shadow-2xl border-2 border-amber-400 space-y-5 relative overflow-hidden" onclick="event.stopPropagation()">
+    <div class="bg-white max-w-md w-full rounded-3xl overflow-hidden shadow-2xl border-2 border-amber-400" onclick="event.stopPropagation()">
       
-      <div class="flex items-center justify-between border-b border-stone-200 pb-3">
+      <!-- Cabeçalho Roxo Nobre e Dourado Imperial -->
+      <div class="p-4 bg-gradient-to-r from-amber-400 via-yellow-400 to-amber-500 border-b-2 border-[#740568]/30 flex items-center justify-between text-[#740568]">
         <div class="flex items-center gap-2.5">
-          <div class="w-10 h-10 rounded-2xl bg-amber-100 text-[#740568] flex items-center justify-center text-xl font-bold">
-            🔐
-          </div>
+          <span class="text-xl">🕊️</span>
           <div>
-            <h3 class="font-black text-base text-[#520349] leading-tight">Área do Tutor</h3>
-            <p class="text-[11px] text-stone-500 font-medium">Acesso restrito para editar esta homenagem</p>
+            <h3 class="font-black text-sm text-[#740568] leading-tight">Terranova Pet Memorial</h3>
+            <p class="text-[10px] text-[#520349] font-black">Acesso Exclusivo para o Tutor da Homenagem</p>
           </div>
         </div>
-        <button type="button" onclick="fecharModalLoginTutor()" class="w-7 h-7 rounded-full bg-stone-100 hover:bg-stone-200 text-stone-600 flex items-center justify-center text-xs font-bold transition">
+        <button onclick="fecharModalLoginTutor()" class="w-8 h-8 rounded-full bg-stone-200 hover:bg-stone-300 text-stone-700 font-bold flex items-center justify-center text-xs">✕</button>
+      </div>
+
+      <!-- Abas: Entrar (Login) vs Cadastrar (Novo Tutor) -->
+      <div class="flex border-b border-stone-200 bg-stone-100/70 p-1.5 gap-1.5">
+        <button type="button" onclick="trocarAbaAuthMemorial('login')" id="tabBtnLoginMemorial" class="flex-1 py-2 rounded-xl text-xs font-black bg-white shadow-xs text-[#740568] transition">
+          🔑 Entrar na Conta
+        </button>
+        <button type="button" onclick="trocarAbaAuthMemorial('cadastro')" id="tabBtnCadastroMemorial" class="flex-1 py-2 rounded-xl text-xs font-bold text-stone-600 hover:text-stone-900 transition">
+          ✍️ Cadastrar Tutor
+        </button>
+      </div>
+
+      <div class="p-5">
+        
+        <!-- FORMULÁRIO 1: LOGIN COM E-MAIL E SENHA -->
+        <form id="formLoginAuthMemorial" onsubmit="executarLoginTutorMemorial(event)" class="space-y-4 text-xs">
+          <p class="text-stone-600 text-xs">
+            Digite seu <strong>E-mail</strong> e <strong>Senha</strong> para entrar e editar as homenagens deste pet:
+          </p>
+
+          <div>
+            <label class="block font-bold text-stone-700 mb-1">Seu E-mail de Tutor *</label>
+            <input type="email" id="loginTutorEmailMemorial" required placeholder="seu.email@exemplo.com" value="familia.miranda@gmail.com" class="w-full bg-stone-50 border border-stone-300 rounded-xl p-2.5 text-xs text-stone-800 focus:outline-none focus:border-amber-500 font-semibold">
+          </div>
+
+          <div>
+            <div class="flex items-center justify-between mb-1">
+              <label class="font-bold text-stone-700">Sua Senha de Acesso *</label>
+              <button type="button" onclick="alternarVisibilidadeSenhaAuth('loginTutorSenhaMemorial', this)" class="text-[11px] text-amber-700 hover:underline font-bold cursor-pointer">👁️ Ver</button>
+            </div>
+            <input type="password" id="loginTutorSenhaMemorial" required placeholder="Sua senha de acesso" value="123" class="w-full bg-stone-50 border border-stone-300 rounded-xl p-2.5 text-xs text-stone-800 focus:outline-none focus:border-amber-500 font-semibold">
+            <div class="flex justify-end mt-1.5">
+              <button type="button" onclick="abrirModalEsqueceuSenhaMemorial()" class="text-[11px] font-bold text-[#740568] hover:text-amber-700 hover:underline transition cursor-pointer">
+                Esqueceu a senha?
+              </button>
+            </div>
+          </div>
+
+          <div id="erroLoginTutorMemorial" class="hidden p-3 rounded-xl bg-rose-50 border border-rose-200 text-rose-700 text-xs font-bold text-center">
+            E-mail ou senha incorretos.
+          </div>
+
+          <button type="submit" class="w-full py-3 bg-gradient-to-r from-[#740568] via-[#8C077E] to-[#740568] hover:brightness-110 text-yellow-300 font-black text-xs rounded-xl shadow-md transition active:scale-95 flex items-center justify-center gap-1.5 cursor-pointer">
+            <span>🚀</span>
+            <span>Entrar &amp; Acessar Modo de Edição</span>
+          </button>
+
+          <p class="text-center text-[11px] text-stone-500 pt-1">
+            Não tem uma conta ainda? 
+            <button type="button" onclick="trocarAbaAuthMemorial('cadastro')" class="text-amber-700 font-bold hover:underline">Cadastre-se aqui gratuitamente</button>
+          </p>
+        </form>
+
+        <!-- FORMULÁRIO 2: CADASTRO DO TUTOR COM SENHA -->
+        <form id="formCadastroAuthMemorial" onsubmit="executarCadastroTutorMemorial(event)" class="hidden space-y-3.5 text-xs">
+          <p class="text-stone-600 text-xs">
+            Preencha seus dados para criar sua conta de tutor e gerenciar o memorial:
+          </p>
+
+          <div>
+            <label class="block font-bold text-stone-700 mb-1">Nome do Tutor / Família *</label>
+            <input type="text" id="cadNomeTutorMemorial" required placeholder="Ex: Família Miranda, Carlos Silva..." class="w-full bg-stone-50 border border-stone-300 rounded-xl p-2.5 text-xs text-stone-800 focus:outline-none focus:border-amber-500 font-semibold">
+          </div>
+
+          <div>
+            <label class="block font-bold text-stone-700 mb-1">Seu E-mail *</label>
+            <input type="email" id="cadEmailTutorMemorial" required placeholder="seu.email@exemplo.com" class="w-full bg-stone-50 border border-stone-300 rounded-xl p-2.5 text-xs text-stone-800 focus:outline-none focus:border-amber-500 font-semibold">
+          </div>
+
+          <!-- SENHA E CONFIRMAÇÃO COM VISUALIZADOR 👁️ -->
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+            <div>
+              <div class="flex items-center justify-between mb-1">
+                <label class="block font-bold text-stone-700 text-xs">Criar Senha *</label>
+                <button type="button" onclick="alternarVisibilidadeSenhaAuth('cadSenhaTutorMemorial', this)" class="text-[11px] text-[#740568] hover:text-amber-700 hover:underline font-bold flex items-center gap-1 cursor-pointer">
+                  👁️ Ver
+                </button>
+              </div>
+              <div class="relative">
+                <input type="password" id="cadSenhaTutorMemorial" required placeholder="Mínimo 3 dígitos" class="w-full bg-stone-50 border border-stone-300 rounded-xl p-2.5 pr-8 text-xs text-stone-800 focus:outline-none focus:border-amber-500 font-semibold">
+              </div>
+            </div>
+            <div>
+              <div class="flex items-center justify-between mb-1">
+                <label class="block font-bold text-stone-700 text-xs">Confirmar Senha *</label>
+                <button type="button" onclick="alternarVisibilidadeSenhaAuth('cadConfirmaSenhaTutorMemorial', this)" class="text-[11px] text-[#740568] hover:text-amber-700 hover:underline font-bold flex items-center gap-1 cursor-pointer">
+                  👁️ Ver
+                </button>
+              </div>
+              <div class="relative">
+                <input type="password" id="cadConfirmaSenhaTutorMemorial" required placeholder="Repita a senha" class="w-full bg-stone-50 border border-stone-300 rounded-xl p-2.5 pr-8 text-xs text-stone-800 focus:outline-none focus:border-amber-500 font-semibold">
+              </div>
+            </div>
+          </div>
+
+          <div>
+            <label class="block font-bold text-stone-700 mb-1">Nome do Pet Homenageado *</label>
+            <input type="text" id="cadNomePetMemorial" required value="Thor" placeholder="Ex: Thor, Pipoca..." class="w-full bg-stone-50 border border-stone-300 rounded-xl p-2.5 text-xs text-stone-800 focus:outline-none focus:border-amber-500 font-semibold">
+          </div>
+
+          <button type="submit" class="w-full py-3 bg-gradient-to-r from-[#740568] via-[#8C077E] to-[#740568] hover:brightness-110 text-yellow-300 font-black text-xs rounded-xl shadow-md transition active:scale-95 flex items-center justify-center gap-1.5 cursor-pointer">
+            <span>✨</span>
+            <span>Finalizar Cadastro &amp; Acessar</span>
+          </button>
+
+          <p class="text-center text-[11px] text-stone-500 pt-1">
+            Já tem uma conta criada? 
+            <button type="button" onclick="trocarAbaAuthMemorial('login')" class="text-amber-700 font-bold hover:underline">Faça login com sua senha</button>
+          </p>
+        </form>
+
+      </div>
+    </div>
+  </div>
+
+  <!-- ========================================================================= -->
+  <!-- MODAL: RECUPERAÇÃO DE SENHA DO TUTOR (MEMORIAL) -->
+  <!-- ========================================================================= -->
+  <div id="modalEsqueceuSenhaMemorial" class="hidden fixed inset-0 z-50 bg-black/80 backdrop-blur-md flex items-center justify-center p-4">
+    <div class="bg-white max-w-md w-full rounded-3xl p-6 md:p-8 shadow-2xl border-2 border-amber-400 space-y-5 relative overflow-hidden" onclick="event.stopPropagation()">
+      
+      <!-- Cabeçalho -->
+      <div class="flex items-center justify-between border-b border-stone-200 pb-3">
+        <div class="flex items-center gap-2.5">
+          <div class="w-9 h-9 rounded-xl bg-amber-100 text-[#740568] flex items-center justify-center text-lg font-bold">
+            🔑
+          </div>
+          <div>
+            <h3 class="font-black text-base text-[#520349] leading-tight">Recuperar Senha de Tutor</h3>
+            <p class="text-[11px] text-stone-500 font-medium">Redefina o acesso para gerenciar a homenagem</p>
+          </div>
+        </div>
+        <button type="button" onclick="fecharModalEsqueceuSenhaMemorial()" class="w-7 h-7 rounded-full bg-stone-100 hover:bg-stone-200 text-stone-600 flex items-center justify-center text-xs font-bold transition">
           ✕
         </button>
       </div>
 
-      <form onsubmit="executarLoginTutorMemorial(event)" class="space-y-4">
+      <!-- Etapa 1: Localizar E-mail -->
+      <div id="etapaMemorialLocalizar" class="space-y-4">
         <div>
-          <label class="block text-xs font-bold text-stone-700 mb-1">Senha do Tutor ou Senha Mestre *</label>
+          <label class="block text-xs font-bold text-stone-700 mb-1">Informe seu e-mail cadastrado:</label>
+          <div class="relative">
+            <span class="absolute left-3.5 top-1/2 -translate-y-1/2 text-stone-400 text-sm">📧</span>
+            <input type="email" id="recuperarMemorialEmailInput" placeholder="seu.email@exemplo.com" class="w-full bg-stone-50 border border-stone-300 focus:border-amber-500 rounded-2xl pl-10 pr-4 py-2.5 text-xs text-stone-800 font-bold focus:outline-none focus:ring-2 focus:ring-amber-400/30">
+          </div>
+        </div>
+
+        <div id="erroRecuperarMemorial" class="hidden p-3 rounded-xl bg-rose-50 border border-rose-200 text-rose-700 text-xs font-bold text-center">
+          E-mail não encontrado.
+        </div>
+
+        <button type="button" onclick="verificarEmailMemorialRecuperacao()" class="w-full py-3.5 rounded-2xl bg-gradient-to-r from-amber-500 via-yellow-400 to-amber-500 hover:brightness-105 text-[#740568] font-black text-xs shadow-md transition active:scale-95 flex items-center justify-center gap-2 cursor-pointer">
+          <span>🔍</span>
+          <span>Localizar Minha Conta</span>
+        </button>
+      </div>
+
+      <!-- Etapa 2: Redefinir Senha -->
+      <div id="etapaMemorialRedefinir" class="hidden space-y-4">
+        <div class="p-3 bg-amber-50 border border-amber-200 rounded-2xl space-y-1">
+          <p class="text-xs font-bold text-[#740568]">Conta Localizada com Sucesso! 🎉</p>
+          <p id="recuperarMemorialInfo" class="text-[11px] text-stone-600 font-mono"></p>
+        </div>
+
+        <div>
+          <label class="block text-xs font-bold text-stone-700 mb-1">Digite sua nova senha:</label>
           <div class="relative">
             <span class="absolute left-3.5 top-1/2 -translate-y-1/2 text-stone-400 text-sm">🔑</span>
-            <input type="password" id="senhaTutorMemorialInput" required placeholder="Digite sua senha ou código da tag" class="w-full bg-stone-50 border border-stone-300 focus:border-amber-500 rounded-2xl pl-10 pr-10 py-3 text-xs text-stone-800 font-bold focus:outline-none focus:ring-2 focus:ring-amber-400/30">
-            <button type="button" onclick="alternarVisibilidadeSenhaTutor()" class="absolute right-3 top-1/2 -translate-y-1/2 text-stone-400 hover:text-stone-700 text-xs p-1" title="Ver / Ocultar Senha">
-              👁️
-            </button>
+            <input type="text" id="recuperarMemorialNovaSenhaInput" placeholder="Nova senha (mínimo 3 caracteres)" class="w-full bg-stone-50 border border-stone-300 focus:border-amber-500 rounded-2xl pl-10 pr-4 py-2.5 text-xs text-stone-800 font-bold font-mono focus:outline-none focus:ring-2 focus:ring-amber-400/30">
           </div>
-          <p class="text-[10px] text-stone-400 mt-1">Você também pode usar o código da tag (<span id="dicaCodigoTagLogin">TN-THOR-3620</span>) ou sua senha mestre.</p>
         </div>
 
-        <div id="erroLoginTutorMemorial" class="hidden p-3 rounded-xl bg-rose-50 border border-rose-200 text-rose-700 text-xs font-bold text-center">
-          Senha incorreta. Verifique os dados ou use a senha mestre.
-        </div>
-
-        <button type="submit" class="w-full py-3.5 rounded-2xl bg-gradient-to-r from-amber-500 via-amber-400 to-yellow-300 hover:brightness-105 text-[#740568] font-black text-xs shadow-md transition active:scale-95 flex items-center justify-center gap-2 cursor-pointer">
-          <span>🚀</span>
-          <span>Acessar Modo de Edição do Tutor</span>
+        <button type="button" onclick="salvarNovaSenhaMemorialRecuperada()" class="w-full py-3.5 rounded-2xl bg-gradient-to-r from-emerald-600 to-teal-600 hover:brightness-110 text-white font-black text-xs shadow-md transition active:scale-95 flex items-center justify-center gap-2 cursor-pointer">
+          <span>✅</span>
+          <span>Salvar Nova Senha e Acessar Edição</span>
         </button>
-      </form>
+      </div>
 
-      <div class="pt-2 border-t border-stone-200 flex items-center justify-between text-xs">
-        <span class="text-stone-500 text-[11px]">É o tutor e esqueceu a senha?</span>
-        <button type="button" onclick="recuperarSenhaTutorMemorial()" class="text-[#740568] hover:text-amber-700 font-bold text-[11px] underline">
-          Usar Código da Tag
-        </button>
+      <!-- Rodapé com Suporte -->
+      <div class="pt-3 border-t border-stone-200 flex items-center justify-between text-xs">
+        <span class="text-stone-500 text-[11px]">Dúvidas no acesso?</span>
+        <a href="https://wa.me/5538998124455?text=Ola,%20solicito%20ajuda%20para%20recuperar%20minha%20senha%20no%20Terranova%20Pet%20Memorial" target="_blank" class="text-[#740568] hover:text-amber-600 font-bold text-[11px] flex items-center gap-1">
+          <span>💬</span> Suporte WhatsApp
+        </a>
       </div>
 
     </div>
   </div>
 
-  <!-- ========================================================================= -->
   <!-- MODAL 2: PAINEL DE EDIÇÃO & PRIVACIDADE EXCLUSIVO DO TUTOR -->
   <!-- ========================================================================= -->
   <div id="modalPainelTutorMemorial" class="hidden fixed inset-0 z-50 bg-black/80 backdrop-blur-md flex items-center justify-center p-4">
