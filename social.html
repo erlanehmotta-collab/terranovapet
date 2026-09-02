@@ -1,0 +1,2323 @@
+<!DOCTYPE html>
+<html lang="pt-BR" class="scroll-smooth">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Terranova Pet Social &bull; O Diário dos Nossos Melhores Amigos</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800;900&family=Playfair+Display:ital,wght@0,600;0,700;1,600&display=swap" rel="stylesheet">
+
+  <style>
+    body {
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      background-color: #FAF7F2;
+      color: #2D231E;
+      min-height: 100vh;
+    }
+    .font-poetic { font-family: 'Playfair Display', serif; }
+    
+    /* Efeito de coração / patinha flutuante ao curtir */
+    @keyframes floatUp {
+      0% { transform: translateY(0) scale(0.8); opacity: 1; }
+      100% { transform: translateY(-80px) scale(1.4); opacity: 0; }
+    }
+    .floating-paw {
+      position: absolute;
+      pointer-events: none;
+      animation: floatUp 0.9s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+      z-index: 60;
+    }
+
+    /* Esconde scrollbar nativa mantendo a funcionalidade de scroll suave */
+    .no-scrollbar::-webkit-scrollbar { display: none; }
+    .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+
+    /* Barra de progresso dos stories */
+    .story-progress-bar {
+      height: 3px;
+      background-color: rgba(255, 255, 255, 0.35);
+      border-radius: 9999px;
+      overflow: hidden;
+      flex: 1;
+    }
+    .story-progress-fill {
+      height: 100%;
+      background-color: #FFF;
+      width: 0%;
+      border-radius: 9999px;
+    }
+    .story-progress-fill.active {
+      transition: width 5s linear;
+      width: 100%;
+    }
+    .story-progress-fill.completed {
+      width: 100%;
+    }
+  </style>
+</head>
+<body class="bg-[#FBF8F3] text-stone-800 pb-20 selection:bg-amber-400 selection:text-[#740568]">
+
+  <!-- ========================================================================= -->
+  <!-- BARRA DE NAVEGAÇÃO TOPO (Roxo Nobre Imperial & DOURADO) -->
+  <!-- ========================================================================= -->
+  <header class="sticky top-0 z-40 bg-gradient-to-r from-amber-400 via-yellow-400 to-amber-500 border-b-2 border-[#740568]/30 text-[#740568] shadow-lg">
+    <div class="max-w-4xl mx-auto px-4 py-3 flex items-center justify-between gap-3">
+      
+      <!-- LOGO & IDENTIDADE -->
+      <a href="social.html" class="flex items-center gap-3 group">
+        <div class="w-11 h-11 rounded-2xl p-0.5 bg-[#740568] border border-[#520349] shadow-md group-hover:scale-105 transition flex-shrink-0 overflow-hidden">
+          <img src="logo_terranova.png" alt="Terranova Pet" class="w-full h-full object-cover rounded-xl">
+        </div>
+        <div>
+          <div class="flex items-center gap-2">
+            <h1 class="font-black text-base tracking-tight leading-none text-[#740568]">Terranova Pet</h1>
+            <span class="text-[10px] bg-gradient-to-r from-[#740568] to-[#9F0C8F] text-yellow-300 font-black px-2 py-0.5 rounded-full uppercase tracking-wider shadow-xs">Social</span>
+          </div>
+          <p class="text-[11px] text-[#520349] font-black">Diario de Aventuras &amp; Comunidade Pet</p>
+        </div>
+      </a>
+
+      <!-- AÇÕES DO TOPO & PERFIL DO TUTOR -->
+      <div class="flex items-center gap-2">
+        <!-- Indicador de Tutor Logado ou Botão de Entrar -->
+        <div id="boxStatusTutor" class="flex items-center gap-1.5">
+          <!-- Injetado dinamicamente via JS -->
+        </div>
+
+        <!-- Botão Postar Estilo Instagram -->
+        <button onclick="clicarNovaPublicacao()" class="px-3.5 py-2 rounded-full bg-gradient-to-r from-[#740568] via-[#8C077E] to-[#740568] hover:brightness-110 text-yellow-300 text-xs font-black shadow-md transition flex items-center gap-1.5 active:scale-95">
+          <span>➕</span>
+          <span>Postar</span>
+        </button>
+
+        <!-- Link para o Memorial Coletivo -->
+        <a href="mural.html" class="px-3 py-2 rounded-full bg-[#740568]/90 hover:bg-[#520349] border border-[#520349] text-amber-300 text-xs font-bold transition flex items-center gap-1.5">
+          <span>🕊️</span>
+          <span class="hidden md:inline">Memorial</span>
+        </a>
+      </div>
+
+    </div>
+  </header>
+
+  <!-- ========================================================================= -->
+  <!-- BARRA DE STORIES COM PASSADOR HORIZONTAL (CARROSSEL COM SETAS < E >) -->
+  <!-- ========================================================================= -->
+  <section class="max-w-4xl mx-auto px-4 pt-6 pb-2 relative">
+    <div class="bg-white rounded-3xl p-4 shadow-sm border border-stone-200/80 relative">
+      
+      <div class="flex items-center justify-between mb-3 px-1">
+        <h2 class="text-xs font-extrabold uppercase tracking-wider text-stone-500 flex items-center gap-1.5">
+          <span>✨</span><span>Aventuras dos Pets &bull; Stories</span>
+        </h2>
+        <div class="flex items-center gap-3">
+          <span class="text-[11px] text-stone-400 font-medium hidden sm:inline">Clique para assistir aos stories</span>
+          <button onclick="abrirModalAdicionarStory()" class="text-xs font-bold text-amber-900 hover:text-amber-950 hover:underline flex items-center gap-1 cursor-pointer bg-amber-100 px-3 py-1 rounded-full border border-amber-300 transition">
+            <span>+</span> <span>Adicionar Story</span>
+          </button>
+        </div>
+      </div>
+
+      <!-- CONTAINER DO CARROSSEL DE STORIES COM BOTÕES DE PASSAR -->
+      <div class="relative group">
+        
+        <!-- Botão Passador para a Esquerda -->
+        <button onclick="passarBarraStories(-200)" aria-label="Passar stories para a esquerda" class="absolute -left-2 top-1/2 -translate-y-1/2 z-20 w-8 h-8 rounded-full bg-white shadow-lg border border-stone-200 text-stone-700 hover:bg-amber-50 hover:text-amber-800 flex items-center justify-center font-black text-sm transition opacity-0 group-hover:opacity-100 hover:scale-110">
+          ❮
+        </button>
+
+        <!-- Lista Horizontal com Rolagem Suave -->
+        <div id="listaStoriesScroll" class="flex items-center gap-4 overflow-x-auto no-scrollbar scroll-smooth py-1 px-1">
+          
+          <!-- Story: Seu Pet / Seu Story (Dinâmico estilo Instagram) -->
+          <div id="storyBubbleSeuPet" class="flex-shrink-0">
+            <!-- Injetado dinamicamente via renderizarBarraAvataresStories() -->
+          </div>
+
+          <!-- Stories dos Pets (Injetados via JS ou pré-renderizados) -->
+          <div id="containerStoriesAvatares" class="flex items-center gap-4">
+            <!-- Renderizado dinamicamente -->
+          </div>
+
+        </div>
+
+        <!-- Botão Passador para a Direita -->
+        <button onclick="passarBarraStories(200)" aria-label="Passar stories para a direita" class="absolute -right-2 top-1/2 -translate-y-1/2 z-20 w-8 h-8 rounded-full bg-white shadow-lg border border-stone-200 text-stone-700 hover:bg-amber-50 hover:text-amber-800 flex items-center justify-center font-black text-sm transition opacity-0 group-hover:opacity-100 hover:scale-110">
+          ❯
+        </button>
+
+      </div>
+
+    </div>
+  </section>
+
+  <!-- ========================================================================= -->
+  <!-- ABAS DO FEED (FEED DA COMUNIDADE VS MEU DIÁRIO PET) -->
+  <!-- ========================================================================= -->
+  <section class="max-w-4xl mx-auto px-4 py-3">
+    <div class="flex items-center justify-between gap-3 border-b border-stone-300 pb-2">
+      <div class="flex items-center gap-2">
+        <button onclick="trocarAbaFeed('feed')" id="abaFeedGeral" class="px-4 py-2 rounded-2xl bg-amber-400 text-[#740568] font-black text-xs shadow-sm transition">
+          🌍 Feed da Comunidade
+        </button>
+        <button onclick="trocarAbaFeed('diario')" id="abaDiarioPet" class="px-4 py-2 rounded-2xl bg-white hover:bg-stone-100 text-stone-700 font-bold text-xs border border-stone-300 transition">
+          📖 Diário de Aventuras
+        </button>
+      </div>
+
+      <span class="text-xs text-stone-500 font-medium hidden sm:inline">
+        Compartilhando a alegria de viver ao lado deles
+      </span>
+    </div>
+  </section>
+
+  <!-- ========================================================================= -->
+  <!-- FEED PRINCIPAL DE PUBLICAÇÕES DOS PETS VIVOS -->
+  <!-- ========================================================================= -->
+  <main class="max-w-2xl mx-auto px-4 py-4 space-y-8" id="containerFeedSocial">
+    <!-- Renderizado dinamicamente via JS -->
+  </main>
+
+  <!-- ========================================================================= -->
+  <!-- TELA DE PERFIL EXCLUSIVO DO PET NA REDE SOCIAL -->
+  <!-- ========================================================================= -->
+  <section id="secaoPerfilPet" class="hidden max-w-3xl mx-auto px-4 py-4 space-y-6">
+    
+    <!-- Barra Superior de Navegação do Perfil -->
+    <div class="flex items-center justify-between">
+      <button onclick="voltarAoFeedGeral()" class="inline-flex items-center gap-2 px-4 py-2 bg-white hover:bg-stone-100 text-stone-700 font-bold text-xs rounded-full border border-stone-200 shadow-xs transition active:scale-95">
+        <span>←</span>
+        <span>Voltar ao Feed da Comunidade</span>
+      </button>
+
+      <span class="text-xs font-bold text-amber-700 bg-amber-100/80 px-3.5 py-1 rounded-full flex items-center gap-1.5 border border-amber-200">
+        <span>🐾</span>
+        <span>Perfil Oficial do Pet</span>
+      </span>
+    </div>
+
+    <!-- ========================================================================= -->
+    <!-- CARTÃO PRINCIPAL DO PERFIL (CAPA + AVATAR + INFORMAÇÕES PESSOAIS HARMONIOSAS) -->
+    <!-- ========================================================================= -->
+    <div class="bg-white rounded-3xl overflow-hidden border border-stone-200 shadow-sm">
+      
+      <!-- Capa decorativa nobre em degradê solar dourado -->
+      <div class="h-32 sm:h-36 bg-gradient-to-r from-amber-400 via-yellow-400 to-amber-500 relative p-4 flex items-start justify-between">
+        <div class="flex items-center gap-1.5 bg-[#740568] px-3 py-1 rounded-full text-yellow-300 text-[11px] font-bold shadow-xs">
+          <img src="logo_terranova.png" class="w-3.5 h-3.5 rounded-full object-cover">
+          <span>Terranova Pet Social</span>
+        </div>
+
+        <span class="bg-[#740568] text-yellow-300 text-[11px] font-black px-3 py-1 rounded-full shadow-xs flex items-center gap-1">
+          <span>📖</span>
+          <span>Diário de Aventuras</span>
+        </span>
+      </div>
+
+      <!-- Conteúdo do Perfil -->
+      <div class="px-5 sm:px-8 pb-6 pt-0 relative">
+        
+        <!-- LINHA SUPERIOR: AVATAR EM DESTAQUE & BOTÕES DE AÇÃO REDUZIDOS E ELEGANTES -->
+        <div class="flex items-end justify-between -mt-12 sm:-mt-14 mb-3">
+          
+          <!-- Avatar em Círculo com Anel Proporcional e Sombra Macia -->
+          <div class="w-24 h-24 sm:w-28 sm:h-28 rounded-full p-1 bg-gradient-to-tr from-amber-400 via-yellow-300 to-[#740568] shadow-lg border-4 border-white flex-shrink-0 bg-white ring-2 ring-amber-400/30">
+            <img id="perfilPetFoto" src="" class="w-full h-full object-cover rounded-full">
+          </div>
+
+          <!-- Botões Reduzidos, Elegantes e Harmônicos -->
+          <div class="flex items-center gap-2 pb-1">
+            <button onclick="darCarinhoPerfil()" class="h-8 px-3.5 bg-gradient-to-r from-[#740568] to-[#9F0C8F] hover:brightness-110 text-yellow-300 font-bold text-[11px] rounded-full shadow-xs transition active:scale-95 flex items-center gap-1.5 cursor-pointer">
+              <span>🐾</span>
+              <span>Enviar Patinha</span>
+            </button>
+            <button id="btnPostarFotoPerfil" onclick="clicarPostarFotoTutor()" class="h-8 px-3 bg-amber-100 hover:bg-amber-200 text-amber-950 font-bold text-[11px] rounded-full border border-amber-300/80 shadow-xs transition active:scale-95 flex items-center gap-1 cursor-pointer">
+              <span>➕</span>
+              <span>Postar</span>
+            </button>
+            <button id="btnEditarPerfilPet" onclick="abrirModalEditarPerfil()" class="h-8 px-3 bg-stone-100 hover:bg-stone-200 text-stone-700 font-semibold text-[11px] rounded-full border border-stone-200 shadow-xs transition active:scale-95 flex items-center gap-1 cursor-pointer">
+              <span>⚙️</span>
+              <span>Editar</span>
+            </button>
+          </div>
+        </div>
+
+        <!-- BLOCO DE INFORMAÇÕES PESSOAIS: DISPOSIÇÃO IMPECÁVEL DAS LETRAS & HIERARQUIA -->
+        <div class="space-y-2.5 pt-1">
+          
+          <!-- Nome do Pet & Selo Oficial -->
+          <div class="flex items-center gap-2.5 flex-wrap">
+            <h2 id="perfilPetNome" class="text-2xl sm:text-3xl font-black font-poetic text-[#740568] tracking-tight leading-none">Thor</h2>
+            <span class="text-[10px] bg-amber-100 text-amber-900 font-extrabold px-2.5 py-0.5 rounded-full flex items-center gap-1 border border-amber-300/80 shadow-2xs">
+              <span class="text-amber-600">✓</span> <span>Perfil Oficial</span>
+            </span>
+          </div>
+
+          <!-- Badges de Identificação Pessoal: Raça, Localidade e Tutor Responsável -->
+          <div class="flex items-center gap-2 flex-wrap text-xs text-stone-600 font-medium">
+            <span class="inline-flex items-center gap-1 bg-stone-100/80 px-2.5 py-1 rounded-lg border border-stone-200/60">
+              <span>🐕</span>
+              <span id="perfilPetSubtitulo" class="font-semibold text-stone-800">Golden Retriever • Montes Claros - MG</span>
+            </span>
+
+            <span class="inline-flex items-center gap-1 bg-amber-50 px-2.5 py-1 rounded-lg border border-amber-200/80 text-amber-900">
+              <span>👤</span>
+              <span id="perfilPetTutor" class="font-bold">Tutor(a): Família Miranda</span>
+            </span>
+          </div>
+
+          <!-- Bio / Biografia Harmoniosa com Formatação Tipo Citação -->
+          <div class="bg-amber-50/40 rounded-2xl p-3.5 sm:p-4 border-l-4 border-amber-400 border-t border-r border-b border-amber-200/50 text-xs text-stone-700 leading-relaxed italic shadow-2xs mt-2">
+            <p id="perfilPetBio">
+              Muito dócil, apaixonado por caminhadas ao ar livre, bolinhas de tênis e carinho na barriga. Companheiro fiel que compartilha todas as suas alegrias no Diário de Aventuras!
+            </p>
+          </div>
+
+          <!-- Barra de Estatísticas: Proporcional, Limpa e Equilibrada -->
+          <div class="grid grid-cols-3 gap-2.5 pt-3 text-center border-t border-stone-100 mt-3">
+            <div class="py-2 px-1 rounded-xl bg-stone-50 border border-stone-200/60">
+              <strong id="perfilPetTotalPosts" class="block text-base sm:text-lg font-black text-stone-800 leading-tight">0</strong>
+              <span class="text-[10px] text-stone-500 font-medium uppercase tracking-wider">Publicações</span>
+            </div>
+            <div class="py-2 px-1 rounded-xl bg-purple-50/50 border border-purple-100">
+              <strong id="perfilPetTotalPatinhas" class="block text-base sm:text-lg font-black text-[#740568] leading-tight">0</strong>
+              <span class="text-[10px] text-[#740568]/80 font-bold uppercase tracking-wider">Patinhas</span>
+            </div>
+            <div class="py-2 px-1 rounded-xl bg-amber-50/50 border border-amber-100">
+              <strong class="block text-base sm:text-lg font-black text-amber-600 leading-tight">100%</strong>
+              <span class="text-[10px] text-amber-700 font-bold uppercase tracking-wider">Amor Puro</span>
+            </div>
+          </div>
+
+        </div>
+
+      </div>
+    </div>
+
+    <!-- SEÇÃO DE POSTS & DIÁRIO DO PET (GRID DE FOTOS) -->
+    <div class="space-y-4">
+      <div class="flex items-center justify-between border-b border-stone-200 pb-2">
+        <h3 class="font-extrabold text-sm text-stone-800 flex items-center gap-2">
+          <span>📖</span>
+          <span>Diário de Aventuras</span>
+        </h3>
+        <span id="perfilContadorFotos" class="text-xs text-stone-500 font-bold">0 publicações</span>
+      </div>
+
+      <!-- Grade de Fotos do Pet -->
+      <div id="perfilGridFotos" class="grid grid-cols-2 sm:grid-cols-3 gap-3">
+        <!-- Injetado dinamicamente -->
+      </div>
+    </div>
+
+  </section>
+
+  <!-- ========================================================================= -->
+  <!-- MODAL INSTAGRAM STORIES EM TELA CHEIA (COM PASSADOR COMPLETO & PROGRESSO) -->
+  <!-- ========================================================================= -->
+  <div id="modalStoryView" class="hidden fixed inset-0 z-50 bg-black/95 backdrop-blur-md flex items-center justify-center p-2 sm:p-4 select-none" onclick="fecharStory()">
+    
+    <!-- CONTAINER DO STORY (PROPORÇÃO 9:16) -->
+    <div class="relative max-w-sm w-full aspect-[9/16] rounded-3xl overflow-hidden shadow-2xl bg-stone-900 border-2 border-amber-400 flex flex-col justify-between" onclick="event.stopPropagation()">
+      
+      <!-- IMAGEM DO STORY COM AJUSTE INTELIGENTE (FUNDO AMBIENTE + FOTO CENTRALIZADA) -->
+      <img id="imgStoryModalBg" class="absolute inset-0 w-full h-full object-cover blur-md opacity-40 scale-110 pointer-events-none select-none">
+      <img id="imgStoryModal" class="absolute inset-0 w-full h-full object-contain z-10 select-none">
+
+      <!-- ======================================================= -->
+      <!-- TOPO DO STORY: BARRINHAS DE PROGRESSO & DADOS DO PET -->
+      <!-- ======================================================= -->
+      <div class="relative z-30 p-4 bg-gradient-to-b from-black/85 via-black/40 to-transparent space-y-3">
+        
+        <!-- Segmentos de Progresso do Story (Estilo Instagram) -->
+        <div id="storyProgressContainer" class="flex items-center gap-1.5 w-full">
+          <!-- Injetado dinamicamente com barrinhas .story-progress-bar -->
+        </div>
+
+        <!-- Cabeçalho do Perfil -->
+        <div class="flex items-center justify-between text-white">
+          <div class="flex items-center gap-2.5">
+            <img id="avatarStoryModal" class="w-9 h-9 rounded-full border-2 border-amber-400 object-cover shadow-sm">
+            <div>
+              <div class="flex items-center gap-1.5">
+                <h4 id="nomeStoryModal" class="font-bold font-poetic text-sm text-amber-300 drop-shadow-sm"></h4>
+                <span class="text-[9px] bg-[#740568] text-yellow-300 font-black px-1.5 py-0.2 rounded-full">🐾</span>
+              </div>
+              <span id="horarioStoryModal" class="text-[10px] text-amber-200">Hoje &bull; Montes Claros - MG</span>
+            </div>
+          </div>
+
+          <!-- Controles Topo: Pausar/Tocar, Apagar e Fechar -->
+          <div class="flex items-center gap-2">
+            <button onclick="alternarPausaStory(event)" id="btnPausaStory" class="w-7 h-7 rounded-full bg-white/20 hover:bg-white/30 flex items-center justify-center text-xs font-bold text-white transition cursor-pointer" title="Pausar / Retomar">
+              ⏸️
+            </button>
+            <button onclick="apagarStoryAtual(event)" id="btnApagarStory" class="w-7 h-7 rounded-full bg-white/20 hover:bg-rose-600 text-white flex items-center justify-center text-xs font-bold transition cursor-pointer" title="Apagar este Story">
+              🗑️
+            </button>
+            <button onclick="fecharStory()" class="w-7 h-7 rounded-full bg-white/20 hover:bg-white/30 flex items-center justify-center text-xs font-bold text-white transition cursor-pointer" title="Fechar Story">
+              ✕
+            </button>
+          </div>
+        </div>
+
+      </div>
+
+      <!-- ======================================================= -->
+      <!-- PASSADOR DE STORIES: BOTÕES E ÁREAS DE TOQUE LATERAIS -->
+      <!-- ======================================================= -->
+      <!-- Área Clicável da Esquerda (Story Anterior) -->
+      <div onclick="voltarStory()" class="absolute left-0 inset-y-16 w-1/3 z-20 cursor-pointer flex items-center pl-2 group">
+        <button class="w-9 h-9 rounded-full bg-black/40 hover:bg-black/70 text-white flex items-center justify-center text-sm font-black border border-white/20 opacity-0 group-hover:opacity-100 transition duration-200 shadow-md">
+          ❮
+        </button>
+      </div>
+
+      <!-- Área Clicável da Direita (Próximo Story) -->
+      <div onclick="avancarStory()" class="absolute right-0 inset-y-16 w-1/3 z-20 cursor-pointer flex items-center justify-end pr-2 group">
+        <button class="w-9 h-9 rounded-full bg-black/40 hover:bg-black/70 text-white flex items-center justify-center text-sm font-black border border-white/20 opacity-0 group-hover:opacity-100 transition duration-200 shadow-md">
+          ❯
+        </button>
+      </div>
+
+      <!-- ======================================================= -->
+      <!-- RODAPÉ DO STORY: LEGENDA & INTERAÇÃO RÁPIDA -->
+      <!-- ======================================================= -->
+      <div class="relative z-30 p-4 bg-gradient-to-t from-black/95 via-black/60 to-transparent text-white space-y-2.5">
+        <p id="legendaStoryModal" class="text-xs sm:text-sm font-medium leading-relaxed drop-shadow-sm line-clamp-3"></p>
+        
+        <!-- Barra de Interação Rápida -->
+        <div class="flex items-center gap-2 pt-1">
+          <input type="text" id="inputRespostaStory" placeholder="Deixe um carinho..." class="flex-1 bg-white/20 backdrop-blur-md rounded-full px-3.5 py-1.5 text-xs text-white placeholder-white/60 border border-white/20 focus:outline-none focus:ring-1 focus:ring-amber-400">
+          <button onclick="enviarCarinhoStory(event)" class="px-3 py-1.5 rounded-full bg-gradient-to-r from-[#740568] to-[#9F0C8F] text-yellow-300 font-black text-xs shadow-md active:scale-90 transition flex items-center gap-1">
+            <span>🐾</span>
+            <span class="text-[11px]">Carinho</span>
+          </button>
+        </div>
+      </div>
+
+    </div>
+
+  </div>
+
+  <!-- ========================================================================= -->
+  <!-- MODAL: NOVO STORY DO PET (EXCLUSIVO DO STORY - FOTO 9:16 VERTICAL SEM LEGENDA) -->
+  <!-- ========================================================================= -->
+  <div id="modalAdicionarStory" class="hidden fixed inset-0 z-50 bg-black/85 backdrop-blur-md flex items-center justify-center p-4" onclick="fecharModalAdicionarStory()">
+    <div class="bg-white max-w-sm w-full rounded-3xl overflow-hidden shadow-2xl border-2 border-[#740568] text-stone-800" onclick="event.stopPropagation()">
+      
+      <!-- Topo Modal -->
+      <div class="p-4 border-b border-stone-200 flex items-center justify-between bg-stone-50">
+        <h3 class="font-black text-sm text-[#740568] flex items-center gap-1.5">
+          <span>✨</span><span>Novo Story do Pet</span>
+        </h3>
+        <button onclick="fecharModalAdicionarStory()" class="w-8 h-8 rounded-full bg-stone-200 hover:bg-stone-300 text-stone-700 font-bold flex items-center justify-center text-xs">✕</button>
+      </div>
+
+      <form onsubmit="publicarNovoStory(event)" class="p-5 space-y-4 text-xs">
+        
+        <!-- Seleção de Foto/Vídeo do Story (formato 9:16 vertical como Instagram) -->
+        <div>
+          <label class="block font-bold text-stone-700 mb-1.5">Foto do Story (Exclusivo dos Stories):</label>
+          <label for="inputMidiaStory" class="group relative aspect-[9/13] max-h-72 w-full rounded-2xl border-2 border-dashed border-[#740568] hover:border-purple-600 bg-purple-50/40 flex flex-col items-center justify-center cursor-pointer overflow-hidden text-center transition">
+            <input type="file" id="inputMidiaStory" accept="image/*,video/*" onchange="previewMidiaStory(event)" class="hidden">
+            
+            <img id="previewImgStoryModal" class="hidden w-full h-full object-cover">
+            
+            <div id="placeholderMidiaStoryModal" class="space-y-1.5 p-4">
+              <span class="text-4xl">📸</span>
+              <p class="font-bold text-stone-800 text-xs">Clique para escolher a foto</p>
+              <p class="text-[10px] text-stone-500">Formato vertical de tela cheia</p>
+              <span class="inline-block mt-2 text-[10px] bg-purple-100 text-[#740568] font-bold px-2.5 py-0.5 rounded-full">✨ Exclusivo dos Stories</span>
+            </div>
+          </label>
+        </div>
+        <!-- Campo de Legenda do Story -->
+        <div>
+          <label class="block font-bold text-stone-700 mb-1">Legenda do Story:</label>
+          <input type="text" id="inputLegendaStory" placeholder="Escreva uma mensagem para o story (ex: Passeio no parque!)..." class="w-full bg-stone-50 border border-stone-300 rounded-xl px-3.5 py-2 text-xs text-stone-800 focus:outline-none focus:border-[#740568]">
+        </div>
+
+        <button type="submit" class="w-full py-3 bg-gradient-to-r from-[#740568] via-[#8C077E] to-[#740568] hover:brightness-110 text-yellow-300 font-black text-xs rounded-xl shadow-md transition active:scale-95 flex items-center justify-center gap-1.5">
+          <span>✨</span>
+          <span>Publicar no Story</span>
+        </button>
+      </form>
+
+    </div>
+  </div>
+
+  <!-- ========================================================================= -->
+  <!-- MODAL: EDITAR PERFIL DO PET (FOTO, NOME, RAÇA, CIDADE, BIO - ESTILO INSTAGRAM) -->
+  <!-- ========================================================================= -->
+  <div id="modalEditarPerfilPet" class="hidden fixed inset-0 z-50 bg-black/85 backdrop-blur-md flex items-center justify-center p-4" onclick="fecharModalEditarPerfil()">
+    <div class="bg-white max-w-md w-full rounded-3xl overflow-hidden shadow-2xl border-2 border-[#740568] text-stone-800 max-h-[90vh] overflow-y-auto" onclick="event.stopPropagation()">
+      
+      <!-- Topo Modal -->
+      <div class="p-4 border-b border-stone-200 flex items-center justify-between bg-stone-50 sticky top-0 z-10">
+        <h3 class="font-black text-sm text-[#740568] flex items-center gap-1.5">
+          <span>⚙️</span><span>Editar Perfil do Pet</span>
+        </h3>
+        <button onclick="fecharModalEditarPerfil()" class="w-8 h-8 rounded-full bg-stone-200 hover:bg-stone-300 text-stone-700 font-bold flex items-center justify-center text-xs">✕</button>
+      </div>
+
+      <form onsubmit="salvarEdicaoPerfilPet(event)" class="p-5 space-y-4 text-xs">
+        
+        <!-- Foto de Perfil Redonda com Botão Alterar Foto -->
+        <div class="flex flex-col items-center justify-center gap-2 pb-3 border-b border-stone-100">
+          <div class="w-24 h-24 rounded-full p-1 bg-gradient-to-tr from-[#740568] via-amber-400 to-yellow-300 shadow-md border-2 border-white relative overflow-hidden bg-white">
+            <img id="previewFotoPerfilEditar" src="" class="w-full h-full object-cover rounded-full">
+          </div>
+          <label for="inputUploadNovaFotoPerfil" class="text-xs font-bold text-amber-900 hover:underline cursor-pointer flex items-center gap-1 bg-amber-100 px-3 py-1 rounded-full border border-amber-300">
+            <span>📷</span>
+            <span>Alterar foto de perfil</span>
+          </label>
+          <input type="file" id="inputUploadNovaFotoPerfil" accept="image/*" onchange="previewNovaFotoPerfil(event)" class="hidden">
+        </div>
+
+        <!-- Nome do Pet -->
+        <div>
+          <label class="block font-bold text-stone-700 mb-1">Nome do Pet:</label>
+          <input type="text" id="inputEditarNomePet" required class="w-full bg-stone-50 border border-stone-300 rounded-xl px-3.5 py-2 text-xs font-poetic font-bold text-stone-900 focus:outline-none focus:border-[#740568]">
+        </div>
+
+        <!-- Raça -->
+        <div>
+          <label class="block font-bold text-stone-700 mb-1">Raça do Pet:</label>
+          <input type="text" id="inputEditarRacaPet" required class="w-full bg-stone-50 border border-stone-300 rounded-xl px-3.5 py-2 text-xs text-stone-800 focus:outline-none focus:border-[#740568]">
+        </div>
+
+        <!-- Cidade / Estado -->
+        <div>
+          <label class="block font-bold text-stone-700 mb-1">Cidade / Estado:</label>
+          <input type="text" id="inputEditarCidadePet" class="w-full bg-stone-50 border border-stone-300 rounded-xl px-3.5 py-2 text-xs text-stone-800 focus:outline-none focus:border-[#740568]">
+        </div>
+
+        <!-- Bio / Descrição do Pet -->
+        <div>
+          <label class="block font-bold text-stone-700 mb-1">Bio / Sobre o Pet:</label>
+          <textarea id="inputEditarBioPet" rows="3" class="w-full bg-stone-50 border border-stone-300 rounded-xl p-3 text-xs text-stone-800 focus:outline-none focus:border-[#740568] leading-relaxed"></textarea>
+        </div>
+
+        <!-- Botões de Salvar ou Cancelar -->
+        <div class="flex items-center gap-2 pt-2">
+          <button type="button" onclick="fecharModalEditarPerfil()" class="flex-1 py-2.5 rounded-xl bg-stone-100 hover:bg-stone-200 text-stone-700 font-bold text-xs transition">
+            Cancelar
+          </button>
+          <button type="submit" class="flex-1 py-2.5 bg-gradient-to-r from-[#740568] via-[#8C077E] to-[#740568] hover:brightness-110 text-yellow-300 font-black text-xs rounded-xl shadow-md transition active:scale-95">
+            Salvar Alterações
+          </button>
+        </div>
+      </form>
+
+    </div>
+  </div>
+
+  <!-- ========================================================================= -->
+  <!-- MODAL INSTAGRAM: CRIAR NOVA PUBLICAÇÃO (FOTOS/VÍDEOS & LEGENDA) -->
+  <!-- ========================================================================= -->
+  <div id="modalCriarPostInstagram" class="hidden fixed inset-0 z-50 bg-black/85 backdrop-blur-md flex items-center justify-center p-4" onclick="fecharModalCriarPost()">
+    <div class="bg-white max-w-md w-full rounded-3xl overflow-hidden shadow-2xl border-2 border-amber-400 text-stone-800" onclick="event.stopPropagation()">
+      
+      <!-- Topo Modal -->
+      <div class="p-4 border-b border-stone-200 flex items-center justify-between bg-stone-50">
+        <h3 class="font-black text-sm text-[#740568] flex items-center gap-1.5">
+          <span>📸</span><span>Criar Nova Publicação</span>
+        </h3>
+        <button onclick="fecharModalCriarPost()" class="w-8 h-8 rounded-full bg-stone-200 hover:bg-stone-300 text-stone-700 font-bold flex items-center justify-center text-xs">✕</button>
+      </div>
+
+      <form onsubmit="publicarNovoPostInstagram(event)" class="p-5 space-y-4 text-xs">
+        
+        <!-- Seleção de Foto/Vídeo com Preview Quadrado -->
+        <div>
+          <label class="block font-bold text-stone-700 mb-1.5">Foto ou Vídeo do Pet:</label>
+          <label for="inputMidiaPost" class="group relative aspect-square max-h-60 w-full rounded-2xl border-2 border-dashed border-amber-400 hover:border-amber-500 bg-[#FAF7F2] flex flex-col items-center justify-center cursor-pointer overflow-hidden text-center transition">
+            <input type="file" id="inputMidiaPost" accept="image/*,video/*" onchange="previewMidiaUpload(event)" class="hidden">
+            
+            <img id="previewImgModal" class="hidden w-full h-full object-cover">
+            
+            <div id="placeholderMidiaModal" class="space-y-1 p-4">
+              <span class="text-3xl">📷</span>
+              <p class="font-bold text-stone-800 text-xs">Clique para escolher a foto ou vídeo</p>
+              <p class="text-[10px] text-stone-500">Selecione do celular ou computador</p>
+            </div>
+          </label>
+        </div>
+
+        <!-- Campo de Legenda -->
+        <div>
+          <label class="block font-bold text-stone-700 mb-1">Legenda da Publicação:</label>
+          <textarea id="textoLegendaModal" rows="3" required placeholder="Escreva uma legenda carinhosa... Ex: Dia de parque comendo picolé canino! #GoldenRetriever #AmorPet" class="w-full bg-stone-50 border border-stone-300 rounded-xl p-3 text-xs text-stone-800 focus:outline-none focus:border-amber-500 font-medium"></textarea>
+        </div>
+
+        <button type="submit" class="w-full py-3 bg-gradient-to-r from-[#740568] via-[#8C077E] to-[#740568] hover:brightness-110 text-yellow-300 font-black text-xs rounded-xl shadow-md transition active:scale-95 flex items-center justify-center gap-1.5">
+          <span>🚀</span>
+          <span>Compartilhar no Feed</span>
+        </button>
+      </form>
+
+    </div>
+  </div>
+
+  <!-- ========================================================================= -->
+  <!-- TELA DE ENTRADA DA REDE SOCIAL (LOGIN COM SENHA OU CADASTRO DE NOVO TUTOR) -->
+  <!-- ========================================================================= -->
+  <div id="modalLoginTutor" class="hidden fixed inset-0 z-50 bg-black/85 backdrop-blur-md flex items-center justify-center p-4" onclick="fecharModalLogin()">
+    <div class="bg-white max-w-md w-full rounded-3xl overflow-hidden shadow-2xl border-2 border-amber-400 text-stone-800" onclick="event.stopPropagation()">
+      
+      <!-- Topo Modal -->
+      <div class="p-4 border-b border-stone-200 flex items-center justify-between bg-stone-50">
+        <div class="flex items-center gap-2">
+          <span class="text-xl">🐾</span>
+          <div>
+            <h3 class="font-black text-sm text-[#740568] leading-tight">Terranova Pet Social</h3>
+            <p class="text-[10px] text-stone-500 font-medium">Acesso Exclusivo para Tutores de Cães Vivos</p>
+          </div>
+        </div>
+        <button onclick="fecharModalLogin()" class="w-8 h-8 rounded-full bg-stone-200 hover:bg-stone-300 text-stone-700 font-bold flex items-center justify-center text-xs">✕</button>
+      </div>
+
+      <!-- Abas da Tela de Entrada: Entrar (Login) vs Cadastrar (Novo Tutor) -->
+      <div class="flex border-b border-stone-200 bg-stone-100/70 p-1.5 gap-1.5">
+        <button type="button" onclick="trocarAbaAuth('login')" id="tabBtnLogin" class="flex-1 py-2 rounded-xl text-xs font-black bg-white shadow-xs text-[#740568] transition">
+          🔑 Entrar na Conta
+        </button>
+        <button type="button" onclick="trocarAbaAuth('cadastro')" id="tabBtnCadastro" class="flex-1 py-2 rounded-xl text-xs font-bold text-stone-600 hover:text-stone-900 transition">
+          ✍️ Cadastrar Tutor
+        </button>
+      </div>
+
+      <div class="p-5">
+        
+        <!-- =================================================== -->
+        <!-- FORMULÁRIO 1: LOGIN COM E-MAIL E SENHA -->
+        <!-- =================================================== -->
+        <form id="formLoginAuth" onsubmit="executarLoginTutor(event)" class="space-y-4 text-xs">
+          <p class="text-stone-600 text-xs">
+            Digite seu <strong>E-mail</strong> e <strong>Senha</strong> para entrar e postar fotos e vídeos:
+          </p>
+
+          <div>
+            <label class="block font-bold text-stone-700 mb-1">Seu E-mail de Tutor *</label>
+            <input type="email" id="loginEmailAuth" required placeholder="seu.email@exemplo.com" value="familia.miranda@gmail.com" class="w-full bg-stone-50 border border-stone-300 rounded-xl p-2.5 text-xs text-stone-800 focus:outline-none focus:border-amber-500 font-semibold">
+          </div>
+
+          <div>
+            <div class="flex items-center justify-between mb-1">
+              <label class="font-bold text-stone-700">Sua Senha de Acesso *</label>
+              <button type="button" onclick="alternarVisibilidadeSenha('loginSenhaAuth', this)" class="text-[11px] text-amber-700 hover:underline font-bold">👁️ Ver</button>
+            </div>
+            <input type="password" id="loginSenhaAuth" required placeholder="Sua senha de acesso" value="123" class="w-full bg-stone-50 border border-stone-300 rounded-xl p-2.5 text-xs text-stone-800 focus:outline-none focus:border-amber-500 font-semibold">
+          </div>
+
+          <button type="submit" class="w-full py-3 bg-gradient-to-r from-[#740568] via-[#8C077E] to-[#740568] hover:brightness-110 text-yellow-300 font-black text-xs rounded-xl shadow-md transition active:scale-95 flex items-center justify-center gap-1.5">
+            <span>🚀</span>
+            <span>Entrar &amp; Acessar o Feed</span>
+          </button>
+
+          <p class="text-center text-[11px] text-stone-500 pt-1">
+            Não tem uma conta ainda? 
+            <button type="button" onclick="trocarAbaAuth('cadastro')" class="text-amber-700 font-bold hover:underline">Cadastre-se aqui gratuitamente</button>
+          </p>
+        </form>
+
+        <!-- =================================================== -->
+        <!-- FORMULÁRIO 2: CADASTRO DO TUTOR COM SENHA -->
+        <!-- =================================================== -->
+        <form id="formCadastroAuth" onsubmit="executarCadastroTutor(event)" class="hidden space-y-3.5 text-xs">
+          <p class="text-stone-600 text-xs">
+            Preencha seus dados para criar seu perfil de tutor e começar a postar como no Instagram:
+          </p>
+
+          <div>
+            <label class="block font-bold text-stone-700 mb-1">Nome do Tutor / Família *</label>
+            <input type="text" id="cadNomeTutor" required placeholder="Ex: Família Miranda, Carlos Silva..." class="w-full bg-stone-50 border border-stone-300 rounded-xl p-2.5 text-xs text-stone-800 focus:outline-none focus:border-amber-500 font-semibold">
+          </div>
+
+          <div>
+            <label class="block font-bold text-stone-700 mb-1">Seu E-mail *</label>
+            <input type="email" id="cadEmailTutor" required placeholder="seu.email@exemplo.com" class="w-full bg-stone-50 border border-stone-300 rounded-xl p-2.5 text-xs text-stone-800 focus:outline-none focus:border-amber-500 font-semibold">
+          </div>
+
+          <!-- SENHA E CONFIRMAÇÃO DE SENHA -->
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+            <div>
+              <label class="block font-bold text-stone-700 mb-1">Criar Senha *</label>
+              <input type="password" id="cadSenhaTutor" required placeholder="Mínimo 3 dígitos" class="w-full bg-stone-50 border border-stone-300 rounded-xl p-2.5 text-xs text-stone-800 focus:outline-none focus:border-amber-500 font-semibold">
+            </div>
+            <div>
+              <label class="block font-bold text-stone-700 mb-1">Confirmar Senha *</label>
+              <input type="password" id="cadConfirmaSenhaTutor" required placeholder="Repita a senha" class="w-full bg-stone-50 border border-stone-300 rounded-xl p-2.5 text-xs text-stone-800 focus:outline-none focus:border-amber-500 font-semibold">
+            </div>
+          </div>
+
+          <!-- DADOS DO PET -->
+          <div class="grid grid-cols-2 gap-3">
+            <div>
+              <label class="block font-bold text-stone-700 mb-1">Nome do Pet *</label>
+              <input type="text" id="cadNomePet" required placeholder="Ex: Thor, Pipoca..." class="w-full bg-stone-50 border border-stone-300 rounded-xl p-2.5 text-xs text-stone-800 focus:outline-none focus:border-amber-500 font-semibold">
+            </div>
+            <div>
+              <label class="block font-bold text-stone-700 mb-1">Raça / Espécie *</label>
+              <input type="text" id="cadRacaPet" required placeholder="Ex: Golden, Beagle..." class="w-full bg-stone-50 border border-stone-300 rounded-xl p-2.5 text-xs text-stone-800 focus:outline-none focus:border-amber-500 font-semibold">
+            </div>
+          </div>
+
+          <button type="submit" class="w-full py-3 bg-gradient-to-r from-[#740568] via-[#8C077E] to-[#740568] hover:brightness-110 text-yellow-300 font-black text-xs rounded-xl shadow-md transition active:scale-95 flex items-center justify-center gap-1.5">
+            <span>✨</span>
+            <span>Finalizar Cadastro &amp; Acessar</span>
+          </button>
+
+          <p class="text-center text-[11px] text-stone-500 pt-1">
+            Já tem uma conta criada? 
+            <button type="button" onclick="trocarAbaAuth('login')" class="text-amber-700 font-bold hover:underline">Faça login com sua senha</button>
+          </p>
+        </form>
+
+      </div>
+
+    </div>
+  </div>
+
+  <!-- ========================================================================= -->
+  <!-- MODAL: VISUALIZADOR DE FOTO / POST (LIGHTBOX INTERATIVO ESTILO INSTAGRAM) -->
+  <!-- ========================================================================= -->
+  <div id="modalVisualizarFotoPost" class="hidden fixed inset-0 z-50 bg-black/90 backdrop-blur-md flex items-center justify-center p-2 sm:p-4" onclick="fecharModalFotoPost()">
+    <div class="relative bg-white max-w-4xl w-full rounded-3xl overflow-hidden shadow-2xl flex flex-col md:flex-row max-h-[92vh] border border-stone-200 text-stone-800" onclick="event.stopPropagation()">
+      
+      <!-- Botão Fechar -->
+      <button onclick="fecharModalFotoPost()" class="absolute top-3 right-3 z-30 w-8 h-8 rounded-full bg-black/60 hover:bg-black/80 text-white flex items-center justify-center text-sm font-bold transition">✕</button>
+
+      <!-- LADO ESQUERDO: IMAGEM DO POST EM ALTA DEFINIÇÃO COM AJUSTE PERFEITO -->
+      <div class="md:w-3/5 w-full bg-stone-950 flex items-center justify-center relative select-none cursor-pointer min-h-[300px] max-h-[50vh] md:max-h-[85vh] overflow-hidden" ondblclick="darPatinhaModalFoto(event)">
+        <!-- Fundo ambiente suave desfocado que harmoniza proporções verticais ou horizontais -->
+        <img id="modalFotoPostImgBg" src="" class="absolute inset-0 w-full h-full object-cover blur-xl opacity-35 scale-110 pointer-events-none select-none">
+        <!-- Foto principal nítida ajustada proporcionalmente ao espaço sem cortes -->
+        <img id="modalFotoPostImg" src="" class="relative z-10 max-w-full max-h-[50vh] md:max-h-[85vh] w-auto h-auto object-contain shadow-md select-none">
+        <div class="absolute bottom-3 left-3 z-20 bg-black/60 backdrop-blur-md px-3 py-1 rounded-full text-white text-[11px] font-bold border border-white/20 shadow-xs">
+          📸 Diário de Aventuras
+        </div>
+      </div>
+
+      <!-- LADO DIREITO: DETALHES, LEGENDA E COMENTÁRIOS ESTILO INSTAGRAM -->
+      <div class="md:w-2/5 w-full flex flex-col justify-between bg-white text-stone-800">
+        
+        <!-- Cabeçalho do Pet -->
+        <div class="p-4 border-b border-stone-200 flex items-center justify-between gap-3 bg-stone-50/70">
+          <div class="flex items-center gap-3 min-w-0">
+            <div class="w-11 h-11 rounded-full p-0.5 bg-gradient-to-tr from-[#740568] via-amber-400 to-yellow-300 shadow-xs flex-shrink-0">
+              <img id="modalFotoPostAvatar" src="" class="w-full h-full object-cover rounded-full border-2 border-white">
+            </div>
+            <div class="min-w-0 flex-1">
+              <div class="flex items-center gap-1.5">
+                <h4 id="modalFotoPostNome" class="font-poetic font-black text-base text-[#740568] leading-tight truncate">Thor</h4>
+                <span class="text-[9px] bg-amber-100 text-amber-900 font-black px-1.5 py-0.2 rounded-full">✓</span>
+              </div>
+              <p id="modalFotoPostSubtitulo" class="text-[11px] text-stone-500 truncate">Golden Retriever • Montes Claros - MG</p>
+            </div>
+          </div>
+          <button onclick="apagarPostModalAtual(event)" class="px-2.5 py-1 rounded-full bg-rose-50 hover:bg-rose-100 text-rose-600 font-bold text-[11px] border border-rose-200/80 transition flex items-center gap-1 cursor-pointer flex-shrink-0" title="Apagar esta publicação">
+            <span>🗑️</span>
+            <span>Apagar</span>
+          </button>
+        </div>
+
+        <!-- Área com Rolagem: Legenda e Comentários -->
+        <div class="p-4 overflow-y-auto space-y-3 flex-1 max-h-64 md:max-h-96 text-xs text-stone-700">
+          <!-- Legenda Original -->
+          <div class="flex items-start gap-2.5 pb-3 border-b border-stone-100">
+            <img id="modalFotoPostLegendaAvatar" src="" class="w-7 h-7 rounded-full object-cover border border-stone-200 flex-shrink-0">
+            <div class="space-y-1 min-w-0">
+              <p class="leading-relaxed">
+                <strong id="modalFotoPostLegendaAutor" class="font-poetic font-bold text-[#740568] mr-1 text-sm">Thor</strong>
+                <span id="modalFotoPostLegendaTexto" class="text-stone-800"></span>
+              </p>
+              <span id="modalFotoPostHorario" class="text-[10px] text-stone-400 block font-medium">Há 2 horas</span>
+            </div>
+          </div>
+
+          <!-- Comentários da Comunidade -->
+          <div class="space-y-2.5" id="modalFotoPostComentariosLista">
+            <!-- Injetado dinamicamente -->
+          </div>
+        </div>
+
+        <!-- Rodapé de Ações: Patinha, Contador e Input de Comentário -->
+        <div class="p-4 border-t border-stone-200 bg-stone-50/50 space-y-3">
+          <div class="flex items-center justify-between">
+            <div class="flex items-center gap-2">
+              <!-- Botão Enviar Patinha -->
+              <button id="btnModalFotoPatinha" onclick="darPatinhaModalFoto(event)" class="px-4 py-2 rounded-full font-black text-xs transition flex items-center gap-1.5 shadow-xs active:scale-95 bg-stone-100 text-stone-700 hover:bg-purple-50">
+                <span>🐾</span>
+                <span id="modalFotoPostPatinhasCount">0 patinhas</span>
+              </button>
+              <!-- Botão Comentar -->
+              <button onclick="focarInputComentarioModal()" class="px-3 py-2 rounded-full bg-stone-100 hover:bg-stone-200 text-stone-700 font-bold text-xs transition flex items-center gap-1">
+                <span>💬</span>
+                <span>Comentar</span>
+              </button>
+            </div>
+            <span id="modalFotoPostDataFormatada" class="text-[10px] text-stone-400 font-semibold uppercase">Hoje</span>
+          </div>
+
+          <!-- Formulário para Enviar Comentário Instantâneo -->
+          <form onsubmit="adicionarComentarioModalFoto(event)" class="flex items-center gap-2 pt-1">
+            <input type="text" id="inputComentarioModalFoto" placeholder="Deixe um carinho ou comentário..." class="flex-1 bg-white border border-stone-300 rounded-full px-4 py-2 text-xs text-stone-800 focus:outline-none focus:border-[#740568] shadow-inner font-medium">
+            <button type="submit" class="px-4 py-2 rounded-full bg-gradient-to-r from-amber-400 via-yellow-300 to-amber-400 text-[#740568] hover:brightness-105 font-black text-xs shadow-sm transition active:scale-95 flex-shrink-0">
+              Publicar
+            </button>
+          </form>
+        </div>
+
+      </div>
+
+    </div>
+  </div>
+
+  <script>
+    // =========================================================================
+    // BASE DE DADOS DOS STORIES DOS PETS (MULTI-STORY COM PASSADOR)
+    // =========================================================================
+    let listaStoriesData = [
+      {
+        petId: "thor",
+        petNome: "Thor",
+        petFoto: "https://images.unsplash.com/photo-1552053831-71594a27632d?auto=format&fit=crop&w=300&q=80",
+        stories: [
+          {
+            img: "https://images.unsplash.com/photo-1552053831-71594a27632d?auto=format&fit=crop&w=800&q=90",
+            legenda: "Manhã de sol e energia correndo pelos campos de Montes Claros! ☀️🎾",
+            horario: "Há 1 hora"
+          },
+          {
+            img: "https://images.unsplash.com/photo-1543466835-00a7907e9de1?auto=format&fit=crop&w=800&q=90",
+            legenda: "Hora do picolé canino sabor pasta de amendoim! Delícia pura 🍦🐶",
+            horario: "Há 30 minutos"
+          }
+        ]
+      },
+      {
+        petId: "pipoca",
+        petNome: "Pipoca",
+        petFoto: "https://images.unsplash.com/photo-1537151625747-768eb6cf92b2?auto=format&fit=crop&w=300&q=80",
+        stories: [
+          {
+            img: "https://images.unsplash.com/photo-1537151625747-768eb6cf92b2?auto=format&fit=crop&w=800&q=90",
+            legenda: "Olha quem não quer sair da caminha quentinha hoje de jeito nenhum! 🛌💤",
+            horario: "Há 2 horas"
+          }
+        ]
+      },
+      {
+        petId: "luna",
+        petNome: "Luna",
+        petFoto: "https://images.unsplash.com/photo-1583511655857-d19b40a7a54e?auto=format&fit=crop&w=300&q=80",
+        stories: [
+          {
+            img: "https://images.unsplash.com/photo-1583511655857-d19b40a7a54e?auto=format&fit=crop&w=800&q=90",
+            legenda: "Princesa toda perfumada após a tosa bebê na Terranova Pet 🐩✨",
+            horario: "Há 4 horas"
+          }
+        ]
+      },
+      {
+        petId: "bob",
+        petNome: "Bob",
+        petFoto: "https://images.unsplash.com/photo-1583337130417-3346a1be7dee?auto=format&fit=crop&w=300&q=80",
+        stories: [
+          {
+            img: "https://images.unsplash.com/photo-1583337130417-3346a1be7dee?auto=format&fit=crop&w=800&q=90",
+            legenda: "Companheiro vigilante cuidando de todo mundo no quintal 🐾🛡️",
+            horario: "Há 5 horas"
+          }
+        ]
+      },
+      {
+        petId: "maya",
+        petNome: "Maya",
+        petFoto: "https://images.unsplash.com/photo-1517849845537-4d257902454a?auto=format&fit=crop&w=300&q=80",
+        stories: [
+          {
+            img: "https://images.unsplash.com/photo-1517849845537-4d257902454a?auto=format&fit=crop&w=800&q=90",
+            legenda: "Pronta e ansiosa pro passeio da tarde no parque! 🐕💛",
+            horario: "Há 6 horas"
+          }
+        ]
+      }
+    ];
+
+    // ESTADO DO PASSADOR DE STORIES
+    let indicePetAtual = 0;
+    let indiceStorySubAtual = 0;
+    let timerStory = null;
+    let storyPausado = false;
+
+    // BASE OFICIAL DE DADOS DOS PETS DA REDE SOCIAL
+    const PETS_SOCIAL_BASE = {
+      thor: {
+        nome: "Thor",
+        raca: "Golden Retriever",
+        tutor: "Família Miranda",
+        cidade: "Montes Claros - MG",
+        foto: "https://images.unsplash.com/photo-1552053831-71594a27632d?auto=format&fit=crop&w=400&q=80",
+        bio: "Muito dócil, apaixonado por corridas ao ar livre, bolinhas de tênis e carinho na barriga. Companheiro fiel que compartilha todas as suas alegrias no Diário de Aventuras!"
+      },
+      pipoca: {
+        nome: "Pipoca",
+        raca: "Beagle Alegre",
+        tutor: "Ana Flávia",
+        cidade: "Belo Horizonte - MG",
+        foto: "https://images.unsplash.com/photo-1537151625747-768eb6cf92b2?auto=format&fit=crop&w=400&q=80",
+        bio: "A alegria da casa! Adora sonecas quentinhas, petiscos e muita bagunça no quintal com os primos caninos."
+      },
+      luna: {
+        nome: "Luna",
+        raca: "Poodle Toy",
+        tutor: "Mariana Souza",
+        cidade: "Montes Claros - MG",
+        foto: "https://images.unsplash.com/photo-1583511655857-d19b40a7a54e?auto=format&fit=crop&w=400&q=80",
+        bio: "Princesinha da família, charmosa, adora banhos cheirosos, laços coloridos e desfilar elegância pelos parques."
+      },
+      bob: {
+        nome: "Bob",
+        raca: "Boxer Protetor",
+        tutor: "Carlos Eduardo",
+        cidade: "Montes Claros - MG",
+        foto: "https://images.unsplash.com/photo-1583337130417-3346a1be7dee?auto=format&fit=crop&w=400&q=80",
+        bio: "Companheiro leal e vigilante. Cuida com amor de todo mundo e adora brincar de cabo de guerra no gramado."
+      },
+      maya: {
+        nome: "Maya",
+        raca: "Labrador Caramelo",
+        tutor: "Juliana Mendes",
+        cidade: "Montes Claros - MG",
+        foto: "https://images.unsplash.com/photo-1517849845537-4d257902454a?auto=format&fit=crop&w=400&q=80",
+        bio: "Energia pura e coração gigante! Apaixonada por água, passeios na chuva e muitos carinhos ao entardecer."
+      }
+    };
+
+    // BASE DE POSTS DO FEED
+    const postsIniciaisSocial = [
+      {
+        id: "post_1",
+        petNome: "Thor",
+        petFoto: "https://images.unsplash.com/photo-1552053831-71594a27632d?auto=format&fit=crop&w=400&q=80",
+        midiaUrl: "https://images.unsplash.com/photo-1552053831-71594a27632d?auto=format&fit=crop&w=1200&q=85",
+        tutor: "Família Miranda",
+        cidade: "Montes Claros - MG",
+        horario: "Há 2 horas",
+        legenda: "Hoje foi dia de parque! O Thor correu atrás da bolinha até cansar e depois ganhou um picolé especial para pets de banana e pasta de amendoim. Nada paga essa carinha de felicidade! 🐶💛 #GoldenRetriever #DiaDeParque #AlegriaPet",
+        patinhas: 34,
+        curtido: false,
+        comentarios: [
+          { autor: "Ana Flávia", texto: "Que coisa mais linda! O Thor é um amorzão ❤️" },
+          { autor: "Carlos Silva", texto: "Dá pra ver a alegria no olhar dele!" }
+        ]
+      },
+      {
+        id: "post_2",
+        petNome: "Pipoca",
+        petFoto: "https://images.unsplash.com/photo-1537151625747-768eb6cf92b2?auto=format&fit=crop&w=400&q=80",
+        midiaUrl: "https://images.unsplash.com/photo-1537151625747-768eb6cf92b2?auto=format&fit=crop&w=1200&q=85",
+        tutor: "Ana Flávia",
+        cidade: "Belo Horizonte - MG",
+        horario: "Há 5 horas",
+        legenda: "Comemorando 3 aninhos da nossa Pipoca! Teve bolo de fígado, muitos petiscos e muita bagunça com os primos caninos. Ela é a energia da nossa casa! 🎂🎉🐾",
+        patinhas: 52,
+        curtido: false,
+        comentarios: [
+          { autor: "Beatriz", texto: "Parabéns, Pipoca linda! Muitas felicidades e petiscos!" }
+        ]
+      },
+      {
+        id: "post_3",
+        petNome: "Luna",
+        petFoto: "https://images.unsplash.com/photo-1583511655857-d19b40a7a54e?auto=format&fit=crop&w=400&q=80",
+        midiaUrl: "https://images.unsplash.com/photo-1583511655857-d19b40a7a54e?auto=format&fit=crop&w=1200&q=85",
+        tutor: "Mariana Souza",
+        cidade: "Montes Claros - MG",
+        horario: "Ontem",
+        legenda: "Depois do banho e tosa na Terranova Pet, a Luna ficou parecendo uma nuvem de algodão doce! Pronta para curtir o fim de semana no sofá. 🐩✨",
+        patinhas: 28,
+        curtido: false,
+        comentarios: []
+      },
+      {
+        id: "post_4",
+        petNome: "Bob",
+        petFoto: "https://images.unsplash.com/photo-1583337130417-3346a1be7dee?auto=format&fit=crop&w=400&q=80",
+        midiaUrl: "https://images.unsplash.com/photo-1583337130417-3346a1be7dee?auto=format&fit=crop&w=1200&q=85",
+        tutor: "Carlos Eduardo",
+        cidade: "Montes Claros - MG",
+        horario: "Há 1 dia",
+        legenda: "Bob no seu posto favorito do gramado tomando o solzinho da manhã. Esse olhar atento protege nossa casa com todo o amor do mundo! 🐾🛡️ #Boxer #Lealdade",
+        patinhas: 41,
+        curtido: false,
+        comentarios: [
+          { autor: "Eduarda", texto: "Que porte maravilhoso e olhar leal!" }
+        ]
+      },
+      {
+        id: "post_5",
+        petNome: "Maya",
+        petFoto: "https://images.unsplash.com/photo-1517849845537-4d257902454a?auto=format&fit=crop&w=400&q=80",
+        midiaUrl: "https://images.unsplash.com/photo-1517849845537-4d257902454a?auto=format&fit=crop&w=1200&q=85",
+        tutor: "Juliana Mendes",
+        cidade: "Montes Claros - MG",
+        horario: "Há 2 dias",
+        legenda: "Se tem água e bolinha, a Maya é a criatura mais realizada desse planeta! Tarde de calor deliciosa no sítio. 🐕💦 #Labrador #AlegriaPura",
+        patinhas: 63,
+        curtido: false,
+        comentarios: [
+          { autor: "Lucas", texto: "Labrador e água, a combinação perfeita haha!" }
+        ]
+      }
+    ];
+
+    let feedPosts = [];
+    let midiaPostCarregada = null;
+
+    // =========================================================================
+    // INICIALIZAÇÃO
+    // =========================================================================
+    window.addEventListener("DOMContentLoaded", () => {
+      carregarStoriesPersistidos();
+      renderizarBarraAvataresStories();
+      carregarPostsSocial();
+      checarTutorLogado();
+
+      // Suporte a teclas de atalho no teclado para os modais
+      window.addEventListener("keydown", (e) => {
+        const modalStory = document.getElementById("modalStoryView");
+        if (modalStory && !modalStory.classList.contains("hidden")) {
+          if (e.key === "ArrowRight") avancarStory();
+          if (e.key === "ArrowLeft") voltarStory();
+          if (e.key === "Escape") fecharStory();
+          if (e.key === " ") {
+            e.preventDefault();
+            alternarPausaStory();
+          }
+        }
+
+        const modalFoto = document.getElementById("modalVisualizarFotoPost");
+        if (modalFoto && !modalFoto.classList.contains("hidden")) {
+          if (e.key === "Escape") fecharModalFotoPost();
+        }
+      });
+    });
+
+    // =========================================================================
+    // PASSADOR DA BARRA HORIZONTAL DE STORIES
+    // =========================================================================
+    function passarBarraStories(deslocamento) {
+      const scrollContainer = document.getElementById("listaStoriesScroll");
+      if (scrollContainer) {
+        scrollContainer.scrollBy({ left: deslocamento, behavior: 'smooth' });
+      }
+    }
+
+    // =========================================================================
+    // CONTROLE DE STORIES ASSISTIDOS / VISTOS (PADRÃO INSTAGRAM)
+    // =========================================================================
+    function obterStoriesAssistidos() {
+      try {
+        return JSON.parse(localStorage.getItem("terranova_stories_assistidos")) || [];
+      } catch(e) {
+        return [];
+      }
+    }
+
+    function marcarStoryComoAssistido(petNome, storyImg) {
+      if (!petNome || !storyImg) return;
+      const assistidos = obterStoriesAssistidos();
+      const key = `${petNome.trim().toLowerCase()}__${storyImg}`;
+      if (!assistidos.includes(key)) {
+        assistidos.push(key);
+        try {
+          localStorage.setItem("terranova_stories_assistidos", JSON.stringify(assistidos));
+        } catch(e) {}
+      }
+    }
+
+    function petTemStoriesNaoVistos(pet) {
+      if (!pet || !pet.stories || !pet.stories.length) return false;
+      const assistidos = obterStoriesAssistidos();
+      return pet.stories.some(s => !assistidos.includes(`${pet.petNome.trim().toLowerCase()}__${s.img}`));
+    }
+
+    function renderizarBarraAvataresStories() {
+      const container = document.getElementById("containerStoriesAvatares");
+      if (!container) return;
+      container.innerHTML = "";
+
+      const assistidos = obterStoriesAssistidos();
+
+      // Separação exatamente como no Instagram:
+      // 1. Primeiro: Pets com stories NÃO assistidos (ficam na frente da lista com anel vibrante)
+      // 2. Depois: Pets com stories JÁ assistidos (saem da lista ativa da frente e vão pro final com anel cinza)
+      const petsComNaoVistos = [];
+      const petsJaAssistidos = [];
+
+      listaStoriesData.forEach(pet => {
+        const temPendentes = pet.stories.some(s => !assistidos.includes(`${pet.petNome.trim().toLowerCase()}__${s.img}`));
+        if (temPendentes) {
+          petsComNaoVistos.push(pet);
+        } else {
+          petsJaAssistidos.push(pet);
+        }
+      });
+
+      // Lista final ordenada: não vistos primeiro, já vistos ao final
+      const petsOrdenados = [...petsComNaoVistos, ...petsJaAssistidos];
+
+      petsOrdenados.forEach((petItem) => {
+        const idxOriginal = listaStoriesData.findIndex(p => p.petNome === petItem.petNome);
+        const temNaoVistos = petItem.stories.some(s => !assistidos.includes(`${petItem.petNome.trim().toLowerCase()}__${s.img}`));
+        
+        let primeiroNaoVistoIdx = petItem.stories.findIndex(s => !assistidos.includes(`${petItem.petNome.trim().toLowerCase()}__${s.img}`));
+        if (primeiroNaoVistoIdx === -1) primeiroNaoVistoIdx = 0;
+
+        const itemDiv = document.createElement("div");
+        itemDiv.className = "flex flex-col items-center gap-1.5 flex-shrink-0 cursor-pointer group transition-all duration-300";
+        itemDiv.onclick = () => abrirStoryPorIndice(idxOriginal, primeiroNaoVistoIdx);
+
+        if (temNaoVistos) {
+          // NÃO ASSISTIDO: Na lista ativa com anel em degradê roxo & ouro
+          itemDiv.innerHTML = `
+            <div class="w-16 h-16 rounded-full p-0.5 bg-gradient-to-tr from-[#740568] via-amber-400 to-yellow-300 group-hover:scale-105 transition shadow-xs">
+              <img src="${petItem.petFoto}" class="w-full h-full object-cover rounded-full border-2 border-white">
+            </div>
+            <span class="text-xs font-poetic font-black text-[#740568] group-hover:text-[#9F0C8F] transition tracking-tight">${petItem.petNome}</span>
+          `;
+        } else {
+          // JÁ ASSISTIDO (saiu da fila ativa da visualização, exatamente como no Instagram):
+          itemDiv.innerHTML = `
+            <div class="w-16 h-16 rounded-full p-0.5 bg-stone-200 border-2 border-stone-300 group-hover:scale-105 transition opacity-60" title="${petItem.petNome} (Story já assistido)">
+              <img src="${petItem.petFoto}" class="w-full h-full object-cover rounded-full border-2 border-white">
+            </div>
+            <span class="text-xs font-poetic font-medium text-stone-400 group-hover:text-stone-600 transition tracking-tight">${petItem.petNome}</span>
+          `;
+        }
+
+        container.appendChild(itemDiv);
+      });
+    }
+
+    // =========================================================================
+    // MOTOR DO PASSADOR DE STORIES EM TELA CHEIA (INSTAGRAM VIEWER)
+    // =========================================================================
+    function abrirStoryPorIndice(petIdx, storyIdx = 0) {
+      indicePetAtual = petIdx;
+      indiceStorySubAtual = storyIdx;
+      storyPausado = false;
+
+      const modal = document.getElementById("modalStoryView");
+      modal.classList.remove("hidden");
+
+      renderizarStoryAtual();
+    }
+
+    function renderizarStoryAtual() {
+      clearTimeout(timerStory);
+
+      const pet = listaStoriesData[indicePetAtual];
+      if (!pet || !pet.stories.length) return;
+
+      const totalStories = pet.stories.length;
+      if (indiceStorySubAtual >= totalStories) indiceStorySubAtual = 0;
+      if (indiceStorySubAtual < 0) indiceStorySubAtual = 0;
+
+      const story = pet.stories[indiceStorySubAtual];
+
+      // Marca o story atual como assistido em tempo real
+      marcarStoryComoAssistido(pet.petNome, story.img);
+
+      // Atualiza DOM
+      document.getElementById("imgStoryModal").src = story.img;
+      document.getElementById("avatarStoryModal").src = pet.petFoto;
+      document.getElementById("nomeStoryModal").innerText = pet.petNome;
+      document.getElementById("horarioStoryModal").innerText = `${story.horario} &bull; Montes Claros`;
+      
+      const legendaEl = document.getElementById("legendaStoryModal");
+      if (legendaEl) {
+        if (story.legenda) {
+          legendaEl.innerText = story.legenda;
+          legendaEl.classList.remove("hidden");
+        } else {
+          legendaEl.innerText = "";
+          legendaEl.classList.add("hidden");
+        }
+      }
+
+      document.getElementById("btnPausaStory").innerText = "⏸️";
+
+      // Renderiza os segmentos da barra de progresso no topo
+      const progressContainer = document.getElementById("storyProgressContainer");
+      progressContainer.innerHTML = "";
+
+      for (let i = 0; i < totalStories; i++) {
+        const seg = document.createElement("div");
+        seg.className = "story-progress-bar";
+        
+        const fill = document.createElement("div");
+        fill.className = "story-progress-fill";
+        
+        if (i < indiceStorySubAtual) {
+          fill.classList.add("completed");
+        } else if (i === indiceStorySubAtual) {
+          setTimeout(() => fill.classList.add("active"), 30);
+        }
+
+        seg.appendChild(fill);
+        progressContainer.appendChild(seg);
+      }
+
+      // Temporizador automático de 5 segundos para passar ao próximo
+      if (!storyPausado) {
+        timerStory = setTimeout(() => {
+          avancarStory();
+        }, 5000);
+      }
+    }
+
+    // PASSADOR: AVANÇAR STORY (DIREITA)
+    function avancarStory() {
+      const pet = listaStoriesData[indicePetAtual];
+      if (indiceStorySubAtual < pet.stories.length - 1) {
+        // Próximo story do mesmo pet
+        indiceStorySubAtual++;
+        renderizarStoryAtual();
+      } else {
+        // Acabaram os stories deste pet! Atualiza a barra para refletir que ele foi assistido
+        renderizarBarraAvataresStories();
+
+        // Procura o próximo pet com stories ainda não vistos na lista de reprodução
+        const assistidos = obterStoriesAssistidos();
+        let proxPetIdx = -1;
+        for (let i = indicePetAtual + 1; i < listaStoriesData.length; i++) {
+          const p = listaStoriesData[i];
+          if (p.stories.some(s => !assistidos.includes(`${p.petNome.trim().toLowerCase()}__${s.img}`))) {
+            proxPetIdx = i;
+            break;
+          }
+        }
+
+        if (proxPetIdx !== -1) {
+          indicePetAtual = proxPetIdx;
+          const p = listaStoriesData[proxPetIdx];
+          let pIdx = p.stories.findIndex(s => !assistidos.includes(`${p.petNome.trim().toLowerCase()}__${s.img}`));
+          indiceStorySubAtual = pIdx !== -1 ? pIdx : 0;
+          renderizarStoryAtual();
+        } else {
+          // Não há mais stories pendentes: fecha o visualizador!
+          fecharStory();
+        }
+      }
+    }
+
+    // PASSADOR: VOLTAR STORY (ESQUERDA)
+    function voltarStory() {
+      if (indiceStorySubAtual > 0) {
+        indiceStorySubAtual--;
+        renderizarStoryAtual();
+      } else {
+        if (indicePetAtual > 0) {
+          indicePetAtual--;
+          const petAnt = listaStoriesData[indicePetAtual];
+          indiceStorySubAtual = petAnt.stories.length - 1;
+          renderizarStoryAtual();
+        } else {
+          indiceStorySubAtual = 0;
+          renderizarStoryAtual();
+        }
+      }
+    }
+
+    function alternarPausaStory(e) {
+      if (e) e.stopPropagation();
+      storyPausado = !storyPausado;
+      const btn = document.getElementById("btnPausaStory");
+
+      if (storyPausado) {
+        clearTimeout(timerStory);
+        btn.innerText = "▶️";
+      } else {
+        btn.innerText = "⏸️";
+        timerStory = setTimeout(() => {
+          avancarStory();
+        }, 3000);
+      }
+    }
+
+    function fecharStory() {
+      clearTimeout(timerStory);
+      document.getElementById("modalStoryView").classList.add("hidden");
+      renderizarBarraAvataresStories();
+    }
+
+    function apagarStoryAtual(e) {
+      if (e) e.stopPropagation();
+      if (indicePetAtual < 0 || indicePetAtual >= listaStoriesData.length) return;
+      const pet = listaStoriesData[indicePetAtual];
+      if (!pet || !pet.stories || !pet.stories.length) return;
+
+      pet.stories.splice(indiceStorySubAtual, 1);
+
+      if (pet.stories.length === 0) {
+        listaStoriesData.splice(indicePetAtual, 1);
+        salvarStoriesData();
+        renderizarBarraAvataresStories();
+        fecharStory();
+        return;
+      }
+
+      salvarStoriesData();
+      renderizarBarraAvataresStories();
+      if (indiceStorySubAtual >= pet.stories.length) {
+        indiceStorySubAtual = pet.stories.length - 1;
+      }
+      atualizarStoryModal();
+    }
+
+    function enviarCarinhoStory(e) {
+      if (e) e.stopPropagation();
+      const input = document.getElementById("inputRespostaStory");
+      const texto = input.value.trim() || "🐾 Muito amor e carinho!";
+      input.value = "";
+
+      // Animação de patinhas voando na tela
+      for (let i = 0; i < 3; i++) {
+        setTimeout(() => {
+          const paw = document.createElement("div");
+          paw.className = "floating-paw text-3xl";
+          paw.innerText = "🐾";
+          paw.style.left = (window.innerWidth / 2 + (Math.random() * 80 - 40)) + "px";
+          paw.style.top = (window.innerHeight / 2 + (Math.random() * 40 - 20)) + "px";
+          document.body.appendChild(paw);
+          setTimeout(() => paw.remove(), 900);
+        }, i * 150);
+      }
+    }
+
+    // =========================================================================
+    // FEED SOCIAL & INTERAÇÕES
+    // =========================================================================
+    function carregarPostsSocial() {
+      let postsLocais = [];
+      try {
+        postsLocais = JSON.parse(localStorage.getItem("terranova_social_posts")) || [];
+      } catch(e) {}
+
+      feedPosts = [...postsLocais, ...postsIniciaisSocial];
+      renderizarFeed(feedPosts);
+    }
+
+    function renderizarFeed(lista) {
+      const container = document.getElementById("containerFeedSocial");
+      container.innerHTML = "";
+
+      lista.forEach(post => {
+        const card = document.createElement("article");
+        card.className = "bg-white rounded-3xl overflow-hidden border border-stone-200 shadow-md hover:shadow-xl transition duration-300 relative";
+        
+        card.innerHTML = `
+          <!-- CABEÇALHO DO POST (CLIQUE ABRE O DIÁRIO DE AVENTURAS DO PET) -->
+          <div class="p-4 flex items-center justify-between border-b border-stone-100">
+            <div class="flex items-center gap-3 cursor-pointer group" onclick="abrirPerfilPet('${post.petNome}')" title="Abrir Diário de Aventuras de ${post.petNome}">
+              <div class="w-12 h-12 rounded-full p-0.5 bg-gradient-to-tr from-amber-400 to-yellow-300 group-hover:scale-105 transition shadow-sm">
+                <img src="${post.petFoto}" class="w-full h-full object-cover rounded-full border border-white">
+              </div>
+              <div>
+                <div class="flex items-center gap-2">
+                  <h3 class="font-poetic font-bold text-base text-[#740568] leading-tight group-hover:text-[#9F0C8F] transition flex items-center gap-1.5">
+                    <span class="tracking-wide">${post.petNome}</span>
+                    <span class="font-sans text-[10px] text-amber-900 bg-amber-100 px-2 py-0.5 rounded-full font-bold border border-amber-300">Ver Diário 📖</span>
+                  </h3>
+                  <span class="text-[10px] bg-amber-100 text-amber-900 font-bold px-2 py-0.5 rounded-full border border-amber-300">Pet Vivo 🐾</span>
+                </div>
+                <p class="text-[11px] text-stone-500 font-medium">Tutor(a): ${post.tutor} &bull; ${post.cidade}</p>
+              </div>
+            </div>
+
+            <div class="flex items-center gap-1.5 flex-shrink-0">
+              <span class="text-[11px] text-stone-400 font-medium">${post.horario}</span>
+              <button onclick="apagarPost('${post.id}', event)" class="p-1 rounded-full hover:bg-rose-50 text-stone-300 hover:text-rose-600 transition text-xs cursor-pointer" title="Apagar Publicação">🗑️</button>
+            </div>
+          </div>
+
+          <!-- MÍDIA DO POST COM AJUSTE PERFEITO AO LOCAL DE POSTAGEM (SEM CORTES) -->
+          <div class="relative w-full min-h-[300px] max-h-[580px] bg-stone-950 flex items-center justify-center overflow-hidden cursor-pointer group" onclick="abrirModalFotoPost('${post.id}')" ondblclick="darPatinha('${post.id}', event)">
+            <!-- Fundo ambiente desfocado que preenche suavemente as bordas sem barras secas -->
+            <img src="${post.midiaUrl}" class="absolute inset-0 w-full h-full object-cover blur-xl opacity-35 scale-110 pointer-events-none select-none">
+            <!-- Foto ajustada que se adapta proporcionalmente a qualquer formato (quadrada, vertical ou horizontal) -->
+            <img src="${post.midiaUrl}" class="relative z-10 max-w-full max-h-[580px] w-auto h-auto object-contain select-none transition duration-300 group-hover:scale-[1.01]">
+            <div class="absolute bottom-3 left-3 z-20 bg-black/60 backdrop-blur-md px-3 py-1 rounded-full text-white text-[11px] font-bold border border-white/20 shadow-xs">
+              📸 Diário de Aventuras
+            </div>
+          </div>
+
+          <!-- BARRA DE AÇÕES (PATINHA / COMENTÁRIOS / COMPARTILHAR) -->
+          <div class="p-4 space-y-3">
+            <div class="flex items-center justify-between">
+              <div class="flex items-center gap-3">
+                <button onclick="darPatinha('${post.id}', event)" id="btnPatinha_${post.id}" class="flex items-center gap-1.5 px-3.5 py-1.5 rounded-full ${post.curtido ? 'bg-[#740568] text-yellow-300' : 'bg-stone-100 hover:bg-amber-100 text-stone-700'} font-black text-xs transition active:scale-90 shadow-xs">
+                  <span>🐾</span>
+                  <span id="txtPatinhas_${post.id}">${post.patinhas} patinhas</span>
+                </button>
+
+                <button onclick="focarComentario('${post.id}')" class="flex items-center gap-1.5 px-3.5 py-1.5 rounded-full bg-stone-100 hover:bg-stone-200 text-stone-700 font-bold text-xs transition">
+                  <span>💬</span>
+                  <span>${post.comentarios.length}</span>
+                </button>
+              </div>
+            </div>
+
+            <!-- LEGENDA EDITADA PELO TUTOR -->
+            <div class="text-xs text-stone-800 leading-relaxed space-y-1">
+              <p><strong class="font-poetic font-bold text-sm text-[#740568] cursor-pointer hover:underline decoration-amber-400" onclick="abrirPerfilPet('${post.petNome}')" title="Ver Diário de Aventuras">${post.petNome}</strong> ${post.legenda}</p>
+            </div>
+
+            <!-- LISTA DE COMENTÁRIOS REAIS -->
+            <div id="listaComentarios_${post.id}" class="space-y-1 pt-2 border-t border-stone-100 text-xs">
+              ${post.comentarios.map(c => `
+                <p class="text-stone-600"><strong class="text-stone-800 font-semibold">${c.autor}:</strong> ${c.texto}</p>
+              `).join('')}
+            </div>
+
+            <!-- CAMPO PARA ADICIONAR NOVO COMENTÁRIO -->
+            <form onsubmit="adicionarComentario('${post.id}', event)" class="flex items-center gap-2 pt-2 border-t border-stone-100">
+              <input type="text" id="inputComentario_${post.id}" placeholder="Deixe um carinho para ${post.petNome}..." class="flex-1 bg-stone-100 rounded-full px-4 py-2 text-xs text-stone-800 focus:outline-none focus:ring-2 focus:ring-[#740568]">
+              <button type="submit" class="px-4 py-2 bg-gradient-to-r from-[#740568] to-[#9F0C8F] text-yellow-300 font-black text-xs rounded-full shadow-sm hover:brightness-105 active:scale-95 transition">
+                Enviar
+              </button>
+            </form>
+          </div>
+        `;
+
+        container.appendChild(card);
+      });
+    }
+
+    // DAR PATINHA
+    function darPatinha(postId, e) {
+      const post = feedPosts.find(p => p.id === postId);
+      if (!post) return;
+
+      post.curtido = !post.curtido;
+      post.patinhas += post.curtido ? 1 : -1;
+
+      const paw = document.createElement("div");
+      paw.className = "floating-paw text-4xl";
+      paw.innerText = "🐾";
+      paw.style.left = (e.clientX || 200) + "px";
+      paw.style.top = (e.clientY || 300) + "px";
+      document.body.appendChild(paw);
+      setTimeout(() => paw.remove(), 900);
+
+      const btn = document.getElementById(`btnPatinha_${postId}`);
+      const txt = document.getElementById(`txtPatinhas_${postId}`);
+      if (btn && txt) {
+        txt.innerText = `${post.patinhas} patinhas`;
+        btn.className = post.curtido
+          ? "flex items-center gap-1.5 px-3.5 py-1.5 rounded-full bg-[#740568] text-yellow-300 font-black text-xs transition active:scale-90 shadow-sm"
+          : "flex items-center gap-1.5 px-3.5 py-1.5 rounded-full bg-stone-100 hover:bg-amber-100 text-stone-700 font-black text-xs transition active:scale-90";
+      }
+
+      salvarPostsSocialStorage();
+    }
+
+    // COMENTÁRIO
+    function adicionarComentario(postId, e) {
+      e.preventDefault();
+      const input = document.getElementById(`inputComentario_${postId}`);
+      const texto = input.value.trim();
+      if (!texto) return;
+
+      const post = feedPosts.find(p => p.id === postId);
+      if (!post) return;
+
+      post.comentarios.push({ autor: "Você", texto: texto });
+      input.value = "";
+
+      const containerComentarios = document.getElementById(`listaComentarios_${postId}`);
+      if (containerComentarios) {
+        const p = document.createElement("p");
+        p.className = "text-stone-600";
+        p.innerHTML = `<strong class="text-stone-800 font-semibold">Você:</strong> ${texto}`;
+        containerComentarios.appendChild(p);
+      }
+
+      salvarPostsSocialStorage();
+    }
+
+    function focarComentario(postId) {
+      const input = document.getElementById(`inputComentario_${postId}`);
+      if (input) input.focus();
+    }
+
+    function salvarPostsSocialStorage() {
+      try {
+        localStorage.setItem("terranova_social_posts", JSON.stringify(feedPosts));
+      } catch(e) {}
+    }
+
+    function compartilharPost(nome, legenda) {
+      const msg = `Olha que lindo o post do ${nome} no Diário da Terranova Pet Social! 🐾✨\n\nhttps://terranova-memorial.loca.lt/social.html`;
+      window.open(`https://api.whatsapp.com/send?text=${encodeURIComponent(msg)}`, '_blank');
+    }
+
+    function trocarAbaFeed(aba) {
+      const btnFeed = document.getElementById("abaFeedGeral");
+      const btnDiario = document.getElementById("abaDiarioPet");
+
+      if (aba === 'feed') {
+        btnFeed.className = "px-4 py-2 rounded-2xl bg-amber-400 text-[#740568] font-black text-xs shadow-sm transition";
+        btnDiario.className = "px-4 py-2 rounded-2xl bg-white hover:bg-stone-100 text-stone-700 font-bold text-xs border border-stone-300 transition";
+        renderizarFeed(feedPosts);
+      } else {
+        btnDiario.className = "px-4 py-2 rounded-2xl bg-amber-400 text-[#740568] font-black text-xs shadow-sm transition";
+        btnFeed.className = "px-4 py-2 rounded-2xl bg-white hover:bg-stone-100 text-stone-700 font-bold text-xs border border-stone-300 transition";
+        
+        let tutor = null;
+        try { tutor = JSON.parse(localStorage.getItem("terranova_tutor_logado")); } catch(e) {}
+        const petFiltrar = (tutor && tutor.petNome) ? tutor.petNome : "Thor";
+        renderizarFeed(feedPosts.filter(p => p.petNome.toLowerCase() === petFiltrar.toLowerCase()));
+      }
+    }
+
+    // =========================================================================
+    // TUTOR LOGIN & CRIAÇÃO DE POSTS
+    // =========================================================================
+    function checarTutorLogado() {
+      let tutor = null;
+      try {
+        tutor = JSON.parse(localStorage.getItem("terranova_tutor_logado"));
+      } catch(e) {}
+
+      const box = document.getElementById("boxStatusTutor");
+      if (!box) return;
+
+      if (tutor && tutor.nome) {
+        box.innerHTML = `
+          <div class="flex items-center gap-2 bg-[#740568] px-3 py-1.5 rounded-full text-xs border border-[#520349] shadow-xs">
+            <span class="w-5 h-5 rounded-full bg-amber-400 text-[#740568] flex items-center justify-center font-black text-[10px]">🐾</span>
+            <span class="font-bold text-yellow-300 hidden sm:inline">${tutor.nome.split(" ")[0]}</span>
+            <button onclick="logoutTutor()" class="text-[10px] text-amber-200 hover:text-white underline ml-1" title="Desconectar">Sair</button>
+          </div>
+        `;
+      } else {
+        box.innerHTML = `
+          <button onclick="abrirModalLogin()" class="px-3 py-1.5 rounded-full bg-[#740568] hover:bg-[#520349] text-yellow-300 font-bold text-xs flex items-center gap-1 transition shadow-xs border border-[#520349]">
+            <span>🔑</span>
+            <span class="hidden sm:inline">Entrar</span>
+          </button>
+        `;
+      }
+    }
+
+    // =========================================================================
+    // AUTENTICAÇÃO COM SENHA & CADASTRO NA TELA DE ENTRADA
+    // =========================================================================
+    function obterTutoresDb() {
+      let db = [];
+      try { db = JSON.parse(localStorage.getItem("terranova_tutores_db")) || []; } catch(e) {}
+      if (!db.length) {
+        // Tutor inicial padrão para teste imediato
+        db = [
+          {
+            nome: "Família Miranda",
+            email: "familia.miranda@gmail.com",
+            senha: "123",
+            petNome: "Thor",
+            petRaca: "Golden Retriever",
+            petFoto: "https://images.unsplash.com/photo-1552053831-71594a27632d?auto=format&fit=crop&w=400&q=80",
+            cidade: "Montes Claros - MG"
+          }
+        ];
+        localStorage.setItem("terranova_tutores_db", JSON.stringify(db));
+      }
+      return db;
+    }
+
+    function abrirModalLogin(aba = 'login') {
+      document.getElementById("modalLoginTutor").classList.remove("hidden");
+      trocarAbaAuth(aba);
+    }
+
+    function fecharModalLogin() {
+      document.getElementById("modalLoginTutor").classList.add("hidden");
+    }
+
+    function trocarAbaAuth(aba) {
+      const btnLogin = document.getElementById("tabBtnLogin");
+      const btnCad = document.getElementById("tabBtnCadastro");
+      const formLogin = document.getElementById("formLoginAuth");
+      const formCad = document.getElementById("formCadastroAuth");
+
+      if (aba === "login") {
+        btnLogin.className = "flex-1 py-2 rounded-xl text-xs font-black bg-white shadow-xs text-[#740568] transition";
+        btnCad.className = "flex-1 py-2 rounded-xl text-xs font-bold text-stone-600 hover:text-stone-900 transition";
+        formLogin.classList.remove("hidden");
+        formCad.classList.add("hidden");
+      } else {
+        btnCad.className = "flex-1 py-2 rounded-xl text-xs font-black bg-white shadow-xs text-[#740568] transition";
+        btnLogin.className = "flex-1 py-2 rounded-xl text-xs font-bold text-stone-600 hover:text-stone-900 transition";
+        formCad.classList.remove("hidden");
+        formLogin.classList.add("hidden");
+      }
+    }
+
+    function alternarVisibilidadeSenha(inputId, btn) {
+      const input = document.getElementById(inputId);
+      if (input.type === "password") {
+        input.type = "text";
+        btn.innerText = "🙈 Ocultar";
+      } else {
+        input.type = "password";
+        btn.innerText = "👁️ Ver";
+      }
+    }
+
+    function executarLoginTutor(e) {
+      e.preventDefault();
+      const email = document.getElementById("loginEmailAuth").value.trim().toLowerCase();
+      const senha = document.getElementById("loginSenhaAuth").value.trim();
+
+      const db = obterTutoresDb();
+      const tutorEncontrado = db.find(t => t.email.toLowerCase() === email && t.senha === senha);
+
+      if (tutorEncontrado) {
+        localStorage.setItem("terranova_tutor_logado", JSON.stringify(tutorEncontrado));
+        checarTutorLogado();
+        fecharModalLogin();
+      } else {
+        const inp = document.getElementById("loginSenhaAuth");
+        if (inp) {
+          inp.classList.add("border-rose-500");
+          inp.focus();
+        }
+      }
+    }
+
+    function executarCadastroTutor(e) {
+      e.preventDefault();
+      const nome = document.getElementById("cadNomeTutor").value.trim();
+      const email = document.getElementById("cadEmailTutor").value.trim().toLowerCase();
+      const senha = document.getElementById("cadSenhaTutor").value.trim();
+      const confirma = document.getElementById("cadConfirmaSenhaTutor").value.trim();
+      const petNome = document.getElementById("cadNomePet").value.trim();
+      const petRaca = document.getElementById("cadRacaPet").value.trim();
+
+      if (senha.length < 3 || senha !== confirma) {
+        return;
+      }
+
+      let db = obterTutoresDb();
+      const jaExiste = db.find(t => t.email.toLowerCase() === email);
+      if (jaExiste) {
+        trocarAbaAuth("login");
+        document.getElementById("loginEmailAuth").value = email;
+        return;
+      }
+
+      const novoTutor = {
+        nome,
+        email,
+        senha,
+        petNome,
+        petRaca,
+        petFoto: "https://images.unsplash.com/photo-1552053831-71594a27632d?auto=format&fit=crop&w=400&q=80",
+        cidade: "Montes Claros - MG"
+      };
+
+      db.push(novoTutor);
+      localStorage.setItem("terranova_tutores_db", JSON.stringify(db));
+      localStorage.setItem("terranova_tutor_logado", JSON.stringify(novoTutor));
+
+      checarTutorLogado();
+      fecharModalLogin();
+    }
+
+    function logoutTutor() {
+      if (confirm("Deseja desconectar deste perfil de tutor?")) {
+        localStorage.removeItem("terranova_tutor_logado");
+        checarTutorLogado();
+      }
+    }
+
+    function clicarNovaPublicacao() {
+      let tutor = null;
+      try { tutor = JSON.parse(localStorage.getItem("terranova_tutor_logado")); } catch(e) {}
+      if (!tutor || !tutor.nome) {
+        abrirModalLogin();
+      } else {
+        abrirModalCriarPost();
+      }
+    }
+
+    function abrirModalCriarPost() {
+      document.getElementById("modalCriarPostInstagram").classList.remove("hidden");
+    }
+
+    function fecharModalCriarPost() {
+      document.getElementById("modalCriarPostInstagram").classList.add("hidden");
+    }
+
+    function previewMidiaUpload(e) {
+      const file = e.target.files[0];
+      if (!file) return;
+
+      const reader = new FileReader();
+      reader.onload = (evt) => {
+        midiaPostCarregada = evt.target.result;
+        const img = document.getElementById("previewImgModal");
+        const placeholder = document.getElementById("placeholderMidiaModal");
+        img.src = midiaPostCarregada;
+        img.classList.remove("hidden");
+        placeholder.classList.add("hidden");
+      };
+      reader.readAsDataURL(file);
+    }
+
+    function publicarNovoPostInstagram(e) {
+      e.preventDefault();
+      let tutor = null;
+      try { tutor = JSON.parse(localStorage.getItem("terranova_tutor_logado")); } catch(e) {}
+      const tutorNome = tutor ? tutor.nome : "Família Miranda";
+      const petNome = tutor ? tutor.petNome : "Thor";
+      const petFoto = (tutor && tutor.petFoto) ? tutor.petFoto : "https://images.unsplash.com/photo-1552053831-71594a27632d?auto=format&fit=crop&w=400&q=80";
+
+      const legenda = document.getElementById("textoLegendaModal").value.trim();
+      const midiaUrl = midiaPostCarregada || petFoto;
+
+      const novoPost = {
+        id: "post_" + Date.now(),
+        petNome: petNome,
+        petFoto: petFoto,
+        midiaUrl: midiaUrl,
+        tutor: tutorNome,
+        cidade: "Montes Claros - MG",
+        horario: "Agora mesmo",
+        legenda: legenda,
+        patinhas: 1,
+        curtido: true,
+        comentarios: []
+      };
+
+      feedPosts.unshift(novoPost);
+      salvarPostsSocialStorage();
+      renderizarFeed(feedPosts);
+
+      // Limpa formulário e fecha modal
+      document.getElementById("textoLegendaModal").value = "";
+      midiaPostCarregada = null;
+      document.getElementById("previewImgModal").classList.add("hidden");
+      document.getElementById("placeholderMidiaModal").classList.remove("hidden");
+      fecharModalCriarPost();
+    }
+
+    // =========================================================================
+    // MOTOR EXCLUSIVO DE STORIES (POSTAGEM DE STORY FICA NO STORY)
+    // =========================================================================
+    let midiaStoryCarregada = null;
+
+    function comprimirImagemParaStory(file, callback) {
+      const reader = new FileReader();
+      reader.onload = (evt) => {
+        const img = new Image();
+        img.onload = () => {
+          const canvas = document.createElement("canvas");
+          let w = img.width;
+          let h = img.height;
+          const maxDim = 1080;
+          if (w > maxDim || h > maxDim) {
+            if (w > h) {
+              h = Math.round((h * maxDim) / w);
+              w = maxDim;
+            } else {
+              w = Math.round((w * maxDim) / h);
+              h = maxDim;
+            }
+          }
+          canvas.width = w;
+          canvas.height = h;
+          const ctx = canvas.getContext("2d");
+          ctx.drawImage(img, 0, 0, w, h);
+          const dataUrl = canvas.toDataURL("image/jpeg", 0.85);
+          callback(dataUrl);
+        };
+        img.src = evt.target.result;
+      };
+      reader.readAsDataURL(file);
+    }
+
+    function abrirModalAdicionarStory() {
+      let tutor = null;
+      try { tutor = JSON.parse(localStorage.getItem("terranova_tutor_logado")); } catch(e) {}
+      
+      // Validação estrita de tutor logado: acesso somente se a conta estiver conectada!
+      if (!tutor || !tutor.nome) {
+        abrirModalAuth("login");
+        return;
+      }
+
+      midiaStoryCarregada = null;
+      const img = document.getElementById("previewImgStoryModal");
+      const ph = document.getElementById("placeholderMidiaStoryModal");
+      if (img) img.classList.add("hidden");
+      if (ph) ph.classList.remove("hidden");
+      const inpLeg = document.getElementById("inputLegendaStory");
+      if (inpLeg) inpLeg.value = "";
+
+      const modal = document.getElementById("modalAdicionarStory");
+      if (modal) modal.classList.remove("hidden");
+    }
+
+    function fecharModalAdicionarStory() {
+      const modal = document.getElementById("modalAdicionarStory");
+      if (modal) modal.classList.add("hidden");
+    }
+
+    function previewMidiaStory(e) {
+      const file = e.target.files[0];
+      if (!file) return;
+
+      comprimirImagemParaStory(file, (dataUrl) => {
+        midiaStoryCarregada = dataUrl;
+        const img = document.getElementById("previewImgStoryModal");
+        const placeholder = document.getElementById("placeholderMidiaStoryModal");
+        img.src = midiaStoryCarregada;
+        img.classList.remove("hidden");
+        placeholder.classList.add("hidden");
+      });
+    }
+
+    function carregarStoriesPersistidos() {
+      try {
+        const salvos = JSON.parse(localStorage.getItem("terranova_stories_db"));
+        if (salvos && Array.isArray(salvos) && salvos.length > 0) {
+          listaStoriesData = salvos;
+        }
+      } catch(e) {}
+    }
+
+    function salvarStoriesData() {
+      try {
+        localStorage.setItem("terranova_stories_db", JSON.stringify(listaStoriesData));
+      } catch(err) {
+        console.warn("Storage warning:", err);
+      }
+    }
+
+    function publicarNovoStory(e) {
+      e.preventDefault();
+      if (!midiaStoryCarregada) return;
+
+      let tutor = null;
+      try { tutor = JSON.parse(localStorage.getItem("terranova_tutor_logado")); } catch(e) {}
+      if (!tutor || !tutor.nome) {
+        abrirModalAuth("login");
+        return;
+      }
+
+      const petNome = tutor.petNome || "Thor";
+      const petFoto = tutor.petFoto || "https://images.unsplash.com/photo-1552053831-71594a27632d?auto=format&fit=crop&w=400&q=80";
+      const legenda = document.getElementById("inputLegendaStory").value.trim();
+
+      // Objeto oficial do story com a imagem EXATA postada
+      const storyItem = {
+        id: "story_" + Date.now(),
+        img: midiaStoryCarregada,
+        horario: "Agora mesmo",
+        legenda: legenda
+      };
+
+      let petExistente = listaStoriesData.find(s => s.petNome.toLowerCase() === petNome.toLowerCase());
+      if (petExistente) {
+        petExistente.petFoto = petFoto;
+        petExistente.stories.unshift(storyItem);
+      } else {
+        petExistente = {
+          petId: petNome.toLowerCase().replace(/\s+/g, "_"),
+          petNome: petNome,
+          petFoto: petFoto,
+          stories: [storyItem]
+        };
+        listaStoriesData.unshift(petExistente);
+      }
+
+      // Remove marcação de visto para que o story seja exibido com anel vibrante imediatamente
+      try {
+        let assistidos = obterStoriesAssistidos();
+        assistidos = assistidos.filter(k => !k.startsWith(`${petNome.trim().toLowerCase()}__`));
+        localStorage.setItem("terranova_stories_assistidos", JSON.stringify(assistidos));
+      } catch(err) {}
+
+      // Persiste na base de stories local
+      salvarStoriesData();
+
+      // Atualiza a barra de avatares dos stories
+      renderizarBarraAvataresStories();
+      fecharModalAdicionarStory();
+
+      // ABRE IMEDIATAMENTE O STORY PUBLICADO COM A IMAGEM EXATA DO STORY POSTADO (ESTILO INSTAGRAM)
+      const idxPet = listaStoriesData.findIndex(s => s.petNome.toLowerCase() === petNome.toLowerCase());
+      if (idxPet !== -1) {
+        abrirStoryPorIndice(idxPet, 0);
+      }
+    }
+
+    // =========================================================================
+    // EDIÇÃO DE PERFIL DO PET (FOTO, NOME, RAÇA, CIDADE, BIO - ESTILO INSTAGRAM)
+    // =========================================================================
+    let novaFotoPerfilCarregada = null;
+
+    function abrirModalEditarPerfil() {
+      const nomeAtual = document.getElementById("perfilPetNome").innerText.trim();
+      const subtitulo = document.getElementById("perfilPetSubtitulo").innerText.trim();
+      const partesSub = subtitulo.split("•").map(s => s.trim());
+      const racaAtual = partesSub[0] || "Golden Retriever";
+      const cidadeAtual = partesSub[1] || "Montes Claros - MG";
+      const bioAtual = document.getElementById("perfilPetBio").innerText.trim();
+      const fotoAtual = document.getElementById("perfilPetFoto").src;
+
+      document.getElementById("previewFotoPerfilEditar").src = fotoAtual;
+      document.getElementById("inputEditarNomePet").value = nomeAtual;
+      document.getElementById("inputEditarRacaPet").value = racaAtual;
+      document.getElementById("inputEditarCidadePet").value = cidadeAtual;
+      document.getElementById("inputEditarBioPet").value = bioAtual;
+      novaFotoPerfilCarregada = null;
+
+      document.getElementById("modalEditarPerfilPet").classList.remove("hidden");
+    }
+
+    function fecharModalEditarPerfil() {
+      document.getElementById("modalEditarPerfilPet").classList.add("hidden");
+    }
+
+    function previewNovaFotoPerfil(e) {
+      const file = e.target.files[0];
+      if (!file) return;
+
+      const reader = new FileReader();
+      reader.onload = (evt) => {
+        novaFotoPerfilCarregada = evt.target.result;
+        document.getElementById("previewFotoPerfilEditar").src = novaFotoPerfilCarregada;
+      };
+      reader.readAsDataURL(file);
+    }
+
+    function salvarEdicaoPerfilPet(e) {
+      e.preventDefault();
+      const novoNome = document.getElementById("inputEditarNomePet").value.trim();
+      const novaRaca = document.getElementById("inputEditarRacaPet").value.trim();
+      const novaCidade = document.getElementById("inputEditarCidadePet").value.trim();
+      const novaBio = document.getElementById("inputEditarBioPet").value.trim();
+      const novaFoto = novaFotoPerfilCarregada || document.getElementById("previewFotoPerfilEditar").src;
+
+      // 1. Atualiza DOM da página do perfil imediatamente
+      document.getElementById("perfilPetNome").innerText = novoNome;
+      document.getElementById("perfilPetFoto").src = novaFoto;
+      document.getElementById("perfilPetSubtitulo").innerText = `${novaRaca} • ${novaCidade}`;
+      document.getElementById("perfilPetBio").innerText = novaBio;
+
+      // 2. Atualiza sessão do tutor logado
+      let tutor = null;
+      try { tutor = JSON.parse(localStorage.getItem("terranova_tutor_logado")); } catch(err) {}
+      if (!tutor) tutor = {};
+      const nomeAntigo = tutor.petNome || "Thor";
+      tutor.petNome = novoNome;
+      tutor.petFoto = novaFoto;
+      tutor.petRaca = novaRaca;
+      tutor.cidade = novaCidade;
+      tutor.bio = novaBio;
+      localStorage.setItem("terranova_tutor_logado", JSON.stringify(tutor));
+
+      // 3. Atualiza na base de tutores
+      let tutoresDb = obterTutoresDb();
+      const idxT = tutoresDb.findIndex(t => t.email && tutor.email && t.email.toLowerCase() === tutor.email.toLowerCase());
+      if (idxT !== -1) {
+        tutoresDb[idxT] = { ...tutoresDb[idxT], ...tutor };
+        localStorage.setItem("terranova_tutores_db", JSON.stringify(tutoresDb));
+      }
+
+      // 4. Atualiza posts desse pet com a nova foto e nome
+      feedPosts.forEach(p => {
+        if (p.petNome && (p.petNome.toLowerCase() === nomeAntigo.toLowerCase() || p.petNome.toLowerCase() === novoNome.toLowerCase())) {
+          p.petNome = novoNome;
+          p.petFoto = novaFoto;
+          p.cidade = novaCidade;
+        }
+      });
+      salvarPostsSocialStorage();
+      renderizarFeed(feedPosts);
+
+      // 5. Atualiza na barra de stories
+      const st = listaStoriesData.find(s => s.petNome.toLowerCase() === nomeAntigo.toLowerCase());
+      if (st) {
+        st.petNome = novoNome;
+        st.petFoto = novaFoto;
+        renderizarBarraAvataresStories();
+      }
+
+      fecharModalEditarPerfil();
+    }
+
+    // =========================================================================
+    // DIÁRIO DE AVENTURAS & PÁGINA PESSOAL DO PET (CONFIGURAÇÃO 100% PRECISA)
+    // =========================================================================
+    function abrirPerfilPet(nomePet) {
+      if (!nomePet) return;
+      const petNomeBusca = nomePet.trim().toLowerCase();
+
+      // Esconde feed geral e stories
+      const containerFeed = document.getElementById("containerFeedSocial");
+      if (containerFeed) containerFeed.classList.add("hidden");
+
+      const secaoStories = document.querySelector("section.max-w-4xl.mx-auto.px-4.pt-6");
+      if (secaoStories) secaoStories.classList.add("hidden");
+
+      const secaoAbas = document.querySelector("section.max-w-4xl.mx-auto.px-4.py-3");
+      if (secaoAbas) secaoAbas.classList.add("hidden");
+      
+      const secaoPerfil = document.getElementById("secaoPerfilPet");
+      if (secaoPerfil) secaoPerfil.classList.remove("hidden");
+
+      window.scrollTo({ top: 0, behavior: "smooth" });
+
+      // Coleta todos os posts desse pet
+      let postsLocais = [];
+      try { postsLocais = JSON.parse(localStorage.getItem("terranova_social_posts")) || []; } catch(e) {}
+      const todosPosts = [...postsLocais, ...postsIniciaisSocial];
+      const postsDoPet = todosPosts.filter(p => p.petNome && p.petNome.trim().toLowerCase() === petNomeBusca);
+
+      // Prioridade 1: Dados do tutor logado (se o pet do perfil for o pet do tutor)
+      let tutorLogado = null;
+      try { tutorLogado = JSON.parse(localStorage.getItem("terranova_tutor_logado")); } catch(e) {}
+      const ehProprioTutor = tutorLogado && tutorLogado.petNome && (tutorLogado.petNome.trim().toLowerCase() === petNomeBusca);
+
+      // Prioridade 2: Cadastro oficial na base PETS_SOCIAL_BASE
+      const basePet = PETS_SOCIAL_BASE[petNomeBusca] || {};
+
+      // Prioridade 3: Coleiras / Store
+      let petsStore = [];
+      try { petsStore = JSON.parse(localStorage.getItem("terranova_pets_store_v3")) || []; } catch(e) {}
+      const petStore = petsStore.find(p => p.nome && p.nome.trim().toLowerCase() === petNomeBusca) || {};
+
+      const primeiroPost = postsDoPet[0] || {};
+
+      // Resolução dos dados do pet com alta fidelidade (nunca desconfigurado)
+      const nomeFinal = (ehProprioTutor && tutorLogado.petNome) || basePet.nome || petStore.nome || nomePet;
+      const fotoFinal = (ehProprioTutor && tutorLogado.petFoto) || basePet.foto || petStore.fotoPrincipal || primeiroPost.petFoto || "https://images.unsplash.com/photo-1552053831-71594a27632d?auto=format&fit=crop&w=400&q=80";
+      const racaFinal = (ehProprioTutor && tutorLogado.petRaca) || basePet.raca || petStore.raca || "Companheiro Leal";
+      const cidadeFinal = (ehProprioTutor && tutorLogado.cidade) || basePet.cidade || primeiroPost.cidade || "Montes Claros - MG";
+      const tutorFinal = (ehProprioTutor && (tutorLogado.nome || tutorLogado.tutorNome)) || basePet.tutor || petStore.tutorNome || primeiroPost.tutor || "Tutor Amoroso";
+      const bioFinal = (ehProprioTutor && tutorLogado.bio) || basePet.bio || petStore.cuidadosMedicos || `Companheiro inseparável de ${tutorFinal}! Adora brincar, passear pelos parques de ${cidadeFinal} e compartilhar cada momento de alegria no seu Diário de Aventuras.`;
+
+      // Atualiza DOM do Perfil de forma límpida e elegante
+      document.getElementById("perfilPetNome").innerText = nomeFinal;
+      document.getElementById("perfilPetFoto").src = fotoFinal;
+      document.getElementById("perfilPetSubtitulo").innerText = `${racaFinal} • ${cidadeFinal}`;
+      document.getElementById("perfilPetTutor").innerText = `Tutor(a): ${tutorFinal}`;
+      document.getElementById("perfilPetBio").innerText = bioFinal;
+
+      // Botões de ação sempre visíveis e prontos para edição/postagem do tutor
+      const btnPostarFoto = document.getElementById("btnPostarFotoPerfil");
+      if (btnPostarFoto) {
+        btnPostarFoto.style.display = "inline-flex";
+      }
+
+      const btnEditarPerfil = document.getElementById("btnEditarPerfilPet");
+      if (btnEditarPerfil) {
+        btnEditarPerfil.style.display = "inline-flex";
+      }
+
+      // Estatísticas
+      const totalPatinhas = postsDoPet.reduce((acc, p) => acc + (p.patinhas || 0), 0);
+      document.getElementById("perfilPetTotalPosts").innerText = postsDoPet.length;
+      document.getElementById("perfilPetTotalPatinhas").innerText = totalPatinhas;
+      document.getElementById("perfilContadorFotos").innerText = `${postsDoPet.length} publicação(ões)`;
+
+      // Renderiza Grade de Fotos do Pet (Diário de Aventuras)
+      const grid = document.getElementById("perfilGridFotos");
+      grid.innerHTML = "";
+
+      if (postsDoPet.length === 0) {
+        grid.innerHTML = `
+          <div class="col-span-full py-12 text-center bg-white rounded-3xl border border-dashed border-stone-300 p-6 space-y-3">
+            <span class="text-4xl">📸</span>
+            <p class="text-sm font-bold text-stone-700">Ainda não há fotos publicadas no diário de ${nomeFinal}.</p>
+            <p class="text-xs text-stone-500">${ehProprioTutor ? 'Você é o tutor(a) deste anjinho! Publique a primeira foto para começar o diário.' : 'O tutor responsável deste pet ainda não registrou novas fotos.'}</p>
+            ${ehProprioTutor ? `
+              <button onclick="clicarPostarFotoTutor()" class="px-4 py-2 bg-gradient-to-r from-[#740568] via-[#8C077E] to-[#740568] hover:brightness-110 text-yellow-300 font-black text-xs rounded-full shadow-xs transition active:scale-95">
+                ➕ Publicar Primeira Foto
+              </button>
+            ` : ''}
+          </div>
+        `;
+      } else {
+        postsDoPet.forEach(p => {
+          const item = document.createElement("div");
+          item.className = "group relative aspect-square rounded-2xl overflow-hidden bg-stone-900 border border-stone-200 shadow-sm cursor-pointer";
+          item.innerHTML = `
+            <img src="${p.midiaUrl}" class="w-full h-full object-cover group-hover:scale-105 transition duration-500">
+            <div class="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent opacity-0 group-hover:opacity-100 transition flex flex-col justify-between p-3 text-white">
+              <span class="text-[10px] font-bold bg-black/60 px-2 py-0.5 rounded-full self-start">${p.horario || "Hoje"}</span>
+              <div>
+                <p class="text-xs font-black flex items-center gap-1"><span>🐾</span> <span>${p.patinhas} patinhas</span></p>
+                <p class="text-[11px] line-clamp-2 italic text-stone-200 mt-1">${p.legenda || ""}</p>
+              </div>
+            </div>
+          `;
+          // AO CLICAR NA FOTO: Abre o modal interativo com patinhas, comentários e legenda (exatamente como no Instagram)
+          item.onclick = () => abrirModalFotoPost(p.id);
+          grid.appendChild(item);
+        });
+      }
+    }
+
+    // =========================================================================
+    // VISUALIZADOR DE FOTO / POST COM PATINHAS E COMENTÁRIOS (ESTILO INSTAGRAM)
+    // =========================================================================
+    let postModalAtualId = null;
+
+    function abrirModalFotoPost(postId) {
+      postModalAtualId = postId;
+      let postsLocais = [];
+      try { postsLocais = JSON.parse(localStorage.getItem("terranova_social_posts")) || []; } catch(e) {}
+      const todos = [...postsLocais, ...postsIniciaisSocial];
+      const post = todos.find(p => p.id === postId);
+      if (!post) return;
+
+      const modal = document.getElementById("modalVisualizarFotoPost");
+      if (!modal) return;
+
+      // Imagem e mídia principal com ajuste automático
+      document.getElementById("modalFotoPostImg").src = post.midiaUrl;
+      const imgBg = document.getElementById("modalFotoPostImgBg");
+      if (imgBg) imgBg.src = post.midiaUrl;
+      document.getElementById("modalFotoPostAvatar").src = post.petFoto;
+      document.getElementById("modalFotoPostNome").innerText = post.petNome;
+      document.getElementById("modalFotoPostSubtitulo").innerText = `Tutor(a): ${post.tutor} • ${post.cidade}`;
+
+      // Legenda original
+      document.getElementById("modalFotoPostLegendaAvatar").src = post.petFoto;
+      document.getElementById("modalFotoPostLegendaAutor").innerText = post.petNome;
+      document.getElementById("modalFotoPostLegendaTexto").innerText = post.legenda;
+      document.getElementById("modalFotoPostHorario").innerText = post.horario || "Recentemente";
+      document.getElementById("modalFotoPostDataFormatada").innerText = post.horario || "Montes Claros - MG";
+
+      // Contador e estado de patinhas
+      atualizarBotaoPatinhaModal(post);
+
+      // Renderiza lista de comentários
+      renderizarComentariosModal(post);
+
+      // Limpa input
+      const inp = document.getElementById("inputComentarioModalFoto");
+      if (inp) inp.value = "";
+
+      modal.classList.remove("hidden");
+    }
+
+    function fecharModalFotoPost() {
+      const modal = document.getElementById("modalVisualizarFotoPost");
+      if (modal) modal.classList.add("hidden");
+      postModalAtualId = null;
+    }
+
+    function apagarPost(postId, e) {
+      if (e) e.stopPropagation();
+      const postIdx = feedPosts.findIndex(p => p.id === postId);
+      if (postIdx === -1) return;
+
+      feedPosts.splice(postIdx, 1);
+      salvarPostsSocialStorage();
+      renderizarFeed(feedPosts);
+      fecharModalFotoPost();
+
+      const secaoPerfil = document.getElementById("secaoPerfilPet");
+      if (secaoPerfil && !secaoPerfil.classList.contains("hidden")) {
+        const petAtual = document.getElementById("perfilPetNome").innerText.trim();
+        abrirPerfilPet(petAtual);
+      }
+    }
+
+    function apagarPostModalAtual(e) {
+      if (e) e.stopPropagation();
+      if (!postModalAtualId) return;
+      apagarPost(postModalAtualId, e);
+    }
+
+    function atualizarBotaoPatinhaModal(post) {
+      const btn = document.getElementById("btnModalFotoPatinha");
+      const txt = document.getElementById("modalFotoPostPatinhasCount");
+      if (!btn || !txt) return;
+
+      txt.innerText = `${post.patinhas} patinhas`;
+      if (post.curtido) {
+        btn.className = "px-4 py-2 rounded-full font-black text-xs transition flex items-center gap-1.5 shadow-sm active:scale-95 bg-[#740568] text-yellow-300";
+      } else {
+        btn.className = "px-4 py-2 rounded-full font-black text-xs transition flex items-center gap-1.5 shadow-sm active:scale-95 bg-stone-100 hover:bg-amber-100 text-stone-700";
+      }
+    }
+
+    function darPatinhaModalFoto(e) {
+      if (e) e.stopPropagation();
+      if (!postModalAtualId) return;
+
+      darPatinha(postModalAtualId, e);
+
+      // Atualiza o post local
+      const post = feedPosts.find(p => p.id === postModalAtualId);
+      if (post) {
+        atualizarBotaoPatinhaModal(post);
+        // Atualiza contador do perfil se estiver na tela do perfil
+        const totalP = feedPosts.filter(p => p.petNome && post.petNome && p.petNome.toLowerCase() === post.petNome.toLowerCase())
+                                .reduce((acc, p) => acc + (p.patinhas || 0), 0);
+        const elTotalP = document.getElementById("perfilPetTotalPatinhas");
+        if (elTotalP) elTotalP.innerText = totalP;
+      }
+    }
+
+    function focarInputComentarioModal() {
+      const inp = document.getElementById("inputComentarioModalFoto");
+      if (inp) inp.focus();
+    }
+
+    function renderizarComentariosModal(post) {
+      const listaEl = document.getElementById("modalFotoPostComentariosLista");
+      if (!listaEl) return;
+      listaEl.innerHTML = "";
+
+      if (!post.comentarios || post.comentarios.length === 0) {
+        listaEl.innerHTML = `
+          <div class="py-8 text-center text-stone-400 space-y-1">
+            <span class="text-2xl block">💬</span>
+            <p class="font-medium text-xs">Nenhum comentário ainda.</p>
+            <p class="text-[10px]">Seja o primeiro a enviar uma mensagem para este pet!</p>
+          </div>
+        `;
+        return;
+      }
+
+      post.comentarios.forEach(c => {
+        const item = document.createElement("div");
+        item.className = "flex items-start gap-2.5 bg-stone-50/80 p-2.5 rounded-2xl border border-stone-100";
+        item.innerHTML = `
+          <div class="w-6 h-6 rounded-full bg-gradient-to-tr from-amber-300 to-yellow-200 text-[#740568] flex items-center justify-center text-[10px] font-black shadow-xs flex-shrink-0">
+            🐾
+          </div>
+          <div class="space-y-0.5 flex-1 min-w-0">
+            <p class="text-xs text-stone-800">
+              <strong class="font-bold text-stone-900 mr-1">${c.autor}:</strong>
+              <span>${c.texto}</span>
+            </p>
+          </div>
+        `;
+        listaEl.appendChild(item);
+      });
+    }
+
+    function adicionarComentarioModalFoto(e) {
+      e.preventDefault();
+      if (!postModalAtualId) return;
+
+      const inp = document.getElementById("inputComentarioModalFoto");
+      const texto = inp.value.trim();
+      if (!texto) return;
+
+      let tutor = null;
+      try { tutor = JSON.parse(localStorage.getItem("terranova_tutor_logado")); } catch(err) {}
+      const autor = tutor && tutor.nome ? tutor.nome : "Amigo Terranova";
+
+      const post = feedPosts.find(p => p.id === postModalAtualId);
+      if (post) {
+        if (!post.comentarios) post.comentarios = [];
+        post.comentarios.push({ autor: autor, texto: texto });
+        inp.value = "";
+
+        salvarPostsSocialStorage();
+        renderizarComentariosModal(post);
+
+        // Atualiza no feed geral também
+        const listaFeed = document.getElementById(`listaComentarios_${post.id}`);
+        if (listaFeed) {
+          listaFeed.innerHTML = post.comentarios.map(c => `
+            <p class="text-stone-600"><strong class="text-stone-800 font-semibold">${c.autor}:</strong> ${c.texto}</p>
+          `).join('');
+        }
+      }
+    }
+
+    function voltarAoFeedGeral() {
+      const secaoPerfil = document.getElementById("secaoPerfilPet");
+      if (secaoPerfil) secaoPerfil.classList.add("hidden");
+
+      const containerFeed = document.getElementById("containerFeedSocial");
+      if (containerFeed) containerFeed.classList.remove("hidden");
+
+      const secaoStories = document.querySelector("section.max-w-4xl.mx-auto.px-4.pt-6");
+      if (secaoStories) secaoStories.classList.remove("hidden");
+
+      const secaoAbas = document.querySelector("section.max-w-4xl.mx-auto.px-4.py-3");
+      if (secaoAbas) secaoAbas.classList.remove("hidden");
+
+      const btnFeed = document.getElementById("abaFeedGeral");
+      const btnDiario = document.getElementById("abaDiarioPet");
+      if (btnFeed && btnDiario) {
+        btnFeed.className = "px-4 py-2 rounded-2xl bg-amber-400 text-[#740568] font-black text-xs shadow-sm transition";
+        btnDiario.className = "px-4 py-2 rounded-2xl bg-white hover:bg-stone-100 text-stone-700 font-bold text-xs border border-stone-300 transition";
+      }
+
+      renderizarFeed(feedPosts);
+    }
+
+    function clicarPostarFotoTutor() {
+      let tutor = null;
+      try {
+        tutor = JSON.parse(localStorage.getItem("terranova_tutor_logado"));
+      } catch(e) {}
+
+      if (!tutor || !tutor.nome) {
+        abrirModalLogin();
+        return;
+      }
+
+      const petNomeAtivo = document.getElementById("perfilPetNome").innerText.trim().toLowerCase();
+      if (!tutor.petNome || tutor.petNome.trim().toLowerCase() !== petNomeAtivo) {
+        return;
+      }
+
+      abrirModalCriarPost();
+    }
+
+    function darCarinhoPerfil() {
+      // Efeito de patinha flutuando
+      for (let i = 0; i < 3; i++) {
+        setTimeout(() => {
+          const paw = document.createElement("div");
+          paw.className = "floating-paw text-3xl";
+          paw.innerText = "🐾";
+          paw.style.left = (window.innerWidth / 2 + (Math.random() * 80 - 40)) + "px";
+          paw.style.top = (window.innerHeight / 2 + (Math.random() * 40 - 20)) + "px";
+          document.body.appendChild(paw);
+          setTimeout(() => paw.remove(), 900);
+        }, i * 150);
+      }
+    }
+
+    // Suporte para abrir direto o diário do pet via URL: social.html?pet=thor
+    window.addEventListener("load", () => {
+      const params = new URLSearchParams(window.location.search);
+      const petParam = params.get("pet");
+      if (petParam) {
+        abrirPerfilPet(petParam);
+      }
+    });
+  </script>
+</body>
+</html>
