@@ -213,6 +213,17 @@
       <p id="petAnos" class="text-base md:text-xl font-garamond italic font-bold text-[#9F0C8F] mt-2">
         2012 &mdash; 2026 &bull; Amor Incondicional
       </p>
+
+      <!-- BADGE DA TAG MEMORIAL COM CÓDIGO E BOTÃO COPIAR LINK -->
+      <div id="badgeTagMemorialContainer" class="mt-2.5 inline-flex items-center gap-2 bg-gradient-to-r from-amber-100 via-amber-50 to-yellow-100 border border-amber-300/80 px-3.5 py-1.5 rounded-full shadow-sm text-xs font-mono font-bold text-[#740568]">
+        <span class="text-sm">🏷️</span>
+        <span>Tag Oficial:</span>
+        <span id="petCodigoTag" class="text-amber-900 tracking-wider">TN-THOR-3620</span>
+        <button type="button" onclick="copiarLinkTagMemorial(event)" class="ml-1 px-2.5 py-1 rounded-lg bg-amber-200 hover:bg-amber-300 text-[#740568] text-[10px] font-sans font-black transition flex items-center gap-1 cursor-pointer active:scale-95 shadow-xs" title="Copiar Link da Tag do Memorial">
+          <span>🔗</span>
+          <span>Copiar Link da Tag</span>
+        </button>
+      </div>
       <p id="petSubtitulo" class="text-xs md:text-sm text-stone-600 max-w-xl mx-auto mt-2.5 leading-relaxed font-medium">
         Nosso leal companheiro, o calor dos nossos dias e o amor mais puro que conhecemos.
       </p>
@@ -908,6 +919,11 @@
       if (elAnos) elAnos.innerText = `${pet.nasc || "2012"} — ${pet.partida || "2026"} • Amor Incondicional`;
       const elSub = document.getElementById("petSubtitulo");
       if (elSub) elSub.innerText = pet.subtitulo || "Nosso leal companheiro e eterno anjo da família";
+      
+      // Atualiza o código da Tag Memorial
+      const elTagCodigo = document.getElementById("petCodigoTag");
+      const tagValor = pet.tagCode || pet.nfcCode || (pet.id ? ("TN-" + pet.id.toUpperCase() + "-3620") : "TN-THOR-3620");
+      if (elTagCodigo) elTagCodigo.innerText = tagValor;
       const elFoto = document.getElementById("petFotoCapa");
       if (elFoto) elFoto.src = pet.fotoPrincipal;
       const elVidA = document.getElementById("videoSlideImgA");
@@ -938,6 +954,26 @@
       verificarStatusPublicoMural();
     }
 
+    // COPIAR LINK OFICIAL DA TAG DO MEMORIAL
+    function copiarLinkTagMemorial(e) {
+      if (e) e.stopPropagation();
+      const tag = (petAtual && (petAtual.tagCode || petAtual.nfcCode || petAtual.id)) || "TN-THOR-3620";
+      const petSlug = (petAtual && (petAtual.nome ? petAtual.nome.toLowerCase().replace(/[^a-z0-9]/g, "-") : petAtual.id)) || "thor";
+      
+      const baseUrl = window.location.origin + window.location.pathname;
+      const tagUrl = `${baseUrl}?id=${encodeURIComponent(tag)}&pet=${encodeURIComponent(petSlug)}`;
+      
+      if (navigator.clipboard && navigator.clipboard.writeText) {
+        navigator.clipboard.writeText(tagUrl).then(() => {
+          alert(`✨ Link da Tag do Memorial copiado com sucesso!\n\n🏷️ Tag Oficial: ${tag}\n🔗 Link: ${tagUrl}\n\nEste link pode ser gravado no chip NFC ou impresso no QR Code da plaquinha/urna.`);
+        }).catch(() => {
+          prompt("Copie o link da tag do memorial abaixo:", tagUrl);
+        });
+      } else {
+        prompt("Copie o link da tag do memorial abaixo:", tagUrl);
+      }
+    }
+
     // OBTENÇÃO SEGURA DOS DADOS
     function obterPetSeguro() {
       try {
@@ -954,6 +990,8 @@
                 id: d.id || (d.nome || d.n).toLowerCase().replace(/[^a-z0-9]/g, "-"),
                 status: "memorial",
                 tipo: "memorial",
+                tagCode: d.tagCode || d.nfcCode || d.tag || d.nfc || (params.get("id") || "TN-THOR-3620"),
+                nfcCode: d.tagCode || d.nfcCode || d.tag || d.nfc || (params.get("id") || "TN-THOR-3620"),
                 nome: d.nome || d.n,
                 raca: d.raca || d.r || "Anjinho Amado",
                 nasc: d.nasc || d.na || "2012",

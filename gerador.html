@@ -248,6 +248,13 @@
               <span class="text-[10px] text-amber-900 bg-amber-200 px-2 py-0.5 rounded-full font-bold">Estrelinha</span>
             </div>
 
+            <!-- CÓDIGO DA TAG DO MEMORIAL (NFC/QR CODE) -->
+            <div>
+              <label class="block font-bold text-stone-700 mb-1">Código / Número da Tag da Medalha ou Urna (NFC/QR Code) *</label>
+              <input type="text" id="campoNfcMemorial" value="TN-THOR-3620" placeholder="Ex: TN-THOR-3620, MEM-0012" class="w-full bg-white border border-stone-300 rounded-xl px-3.5 py-2.5 text-sm font-mono font-bold text-[#740568] focus:outline-none focus:border-amber-500">
+              <p class="text-[10px] text-stone-500 mt-1">Este código identifica a medalha e gera o link da tag gravada no chip NFC ou QR Code.</p>
+            </div>
+
             <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
               <div>
                 <label class="block font-bold text-stone-700 mb-1">Ano de Chegada (Nascimento) *</label>
@@ -499,6 +506,10 @@
                   <div>
                     <h4 id="mockupMemorialNomePet" class="font-black text-xs text-stone-900 leading-tight">Thor</h4>
                     <p id="mockupMemorialAnos" class="text-[8px] text-amber-800 font-mono font-bold">2012 &mdash; 2026 &bull; Amor Eterno</p>
+                    <div class="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full bg-amber-100 text-[#740568] text-[8px] font-mono font-bold border border-amber-300 shadow-xs mt-1">
+                      <span>🏷️ Tag:</span>
+                      <span id="mockupMemorialTagCodigo">TN-THOR-3620</span>
+                    </div>
                   </div>
 
                   <div class="p-2 bg-white rounded-xl border border-amber-200 text-[8px] text-stone-600 italic leading-relaxed">
@@ -927,12 +938,18 @@
       } else if (modoAtual === "memorial") {
         paginaAlvo = "memorial.html";
         try {
+          const tagMem = (document.getElementById("campoNfcMemorial") ? document.getElementById("campoNfcMemorial").value.trim() : "") || ("TN-" + slug.toUpperCase() + "-3620");
+          const elMockTag = document.getElementById("mockupMemorialTagCodigo");
+          if (elMockTag) elMockTag.innerText = tagMem;
+
           const nascVal = (document.getElementById("campoNasc") ? document.getElementById("campoNasc").value.trim() : "") || "2012";
           const partVal = (document.getElementById("campoPartida") ? document.getElementById("campoPartida").value.trim() : "") || "2026";
           const historiasTxt = (document.getElementById("campoHistorias") ? document.getElementById("campoHistorias").value.trim() : "");
           const cartaTxt = (document.getElementById("campoCartaAnjinho") ? document.getElementById("campoCartaAnjinho").value.trim() : "");
           const dObj = {
             id: slug,
+            tagCode: tagMem,
+            nfcCode: tagMem,
             nome: nome,
             raca: raca,
             tutorNome: tutor,
@@ -945,7 +962,7 @@
             cartaPet: cartaTxt
           };
           const b64 = btoa(unescape(encodeURIComponent(JSON.stringify(dObj))));
-          param = `pet=${encodeURIComponent(slug)}&d=${encodeURIComponent(b64)}`;
+          param = `id=${encodeURIComponent(tagMem)}&pet=${encodeURIComponent(slug)}&d=${encodeURIComponent(b64)}`;
         } catch(err) {
           param = `pet=${encodeURIComponent(slug)}`;
         }
