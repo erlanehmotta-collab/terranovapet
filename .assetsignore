@@ -1,0 +1,7 @@
+_worker.js
+wrangler.toml
+.git
+.gitignore
+README.md
+server.js
+data_pets.json
