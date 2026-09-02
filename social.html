@@ -607,6 +607,11 @@
               <button type="button" onclick="alternarVisibilidadeSenha('loginSenhaAuth', this)" class="text-[11px] text-amber-700 hover:underline font-bold">👁️ Ver</button>
             </div>
             <input type="password" id="loginSenhaAuth" required placeholder="Sua senha de acesso" value="123" class="w-full bg-stone-50 border border-stone-300 rounded-xl p-2.5 text-xs text-stone-800 focus:outline-none focus:border-amber-500 font-semibold">
+            <div class="flex justify-end mt-1.5">
+              <button type="button" onclick="abrirModalEsqueceuSenhaSocial()" class="text-[11px] font-bold text-[#740568] hover:text-amber-700 hover:underline transition cursor-pointer">
+                Esqueceu a senha?
+              </button>
+            </div>
           </div>
 
           <button type="submit" class="w-full py-3 bg-gradient-to-r from-[#740568] via-[#8C077E] to-[#740568] hover:brightness-110 text-yellow-300 font-black text-xs rounded-xl shadow-md transition active:scale-95 flex items-center justify-center gap-1.5">
@@ -638,15 +643,29 @@
             <input type="email" id="cadEmailTutor" required placeholder="seu.email@exemplo.com" class="w-full bg-stone-50 border border-stone-300 rounded-xl p-2.5 text-xs text-stone-800 focus:outline-none focus:border-amber-500 font-semibold">
           </div>
 
-          <!-- SENHA E CONFIRMAÇÃO DE SENHA -->
+          <!-- SENHA E CONFIRMAÇÃO DE SENHA COM VISUALIZADOR 👁️ -->
           <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
             <div>
-              <label class="block font-bold text-stone-700 mb-1">Criar Senha *</label>
-              <input type="password" id="cadSenhaTutor" required placeholder="Mínimo 3 dígitos" class="w-full bg-stone-50 border border-stone-300 rounded-xl p-2.5 text-xs text-stone-800 focus:outline-none focus:border-amber-500 font-semibold">
+              <div class="flex items-center justify-between mb-1">
+                <label class="block font-bold text-stone-700 text-xs">Criar Senha *</label>
+                <button type="button" onclick="alternarVisibilidadeSenha('cadSenhaTutor', this)" class="text-[11px] text-[#740568] hover:text-amber-700 hover:underline font-bold flex items-center gap-1 cursor-pointer">
+                  👁️ Ver
+                </button>
+              </div>
+              <div class="relative">
+                <input type="password" id="cadSenhaTutor" required placeholder="Mínimo 3 dígitos" class="w-full bg-stone-50 border border-stone-300 rounded-xl p-2.5 pr-8 text-xs text-stone-800 focus:outline-none focus:border-amber-500 font-semibold">
+              </div>
             </div>
             <div>
-              <label class="block font-bold text-stone-700 mb-1">Confirmar Senha *</label>
-              <input type="password" id="cadConfirmaSenhaTutor" required placeholder="Repita a senha" class="w-full bg-stone-50 border border-stone-300 rounded-xl p-2.5 text-xs text-stone-800 focus:outline-none focus:border-amber-500 font-semibold">
+              <div class="flex items-center justify-between mb-1">
+                <label class="block font-bold text-stone-700 text-xs">Confirmar Senha *</label>
+                <button type="button" onclick="alternarVisibilidadeSenha('cadConfirmaSenhaTutor', this)" class="text-[11px] text-[#740568] hover:text-amber-700 hover:underline font-bold flex items-center gap-1 cursor-pointer">
+                  👁️ Ver
+                </button>
+              </div>
+              <div class="relative">
+                <input type="password" id="cadConfirmaSenhaTutor" required placeholder="Repita a senha" class="w-full bg-stone-50 border border-stone-300 rounded-xl p-2.5 pr-8 text-xs text-stone-800 focus:outline-none focus:border-amber-500 font-semibold">
+              </div>
             </div>
           </div>
 
@@ -673,6 +692,81 @@
           </p>
         </form>
 
+      </div>
+
+    </div>
+  </div>
+
+  
+  <!-- ========================================================================= -->
+  <!-- MODAL: RECUPERAÇÃO DE SENHA DO TUTOR (SOCIAL) -->
+  <!-- ========================================================================= -->
+  <div id="modalEsqueceuSenhaSocial" class="hidden fixed inset-0 z-50 bg-black/80 backdrop-blur-md flex items-center justify-center p-4">
+    <div class="bg-white max-w-md w-full rounded-3xl p-6 md:p-8 shadow-2xl border-2 border-amber-400 space-y-5 relative overflow-hidden" onclick="event.stopPropagation()">
+      
+      <!-- Cabeçalho do Modal -->
+      <div class="flex items-center justify-between border-b border-stone-200 pb-3">
+        <div class="flex items-center gap-2.5">
+          <div class="w-9 h-9 rounded-xl bg-amber-100 text-[#740568] flex items-center justify-center text-lg font-bold">
+            🐾
+          </div>
+          <div>
+            <h3 class="font-black text-base text-[#520349] leading-tight">Recuperar Senha de Tutor</h3>
+            <p class="text-[11px] text-stone-500 font-medium">Acesso ao Diário e Publicações Pet</p>
+          </div>
+        </div>
+        <button type="button" onclick="fecharModalEsqueceuSenhaSocial()" class="w-7 h-7 rounded-full bg-stone-100 hover:bg-stone-200 text-stone-600 flex items-center justify-center text-xs font-bold transition">
+          ✕
+        </button>
+      </div>
+
+      <!-- Etapa 1: Localizar Conta -->
+      <div id="etapaSocialLocalizar" class="space-y-4">
+        <div>
+          <label class="block text-xs font-bold text-stone-700 mb-1">Informe seu e-mail cadastrado:</label>
+          <div class="relative">
+            <span class="absolute left-3.5 top-1/2 -translate-y-1/2 text-stone-400 text-sm">📧</span>
+            <input type="email" id="recuperarSocialEmailInput" placeholder="seu.email@exemplo.com" class="w-full bg-stone-50 border border-stone-300 focus:border-amber-500 rounded-2xl pl-10 pr-4 py-2.5 text-xs text-stone-800 font-bold focus:outline-none focus:ring-2 focus:ring-amber-400/30">
+          </div>
+        </div>
+
+        <div id="erroRecuperarSocial" class="hidden p-3 rounded-xl bg-rose-50 border border-rose-200 text-rose-700 text-xs font-bold text-center">
+          E-mail não encontrado.
+        </div>
+
+        <button type="button" onclick="verificarEmailSocialRecuperacao()" class="w-full py-3.5 rounded-2xl bg-gradient-to-r from-amber-500 via-yellow-400 to-amber-500 hover:brightness-105 text-[#740568] font-black text-xs shadow-md transition active:scale-95 flex items-center justify-center gap-2 cursor-pointer">
+          <span>🔍</span>
+          <span>Localizar Minha Conta</span>
+        </button>
+      </div>
+
+      <!-- Etapa 2: Redefinir Senha -->
+      <div id="etapaSocialRedefinir" class="hidden space-y-4">
+        <div class="p-3 bg-amber-50 border border-amber-200 rounded-2xl space-y-1">
+          <p class="text-xs font-bold text-[#740568]">Conta de Tutor Encontrada! 🎉</p>
+          <p id="recuperarSocialInfo" class="text-[11px] text-stone-600 font-mono"></p>
+        </div>
+
+        <div>
+          <label class="block text-xs font-bold text-stone-700 mb-1">Digite sua nova senha:</label>
+          <div class="relative">
+            <span class="absolute left-3.5 top-1/2 -translate-y-1/2 text-stone-400 text-sm">🔑</span>
+            <input type="text" id="recuperarSocialNovaSenhaInput" placeholder="Nova senha (mínimo 3 caracteres)" class="w-full bg-stone-50 border border-stone-300 focus:border-amber-500 rounded-2xl pl-10 pr-4 py-2.5 text-xs text-stone-800 font-bold font-mono focus:outline-none focus:ring-2 focus:ring-amber-400/30">
+          </div>
+        </div>
+
+        <button type="button" onclick="salvarNovaSenhaSocialRecuperada()" class="w-full py-3.5 rounded-2xl bg-gradient-to-r from-emerald-600 to-teal-600 hover:brightness-110 text-white font-black text-xs shadow-md transition active:scale-95 flex items-center justify-center gap-2 cursor-pointer">
+          <span>✅</span>
+          <span>Salvar Nova Senha e Acessar Feed</span>
+        </button>
+      </div>
+
+      <!-- Rodapé com Suporte -->
+      <div class="pt-3 border-t border-stone-200 flex items-center justify-between text-xs">
+        <span class="text-stone-500 text-[11px]">Dúvidas no acesso?</span>
+        <a href="https://wa.me/5538998124455?text=Ola,%20preciso%20de%20ajuda%20para%20recuperar%20minha%20senha%20no%20Terranova%20Pet%20Social" target="_blank" class="text-[#740568] hover:text-amber-600 font-bold text-[11px] flex items-center gap-1">
+          <span>💬</span> Suporte WhatsApp
+        </a>
       </div>
 
     </div>
@@ -1631,6 +1725,133 @@
         input.type = "password";
         btn.innerText = "👁️ Ver";
       }
+    }
+
+    
+    // =========================================================================
+    // RECUPERAÇÃO DE SENHA NO SOCIAL
+    // =========================================================================
+    let tutorEmRecuperacao = null;
+    let tipoContaRecuperacao = "tutor"; // "tutor" ou "master"
+
+    function abrirModalEsqueceuSenhaSocial() {
+      const modal = document.getElementById("modalEsqueceuSenhaSocial");
+      const inputEmail = document.getElementById("recuperarSocialEmailInput");
+      const loginEmail = document.getElementById("loginEmailAuth");
+
+      if (inputEmail && loginEmail) {
+        inputEmail.value = loginEmail.value.trim();
+      }
+
+      document.getElementById("etapaSocialLocalizar").classList.remove("hidden");
+      document.getElementById("etapaSocialRedefinir").classList.add("hidden");
+      document.getElementById("erroRecuperarSocial").classList.add("hidden");
+
+      if (modal) modal.classList.remove("hidden");
+    }
+
+    function fecharModalEsqueceuSenhaSocial() {
+      const modal = document.getElementById("modalEsqueceuSenhaSocial");
+      if (modal) modal.classList.add("hidden");
+    }
+
+    function verificarEmailSocialRecuperacao() {
+      const email = (document.getElementById("recuperarSocialEmailInput").value || "").trim().toLowerCase();
+      const erroBox = document.getElementById("erroRecuperarSocial");
+
+      // 1. Busca na base de tutores do Social
+      const tutores = obterTutoresDb();
+      tutorEmRecuperacao = tutores.find(t => t.email && t.email.toLowerCase() === email);
+      tipoContaRecuperacao = "tutor";
+
+      // 2. Se não encontrar, busca na base de contas mestres
+      if (!tutorEmRecuperacao) {
+        let mestres = [];
+        try { mestres = JSON.parse(localStorage.getItem("terranova_master_accounts")) || []; } catch(e) {}
+        tutorEmRecuperacao = mestres.find(m => m.email && m.email.toLowerCase() === email);
+        if (tutorEmRecuperacao) tipoContaRecuperacao = "master";
+      }
+
+      // 3. Suporte especial à conta da Família Miranda padrão
+      if (!tutorEmRecuperacao && (email === "familia.miranda@gmail.com" || email === "erlanehmotta@gmail.com")) {
+        tutorEmRecuperacao = {
+          nome: email === "erlanehmotta@gmail.com" ? "Erlane Motta (Mestre)" : "Família Miranda",
+          email: email,
+          senha: email === "erlanehmotta@gmail.com" ? "Emia2026" : "123",
+          petNome: "Thor",
+          petRaca: "Golden Retriever",
+          petFoto: "https://images.unsplash.com/photo-1552053831-71594a27632d?auto=format&fit=crop&w=400&q=80",
+          cidade: "Montes Claros - MG"
+        };
+      }
+
+      if (tutorEmRecuperacao) {
+        if (erroBox) erroBox.classList.add("hidden");
+        document.getElementById("etapaSocialLocalizar").classList.add("hidden");
+        document.getElementById("etapaSocialRedefinir").classList.remove("hidden");
+
+        const infoEl = document.getElementById("recuperarSocialInfo");
+        if (infoEl) {
+          infoEl.innerHTML = `Tutor: <strong>${tutorEmRecuperacao.nome}</strong> (${tutorEmRecuperacao.petNome || 'Pet'})<br>E-mail: <strong>${tutorEmRecuperacao.email}</strong>`;
+        }
+
+        const inputNova = document.getElementById("recuperarSocialNovaSenhaInput");
+        if (inputNova) {
+          inputNova.value = tutorEmRecuperacao.senha || "123";
+          inputNova.focus();
+        }
+      } else {
+        if (erroBox) {
+          erroBox.classList.remove("hidden");
+          erroBox.innerText = `O e-mail "${email}" não foi encontrado. Verifique a digitação ou cadastre-se.`;
+        }
+      }
+    }
+
+    function salvarNovaSenhaSocialRecuperada() {
+      if (!tutorEmRecuperacao) return;
+      const novaSenha = (document.getElementById("recuperarSocialNovaSenhaInput").value || "").trim();
+      if (!novaSenha || novaSenha.length < 3) {
+        alert("A senha deve conter no mínimo 3 dígitos.");
+        return;
+      }
+
+      // Atualiza na base de dados correspondente
+      if (tipoContaRecuperacao === "master") {
+        let mestres = [];
+        try { mestres = JSON.parse(localStorage.getItem("terranova_master_accounts")) || []; } catch(e) {}
+        const idxM = mestres.findIndex(m => m.email.toLowerCase() === tutorEmRecuperacao.email.toLowerCase());
+        if (idxM !== -1) {
+          mestres[idxM].senha = novaSenha;
+          localStorage.setItem("terranova_master_accounts", JSON.stringify(mestres));
+        }
+      } else {
+        let tutores = obterTutoresDb();
+        const idxT = tutores.findIndex(t => t.email.toLowerCase() === tutorEmRecuperacao.email.toLowerCase());
+        if (idxT !== -1) {
+          tutores[idxT].senha = novaSenha;
+        } else {
+          tutores.push({ ...tutorEmRecuperacao, senha: novaSenha });
+        }
+        localStorage.setItem("terranova_tutores_db", JSON.stringify(tutores));
+      }
+
+      tutorEmRecuperacao.senha = novaSenha;
+
+      // Realiza login automático
+      localStorage.setItem("terranova_tutor_logado", JSON.stringify(tutorEmRecuperacao));
+
+      // Atualiza campos do formulário de login
+      const emailLogin = document.getElementById("loginEmailAuth");
+      const senhaLogin = document.getElementById("loginSenhaAuth");
+      if (emailLogin) emailLogin.value = tutorEmRecuperacao.email;
+      if (senhaLogin) senhaLogin.value = novaSenha;
+
+      fecharModalEsqueceuSenhaSocial();
+      fecharModalLogin();
+      checarTutorLogado();
+
+      alert(`🎉 Senha redefinida com sucesso para ${tutorEmRecuperacao.nome}! Você já está conectado ao Feed Social.`);
     }
 
     function executarLoginTutor(e) {

@@ -138,7 +138,12 @@
     </div>
     
     <div class="flex flex-wrap items-center gap-2.5">
-      <!-- BOTÃO BAIXAR VÍDEO -->
+      <!-- ÁREA DE ACESSO DO TUTOR (MODO EDIÇÃO / VISITANTE) -->
+      <div id="containerAcessoTutorTopo">
+        <!-- Injetado dinamicamente: Se logado mostra '👑 Modo Tutor', se não mostra '🔐 Acesso do Tutor' -->
+      </div>
+
+      <!-- BOTÃO BAIXAR VÍDEO (COM CONTROLE DE PERMISSÃO) -->
       <button onclick="baixarVideoTributo()" class="px-3.5 py-2 rounded-full bg-gradient-to-r from-amber-400 to-yellow-400 hover:brightness-110 text-[#740568] text-xs font-black shadow-lg transition flex items-center gap-1.5 active:scale-95">
         <span>📥</span>
         <span>Baixar Vídeo</span>
@@ -320,11 +325,11 @@
 
           <!-- BOTÕES RÁPIDOS DE ADICIONAR FOTOS E GERAR VÍDEO -->
           <div class="pt-2 flex flex-wrap items-center justify-center gap-2">
-            <button type="button" onclick="document.getElementById('inputUploadNovasFotosMemorial').click()" class="px-3.5 py-1.5 bg-white/95 hover:bg-white text-[#8C077E] border border-amber-300 rounded-full text-xs font-bold shadow-xs transition flex items-center gap-1.5 active:scale-95">
+            <button type="button" onclick="checarPermissaoTutorEExecutar(() => document.getElementById('inputUploadNovasFotosMemorial').click())" class="px-3.5 py-1.5 bg-white/95 hover:bg-white text-[#8C077E] border border-amber-300 rounded-full text-xs font-bold shadow-xs transition flex items-center gap-1.5 active:scale-95">
               <span>📷</span>
               <span>Subir Fotos para o Vídeo</span>
             </button>
-            <button type="button" onclick="gerarNovoVideoTributo(true)" class="px-3.5 py-1.5 bg-gradient-to-r from-amber-400 to-yellow-300 text-[#740568] font-black rounded-full text-xs shadow-xs transition flex items-center gap-1.5 active:scale-95 hover:brightness-105">
+            <button type="button" onclick="checarPermissaoTutorEExecutar(() => gerarNovoVideoTributo(true))" class="px-3.5 py-1.5 bg-gradient-to-r from-amber-400 to-yellow-300 text-[#740568] font-black rounded-full text-xs shadow-xs transition flex items-center gap-1.5 active:scale-95 hover:brightness-105">
               <span>🎬</span>
               <span>Gerar Novo Vídeo Agora</span>
             </button>
@@ -498,7 +503,7 @@
           </div>
 
           <!-- BOTÃO PARA O TUTOR ACRESCENTAR NOVA HISTÓRIA -->
-          <button type="button" onclick="abrirModalNovaHistoria()" class="px-4 py-2.5 bg-gradient-to-r from-amber-500 via-yellow-400 to-amber-500 hover:brightness-105 text-[#740568] rounded-2xl text-xs font-black shadow-md flex items-center gap-2 transition active:scale-95">
+          <button type="button" onclick="checarPermissaoTutorEExecutar(() => abrirModalNovaHistoria())" class="px-4 py-2.5 bg-gradient-to-r from-amber-500 via-yellow-400 to-amber-500 hover:brightness-105 text-[#740568] rounded-2xl text-xs font-black shadow-md flex items-center gap-2 transition active:scale-95">
             <span>✍️</span>
             <span>Acrescentar Nova História</span>
           </button>
@@ -906,7 +911,241 @@
     ];
 
     // APLICAÇÃO DOS DADOS DO PET NA TELA
+    
+    // =========================================================================
+    // SISTEMA DE ACESSO DO TUTOR, CONTROLE DE DOWNLOAD & PRIVACIDADE
+    // =========================================================================
+    let tutorAutenticadoMemorial = false;
+
+    function verificarSeEhTutorOuAdmin() {
+      if (tutorAutenticadoMemorial) return true;
+
+      // 1. Checa se o usuário está logado como Administrador Mestre
+      try {
+        const sessaoMestre = localStorage.getItem("terranova_master_session");
+        if (sessaoMestre) {
+          const sess = JSON.parse(sessaoMestre);
+          if (sess && sess.email) return true;
+        }
+      } catch(e) {}
+
+      // 2. Checa se o usuário é o tutor logado deste pet
+      try {
+        const sessaoTutor = localStorage.getItem("terranova_tutor_logado");
+        if (sessaoTutor) {
+          const t = JSON.parse(sessaoTutor);
+          if (t && petAtual) {
+            const petNome = (petAtual.nome || "").trim().toLowerCase();
+            const tutorPet = (t.petNome || "").trim().toLowerCase();
+            if (petNome === tutorPet || t.isAdmin) return true;
+          }
+        }
+      } catch(e) {}
+
+      // 3. Checa sessão temporária específica deste memorial
+      try {
+        const key = "terranova_tutor_autenticado_" + (petAtual ? petAtual.id : "thor");
+        if (sessionStorage.getItem(key) === "true") return true;
+      } catch(e) {}
+
+      return false;
+    }
+
+    function atualizarEstadoVisualTutor() {
+      const containerTopo = document.getElementById("containerAcessoTutorTopo");
+      const btnBaixar = document.getElementById("btnBaixarVideoControle");
+      const ehTutor = verificarSeEhTutorOuAdmin();
+
+      if (containerTopo) {
+        if (ehTutor) {
+          containerTopo.innerHTML = `
+            <div class="flex items-center gap-1.5 bg-gradient-to-r from-amber-400 to-yellow-300 px-3 py-1.5 rounded-full border border-white/80 shadow-md">
+              <span class="text-xs">👑</span>
+              <span class="text-xs font-black text-[#740568]">Modo Tutor</span>
+              <button type="button" onclick="abrirPainelTutorMemorial()" class="ml-1 px-2 py-0.5 rounded-md bg-[#740568] hover:bg-[#520349] text-amber-200 text-[10px] font-bold transition">
+                Editar
+              </button>
+              <button type="button" onclick="logoutTutorMemorial()" class="text-stone-700 hover:text-red-700 text-xs px-1" title="Sair do Modo Tutor">
+                ✕
+              </button>
+            </div>
+          `;
+        } else {
+          containerTopo.innerHTML = `
+            <button type="button" onclick="abrirModalLoginTutor()" class="px-3.5 py-2 rounded-full bg-black/40 hover:bg-black/60 border border-amber-300/70 text-amber-200 text-xs font-bold transition flex items-center gap-1.5 shadow-sm">
+              <span>🔐</span>
+              <span>Acesso do Tutor</span>
+            </button>
+          `;
+        }
+      }
+
+      // Controle de exibição do botão de baixar vídeo para visitantes
+      const permitirDownload = petAtual ? (petAtual.permitirDownloadVideo !== false) : true;
+      const btnDownloadGeral = document.querySelectorAll("button[onclick='baixarVideoTributo()']");
+      
+      btnDownloadGeral.forEach(btn => {
+        if (!permitirDownload && !ehTutor) {
+          btn.innerHTML = "<span>🔒</span> <span>Vídeo Reservado</span>";
+          btn.classList.add("opacity-70");
+          btn.title = "O tutor deste memorial configurou o download do vídeo como restrito à família.";
+        } else {
+          btn.innerHTML = "<span>📥</span> <span>Baixar Vídeo</span>";
+          btn.classList.remove("opacity-70");
+          btn.title = "Baixar vídeo tributo em alta definição";
+        }
+      });
+    }
+
+    function abrirModalLoginTutor() {
+      const modal = document.getElementById("modalLoginTutorMemorial");
+      const dica = document.getElementById("dicaCodigoTagLogin");
+      if (dica && petAtual) {
+        dica.innerText = petAtual.tagCode || petAtual.nfcCode || "TN-THOR-3620";
+      }
+      document.getElementById("erroLoginTutorMemorial").classList.add("hidden");
+      document.getElementById("senhaTutorMemorialInput").value = "";
+      if (modal) modal.classList.remove("hidden");
+    }
+
+    function fecharModalLoginTutor() {
+      const modal = document.getElementById("modalLoginTutorMemorial");
+      if (modal) modal.classList.add("hidden");
+    }
+
+    function alternarVisibilidadeSenhaTutor() {
+      const inp = document.getElementById("senhaTutorMemorialInput");
+      if (inp) inp.type = (inp.type === "password") ? "text" : "password";
+    }
+
+    function executarLoginTutorMemorial(e) {
+      if (e) e.preventDefault();
+      const senhaDigitada = (document.getElementById("senhaTutorMemorialInput").value || "").trim();
+      const erroBox = document.getElementById("erroLoginTutorMemorial");
+
+      if (!petAtual) petAtual = obterPetSeguro();
+
+      const tagVal = (petAtual.tagCode || petAtual.nfcCode || petAtual.id || "").toLowerCase();
+      const senhaPet = (petAtual.senhaTutor || "123").toLowerCase();
+      const senhaMestre = "emia2026";
+
+      const digitadoLower = senhaDigitada.toLowerCase();
+
+      // Validação: aceita senha do pet, código da tag ou senha mestre Emia2026
+      if (digitadoLower === senhaPet || digitadoLower === tagVal || digitadoLower === senhaMestre) {
+        tutorAutenticadoMemorial = true;
+        const key = "terranova_tutor_autenticado_" + petAtual.id;
+        sessionStorage.setItem(key, "true");
+
+        fecharModalLoginTutor();
+        atualizarEstadoVisualTutor();
+        abrirPainelTutorMemorial();
+      } else {
+        if (erroBox) {
+          erroBox.classList.remove("hidden");
+          erroBox.innerText = "Senha incorreta. Você pode usar a sua senha de tutor, a senha mestre ou o código da tag.";
+        }
+      }
+    }
+
+    function recuperarSenhaTutorMemorial() {
+      if (!petAtual) petAtual = obterPetSeguro();
+      const tag = petAtual.tagCode || petAtual.nfcCode || "TN-THOR-3620";
+      const campo = document.getElementById("senhaTutorMemorialInput");
+      if (campo) {
+        campo.value = tag;
+        campo.type = "text";
+        alert(`🔑 Código da Tag preenchido automaticamente: ${tag}\n\nClique em 'Acessar Modo de Edição do Tutor' para continuar.`);
+      }
+    }
+
+    function logoutTutorMemorial() {
+      if (confirm("Deseja sair do Modo de Edição do Tutor?")) {
+        tutorAutenticadoMemorial = false;
+        if (petAtual) {
+          sessionStorage.removeItem("terranova_tutor_autenticado_" + petAtual.id);
+        }
+        atualizarEstadoVisualTutor();
+        alert("Modo de Edição encerrado. Você agora está no modo de visualização pública.");
+      }
+    }
+
+    function abrirPainelTutorMemorial() {
+      if (!verificarSeEhTutorOuAdmin()) {
+        abrirModalLoginTutor();
+        return;
+      }
+
+      if (!petAtual) petAtual = obterPetSeguro();
+
+      // Preenche os campos do painel com os dados atuais
+      document.getElementById("tutorPermitirDownloadVideo").checked = (petAtual.permitirDownloadVideo !== false);
+      document.getElementById("tutorEditNome").value = petAtual.nome || "Thor";
+      document.getElementById("tutorEditSubtitulo").value = petAtual.subtitulo || "Nosso leal companheiro e eterno anjo da família";
+      document.getElementById("tutorEditNasc").value = petAtual.nasc || "2012";
+      document.getElementById("tutorEditPartida").value = petAtual.partida || "2026";
+      document.getElementById("tutorEditCarta").value = petAtual.cartaPet || "";
+      document.getElementById("tutorEditSenha").value = petAtual.senhaTutor || "123";
+
+      document.getElementById("modalPainelTutorMemorial").classList.remove("hidden");
+    }
+
+    function fecharPainelTutorMemorial() {
+      document.getElementById("modalPainelTutorMemorial").classList.add("hidden");
+    }
+
+    function salvarEdicoesTutorMemorial(e) {
+      if (e) e.preventDefault();
+      if (!petAtual) petAtual = obterPetSeguro();
+
+      const permitirDownload = document.getElementById("tutorPermitirDownloadVideo").checked;
+      const novoNome = document.getElementById("tutorEditNome").value.trim();
+      const novoSub = document.getElementById("tutorEditSubtitulo").value.trim();
+      const novoNasc = document.getElementById("tutorEditNasc").value.trim();
+      const novaPartida = document.getElementById("tutorEditPartida").value.trim();
+      const novaCarta = document.getElementById("tutorEditCarta").value.trim();
+      const novaSenha = document.getElementById("tutorEditSenha").value.trim();
+
+      petAtual.permitirDownloadVideo = permitirDownload;
+      petAtual.nome = novoNome;
+      petAtual.subtitulo = novoSub;
+      petAtual.nasc = novoNasc;
+      petAtual.partida = novaPartida;
+      petAtual.cartaPet = novaCarta;
+      if (novaSenha) petAtual.senhaTutor = novaSenha;
+
+      // 1. Atualiza na tela imediatamente
+      aplicarDadosPetNaTela(petAtual);
+
+      // 2. Salva localmente
+      salvarPetAtualizadoNoStorage();
+
+      // 3. Sincroniza na Nuvem (Cloudflare D1)
+      try {
+        fetch('/api/pets', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(petAtual)
+        }).catch(err => console.log('Sync D1:', err));
+      } catch(err) {}
+
+      fecharPainelTutorMemorial();
+      atualizarEstadoVisualTutor();
+
+      alert(`🎉 Memorial de ${novoNome} atualizado com sucesso!\n\n🛡️ Download de Terceiros: ${permitirDownload ? 'Liberado para visitantes' : 'Privado / Bloqueado para visitantes'}\nAs alterações foram salvas e sincronizadas na nuvem.`);
+    }
+
+    function checarPermissaoTutorEExecutar(acao) {
+      if (verificarSeEhTutorOuAdmin()) {
+        acao();
+      } else {
+        alert("🔒 Esta funcionalidade é reservada ao tutor deste pet. Informe a senha de acesso para continuar.");
+        abrirModalLoginTutor();
+      }
+    }
+
     function aplicarDadosPetNaTela(pet) {
+      atualizarEstadoVisualTutor();
       if (!pet) return;
       petAtual = pet;
 
@@ -1633,6 +1872,15 @@
     function baixarVideoTributo() {
       if (!petAtual) petAtual = obterPetSeguro();
       
+      const ehTutor = verificarSeEhTutorOuAdmin();
+      const permitirDownload = petAtual.permitirDownloadVideo !== false;
+
+      if (!permitirDownload && !ehTutor) {
+        alert("🔒 Download Bloqueado: O tutor deste memorial configurou o download do vídeo como restrito à família. Apenas o tutor autenticado tem permissão para baixar este arquivo.");
+        abrirModalLoginTutor();
+        return;
+      }
+      
       alert(`🎬 Gerando o download do Vídeo Tributo de ${petAtual.nome} em Alta Definição...\n\nO vídeo com a retrospectiva de fotos e a trilha de piano acústico será salvo no seu dispositivo.`);
       
       // Cria link direto ou dispara download da imagem de capa / pacote memorial
@@ -1953,5 +2201,166 @@
       } catch(e) {}
     }
   </script>
+
+  <!-- ========================================================================= -->
+  <!-- MODAL 1: AUTENTICAÇÃO DO TUTOR DO MEMORIAL -->
+  <!-- ========================================================================= -->
+  <div id="modalLoginTutorMemorial" class="hidden fixed inset-0 z-50 bg-black/80 backdrop-blur-md flex items-center justify-center p-4">
+    <div class="bg-white max-w-md w-full rounded-3xl p-6 md:p-8 shadow-2xl border-2 border-amber-400 space-y-5 relative overflow-hidden" onclick="event.stopPropagation()">
+      
+      <div class="flex items-center justify-between border-b border-stone-200 pb-3">
+        <div class="flex items-center gap-2.5">
+          <div class="w-10 h-10 rounded-2xl bg-amber-100 text-[#740568] flex items-center justify-center text-xl font-bold">
+            🔐
+          </div>
+          <div>
+            <h3 class="font-black text-base text-[#520349] leading-tight">Área do Tutor</h3>
+            <p class="text-[11px] text-stone-500 font-medium">Acesso restrito para editar esta homenagem</p>
+          </div>
+        </div>
+        <button type="button" onclick="fecharModalLoginTutor()" class="w-7 h-7 rounded-full bg-stone-100 hover:bg-stone-200 text-stone-600 flex items-center justify-center text-xs font-bold transition">
+          ✕
+        </button>
+      </div>
+
+      <form onsubmit="executarLoginTutorMemorial(event)" class="space-y-4">
+        <div>
+          <label class="block text-xs font-bold text-stone-700 mb-1">Senha do Tutor ou Senha Mestre *</label>
+          <div class="relative">
+            <span class="absolute left-3.5 top-1/2 -translate-y-1/2 text-stone-400 text-sm">🔑</span>
+            <input type="password" id="senhaTutorMemorialInput" required placeholder="Digite sua senha ou código da tag" class="w-full bg-stone-50 border border-stone-300 focus:border-amber-500 rounded-2xl pl-10 pr-10 py-3 text-xs text-stone-800 font-bold focus:outline-none focus:ring-2 focus:ring-amber-400/30">
+            <button type="button" onclick="alternarVisibilidadeSenhaTutor()" class="absolute right-3 top-1/2 -translate-y-1/2 text-stone-400 hover:text-stone-700 text-xs p-1" title="Ver / Ocultar Senha">
+              👁️
+            </button>
+          </div>
+          <p class="text-[10px] text-stone-400 mt-1">Você também pode usar o código da tag (<span id="dicaCodigoTagLogin">TN-THOR-3620</span>) ou sua senha mestre.</p>
+        </div>
+
+        <div id="erroLoginTutorMemorial" class="hidden p-3 rounded-xl bg-rose-50 border border-rose-200 text-rose-700 text-xs font-bold text-center">
+          Senha incorreta. Verifique os dados ou use a senha mestre.
+        </div>
+
+        <button type="submit" class="w-full py-3.5 rounded-2xl bg-gradient-to-r from-amber-500 via-amber-400 to-yellow-300 hover:brightness-105 text-[#740568] font-black text-xs shadow-md transition active:scale-95 flex items-center justify-center gap-2 cursor-pointer">
+          <span>🚀</span>
+          <span>Acessar Modo de Edição do Tutor</span>
+        </button>
+      </form>
+
+      <div class="pt-2 border-t border-stone-200 flex items-center justify-between text-xs">
+        <span class="text-stone-500 text-[11px]">É o tutor e esqueceu a senha?</span>
+        <button type="button" onclick="recuperarSenhaTutorMemorial()" class="text-[#740568] hover:text-amber-700 font-bold text-[11px] underline">
+          Usar Código da Tag
+        </button>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- ========================================================================= -->
+  <!-- MODAL 2: PAINEL DE EDIÇÃO & PRIVACIDADE EXCLUSIVO DO TUTOR -->
+  <!-- ========================================================================= -->
+  <div id="modalPainelTutorMemorial" class="hidden fixed inset-0 z-50 bg-black/80 backdrop-blur-md flex items-center justify-center p-4">
+    <div class="bg-white max-w-2xl w-full rounded-3xl shadow-2xl border-2 border-amber-400 overflow-hidden flex flex-col max-h-[90vh]" onclick="event.stopPropagation()">
+      
+      <!-- Cabeçalho do Painel do Tutor -->
+      <div class="p-5 md:p-6 bg-gradient-to-r from-[#740568] via-[#520349] to-[#8C077E] text-white flex items-center justify-between border-b-2 border-amber-400">
+        <div class="flex items-center gap-3">
+          <div class="w-10 h-10 rounded-xl bg-amber-400 text-[#740568] flex items-center justify-center text-xl font-bold shadow-md">
+            👑
+          </div>
+          <div>
+            <h3 class="font-black text-lg md:text-xl text-amber-100 leading-tight">Painel de Edição do Tutor</h3>
+            <p class="text-xs text-amber-200/80">Personalize o memorial e controle a privacidade da homenagem</p>
+          </div>
+        </div>
+        <button type="button" onclick="fecharPainelTutorMemorial()" class="w-8 h-8 rounded-full bg-white/10 hover:bg-white/20 text-white flex items-center justify-center text-sm font-bold transition">
+          ✕
+        </button>
+      </div>
+
+      <!-- Formulário com Scroll -->
+      <form onsubmit="salvarEdicoesTutorMemorial(event)" class="p-5 md:p-6 space-y-5 overflow-y-auto">
+        
+        <!-- SEÇÃO A: PRIVACIDADE DO VÍDEO (COMO NO INSTAGRAM) -->
+        <div class="p-4 rounded-2xl bg-amber-50/80 border border-amber-300 space-y-2">
+          <div class="flex items-center justify-between">
+            <div>
+              <h4 class="font-black text-xs text-[#740568] uppercase tracking-wider flex items-center gap-1.5">
+                <span>🛡️</span> Privacidade do Vídeo Memorial
+              </h4>
+              <p class="text-[11px] text-stone-600 font-medium">Controle se visitantes externos podem fazer download do vídeo da homenagem</p>
+            </div>
+            <span class="text-[10px] bg-amber-200 text-[#740568] font-bold px-2.5 py-0.5 rounded-full">Privacidade</span>
+          </div>
+
+          <label class="flex items-center justify-between p-3 bg-white rounded-xl border border-amber-200 cursor-pointer hover:bg-stone-50 transition select-none">
+            <div class="pr-4">
+              <span class="block text-xs font-bold text-stone-800">Permitir que visitantes baixem o vídeo memorial</span>
+              <span class="block text-[10px] text-stone-500">Se desmarcado, apenas você (tutor logado) verá o botão de download. Visitantes poderão apenas assistir online.</span>
+            </div>
+            <input type="checkbox" id="tutorPermitirDownloadVideo" checked class="w-5 h-5 text-amber-500 rounded focus:ring-0 accent-amber-500 cursor-pointer">
+          </label>
+        </div>
+
+        <!-- SEÇÃO B: DADOS DO PET -->
+        <div class="space-y-3">
+          <h4 class="font-black text-xs text-stone-700 uppercase tracking-wider flex items-center gap-1.5">
+            <span>🐾</span> Informações Básicas da Homenagem
+          </h4>
+
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+            <div>
+              <label class="block text-xs font-bold text-stone-700 mb-1">Nome do Pet *</label>
+              <input type="text" id="tutorEditNome" required class="w-full bg-stone-50 border border-stone-300 rounded-xl px-3 py-2 text-xs font-bold text-stone-800 focus:outline-none focus:border-amber-500">
+            </div>
+            <div>
+              <label class="block text-xs font-bold text-stone-700 mb-1">Subtítulo / Frase *</label>
+              <input type="text" id="tutorEditSubtitulo" required class="w-full bg-stone-50 border border-stone-300 rounded-xl px-3 py-2 text-xs font-medium text-stone-800 focus:outline-none focus:border-amber-500">
+            </div>
+          </div>
+
+          <div class="grid grid-cols-2 gap-3">
+            <div>
+              <label class="block text-xs font-bold text-stone-700 mb-1">Ano de Nascimento *</label>
+              <input type="text" id="tutorEditNasc" required class="w-full bg-stone-50 border border-stone-300 rounded-xl px-3 py-2 text-xs font-bold text-stone-800 focus:outline-none focus:border-amber-500">
+            </div>
+            <div>
+              <label class="block text-xs font-bold text-stone-700 mb-1">Ano de Partida *</label>
+              <input type="text" id="tutorEditPartida" required class="w-full bg-stone-50 border border-stone-300 rounded-xl px-3 py-2 text-xs font-bold text-stone-800 focus:outline-none focus:border-amber-500">
+            </div>
+          </div>
+        </div>
+
+        <!-- SEÇÃO C: CARTA DO ANJINHO -->
+        <div class="space-y-1.5">
+          <label class="block text-xs font-bold text-stone-700">💌 Carta do Nosso Anjinho:</label>
+          <textarea id="tutorEditCarta" rows="4" class="w-full bg-stone-50 border border-stone-300 rounded-xl p-3 text-xs text-stone-800 focus:outline-none focus:border-amber-500 leading-relaxed font-medium"></textarea>
+        </div>
+
+        <!-- SEÇÃO D: SENHA EXCLUSIVA DO TUTOR -->
+        <div class="p-3.5 rounded-2xl bg-stone-50 border border-stone-200 space-y-2">
+          <label class="block text-xs font-bold text-stone-700">Sua Senha Pessoal de Tutor:</label>
+          <div class="relative">
+            <input type="text" id="tutorEditSenha" placeholder="Digite uma senha pessoal" class="w-full bg-white border border-stone-300 rounded-xl px-3 py-2 text-xs font-mono font-bold text-[#740568] focus:outline-none focus:border-amber-500">
+          </div>
+          <p class="text-[10px] text-stone-400">Esta senha permite que você acerte qualquer detalhe do memorial deste pet a qualquer momento.</p>
+        </div>
+
+        <!-- BOTÃO SALVAR -->
+        <div class="pt-2 flex items-center justify-between gap-3">
+          <button type="button" onclick="fecharPainelTutorMemorial()" class="px-4 py-2.5 rounded-xl bg-stone-200 hover:bg-stone-300 text-stone-700 text-xs font-bold transition">
+            Cancelar
+          </button>
+
+          <button type="submit" class="px-6 py-3 rounded-xl bg-gradient-to-r from-amber-500 via-amber-400 to-yellow-300 hover:brightness-105 text-[#740568] font-black text-xs shadow-md transition active:scale-95 flex items-center gap-2 cursor-pointer">
+            <span>💾</span>
+            <span>Salvar Alterações &amp; Sincronizar na Nuvem</span>
+          </button>
+        </div>
+
+      </form>
+
+    </div>
+  </div>
 </body>
 </html>
