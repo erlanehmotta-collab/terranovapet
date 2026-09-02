@@ -227,15 +227,11 @@
             <img id="perfilPetFoto" src="" class="w-full h-full object-cover rounded-full">
           </div>
 
-          <!-- Botões Reduzidos, Elegantes e Harmônicos -->
+          <!-- Botões de Gestão do Perfil: Postar e Editar -->
           <div class="flex items-center gap-2 pb-1">
-            <button onclick="darCarinhoPerfil()" class="h-8 px-3.5 bg-gradient-to-r from-[#740568] to-[#9F0C8F] hover:brightness-110 text-yellow-300 font-bold text-[11px] rounded-full shadow-xs transition active:scale-95 flex items-center gap-1.5 cursor-pointer">
-              <span>🐾</span>
-              <span>Enviar Patinha</span>
-            </button>
-            <button id="btnPostarFotoPerfil" onclick="clicarPostarFotoTutor()" class="h-8 px-3 bg-amber-100 hover:bg-amber-200 text-amber-950 font-bold text-[11px] rounded-full border border-amber-300/80 shadow-xs transition active:scale-95 flex items-center gap-1 cursor-pointer">
+            <button id="btnPostarFotoPerfil" onclick="clicarPostarFotoTutor()" class="h-8 px-3.5 bg-amber-100 hover:bg-amber-200 text-amber-950 font-bold text-[11px] rounded-full border border-amber-300/80 shadow-xs transition active:scale-95 flex items-center gap-1.5 cursor-pointer">
               <span>➕</span>
-              <span>Postar</span>
+              <span>Nova Publicação</span>
             </button>
             <button id="btnEditarPerfilPet" onclick="abrirModalEditarPerfil()" class="h-8 px-3 bg-stone-100 hover:bg-stone-200 text-stone-700 font-semibold text-[11px] rounded-full border border-stone-200 shadow-xs transition active:scale-95 flex items-center gap-1 cursor-pointer">
               <span>⚙️</span>
@@ -719,7 +715,7 @@
               <p id="modalFotoPostSubtitulo" class="text-[11px] text-stone-500 truncate">Golden Retriever • Montes Claros - MG</p>
             </div>
           </div>
-          <button onclick="apagarPostModalAtual(event)" class="px-2.5 py-1 rounded-full bg-rose-50 hover:bg-rose-100 text-rose-600 font-bold text-[11px] border border-rose-200/80 transition flex items-center gap-1 cursor-pointer flex-shrink-0" title="Apagar esta publicação">
+          <button id="btnModalApagarPost" onclick="apagarPostModalAtual(event)" class="hidden px-2.5 py-1 rounded-full bg-rose-50 hover:bg-rose-100 text-rose-600 font-bold text-[11px] border border-rose-200/80 transition flex items-center gap-1 cursor-pointer flex-shrink-0" title="Apagar esta publicação">
             <span>🗑️</span>
             <span>Apagar</span>
           </button>
@@ -1315,14 +1311,30 @@
       renderizarFeed(feedPosts);
     }
 
-    function renderizarFeed(lista) {
+    function renderizarFeed(lista, isDiario = false) {
       const container = document.getElementById("containerFeedSocial");
       container.innerHTML = "";
+
+      let tutorLogado = null;
+      try {
+        tutorLogado = JSON.parse(localStorage.getItem("terranova_tutor_logado"));
+      } catch(e) {}
 
       lista.forEach(post => {
         const card = document.createElement("article");
         card.className = "bg-white rounded-3xl overflow-hidden border border-stone-200 shadow-md hover:shadow-xl transition duration-300 relative";
         
+        // REGRA DE SEGURANÇA MANDATÓRIA:
+        // Na área do Feed da Comunidade (isDiario === false) NUNCA é permitido apagar post!
+        // O botão de apagar só aparece se for no Diário Pessoal (isDiario === true) E o tutor estiver logado na conta dele!
+        const petDoTutor = (tutorLogado && tutorLogado.petNome) ? tutorLogado.petNome.trim().toLowerCase() : "";
+        const postPet = (post.petNome || "").trim().toLowerCase();
+        const tutorPodeApagar = isDiario && tutorLogado && (petDoTutor === postPet || tutorLogado.isAdmin);
+
+        const botaoApagarHtml = tutorPodeApagar ? `
+          <button onclick="apagarPost('${post.id}', event)" class="p-1 rounded-full hover:bg-rose-50 text-stone-400 hover:text-rose-600 transition text-xs cursor-pointer ml-1" title="Apagar Minha Publicação">🗑️</button>
+        ` : '';
+
         card.innerHTML = `
           <!-- CABEÇALHO DO POST (CLIQUE ABRE O DIÁRIO DE AVENTURAS DO PET) -->
           <div class="p-4 flex items-center justify-between border-b border-stone-100">
@@ -1344,7 +1356,7 @@
 
             <div class="flex items-center gap-1.5 flex-shrink-0">
               <span class="text-[11px] text-stone-400 font-medium">${post.horario}</span>
-              <button onclick="apagarPost('${post.id}', event)" class="p-1 rounded-full hover:bg-rose-50 text-stone-300 hover:text-rose-600 transition text-xs cursor-pointer" title="Apagar Publicação">🗑️</button>
+              ${botaoApagarHtml}
             </div>
           </div>
 
@@ -1476,15 +1488,15 @@
       if (aba === 'feed') {
         btnFeed.className = "px-4 py-2 rounded-2xl bg-amber-400 text-[#740568] font-black text-xs shadow-sm transition";
         btnDiario.className = "px-4 py-2 rounded-2xl bg-white hover:bg-stone-100 text-stone-700 font-bold text-xs border border-stone-300 transition";
-        renderizarFeed(feedPosts);
+        renderizarFeed(feedPosts, false);
       } else {
         btnDiario.className = "px-4 py-2 rounded-2xl bg-amber-400 text-[#740568] font-black text-xs shadow-sm transition";
         btnFeed.className = "px-4 py-2 rounded-2xl bg-white hover:bg-stone-100 text-stone-700 font-bold text-xs border border-stone-300 transition";
         
         let tutor = null;
         try { tutor = JSON.parse(localStorage.getItem("terranova_tutor_logado")); } catch(e) {}
-        const petFiltrar = (tutor && tutor.petNome) ? tutor.petNome : "Thor";
-        renderizarFeed(feedPosts.filter(p => p.petNome.toLowerCase() === petFiltrar.toLowerCase()));
+        const petFiltrar = (tutor && tutor.petNome) ? tutor.petNome.toLowerCase() : "thor";
+        renderizarFeed(feedPosts.filter(p => p.petNome.toLowerCase() === petFiltrar), true);
       }
     }
 
@@ -2116,9 +2128,20 @@
       // Renderiza lista de comentários
       renderizarComentariosModal(post);
 
-      // Limpa input
-      const inp = document.getElementById("inputComentarioModalFoto");
-      if (inp) inp.value = "";
+      // Controle do Botão de Apagar no Modal: só visível se o tutor estiver logado e for dono do post
+      const btnApagarModal = document.getElementById("btnModalApagarPost");
+      if (btnApagarModal) {
+        let tutorLogado = null;
+        try { tutorLogado = JSON.parse(localStorage.getItem("terranova_tutor_logado")); } catch(e) {}
+        const petDoTutor = (tutorLogado && tutorLogado.petNome) ? tutorLogado.petNome.trim().toLowerCase() : "";
+        const postPet = (post.petNome || "").trim().toLowerCase();
+        const ehDonoDoPost = tutorLogado && (petDoTutor === postPet || tutorLogado.isAdmin);
+        if (ehDonoDoPost) {
+          btnApagarModal.classList.remove("hidden");
+        } else {
+          btnApagarModal.classList.add("hidden");
+        }
+      }
 
       modal.classList.remove("hidden");
     }
@@ -2131,12 +2154,46 @@
 
     function apagarPost(postId, e) {
       if (e) e.stopPropagation();
-      const postIdx = feedPosts.findIndex(p => p.id === postId);
-      if (postIdx === -1) return;
 
-      feedPosts.splice(postIdx, 1);
+      let tutorLogado = null;
+      try { tutorLogado = JSON.parse(localStorage.getItem("terranova_tutor_logado")); } catch(err) {}
+
+      if (!tutorLogado || !tutorLogado.nome) {
+        alert("🔒 Acesso restrito: Você precisa estar conectado à sua conta de tutor para gerenciar ou apagar publicações.");
+        abrirModalLogin();
+        return;
+      }
+
+      const post = feedPosts.find(p => p.id === postId);
+      if (!post) return;
+
+      const petDoTutor = (tutorLogado.petNome || "").trim().toLowerCase();
+      const postPet = (post.petNome || "").trim().toLowerCase();
+
+      if (petDoTutor !== postPet && !tutorLogado.isAdmin) {
+        alert("⚠️ Você só tem permissão para apagar publicações do seu próprio pet!");
+        return;
+      }
+
+      if (!confirm(`Tem certeza de que deseja apagar a publicação de ${post.petNome}?\nEsta ação não poderá ser desfeita.`)) {
+        return;
+      }
+
+      const postIdx = feedPosts.findIndex(p => p.id === postId);
+      if (postIdx !== -1) {
+        feedPosts.splice(postIdx, 1);
+      }
+
       salvarPostsSocialStorage();
-      renderizarFeed(feedPosts);
+
+      const btnDiario = document.getElementById("abaDiarioPet");
+      const isDiarioAtivo = btnDiario && btnDiario.classList.contains("bg-amber-400");
+      if (isDiarioAtivo) {
+        renderizarFeed(feedPosts.filter(p => p.petNome.toLowerCase() === petDoTutor), true);
+      } else {
+        renderizarFeed(feedPosts, false);
+      }
+
       fecharModalFotoPost();
 
       const secaoPerfil = document.getElementById("secaoPerfilPet");

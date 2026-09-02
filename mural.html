@@ -45,45 +45,78 @@
       to { background-position: 580px 1140px; }
     }
 
-    /* Cartão Jazigo em Mármore Creme & Ouro (Luminoso, Nobre e Acolhedor) */
+    /* Lápide Monumento Celestial (Arco Solene, Mármore Nobre & Brilho Dinâmico) */
     .memorial-card-luminous {
-      background: linear-gradient(160deg, #FFFFFF 0%, #FFFDF8 45%, #FEF7E8 100%);
-      border: 2px solid #F6BD42;
+      background: linear-gradient(165deg, #FFFFFF 0%, #FFFDF8 45%, #FEF7EA 100%);
+      border: 2.5px solid #F59E0B;
+      border-radius: 42px 42px 28px 28px;
       box-shadow: 
-        0 15px 35px -5px rgba(245, 158, 11, 0.3),
-        0 25px 50px -10px rgba(10, 0, 13, 0.85);
-      transition: all 0.35s cubic-bezier(0.16, 1, 0.3, 1);
+        0 15px 40px -8px rgba(0, 0, 0, 0.7),
+        0 0 25px -4px rgba(245, 158, 11, 0.4);
+      transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+      position: relative;
+      overflow: hidden;
     }
     .memorial-card-luminous:hover {
-      transform: translateY(-6px);
-      box-shadow: 
-        0 20px 45px -5px rgba(245, 158, 11, 0.5),
-        0 30px 60px -10px rgba(10, 0, 13, 0.95);
+      transform: translateY(-8px) scale(1.015);
       border-color: #FFD700;
+      box-shadow: 
+        0 25px 55px -10px rgba(0, 0, 0, 0.9),
+        0 0 35px 2px rgba(245, 158, 11, 0.6),
+        0 0 50px rgba(147, 51, 234, 0.35);
     }
 
-    /* Animação suave de vela acesa */
-    @keyframes flameFlicker {
-      0%, 100% { opacity: 0.92; transform: scale(1); filter: drop-shadow(0 0 6px #FFB703); }
-      50% { opacity: 1; transform: scale(1.18); filter: drop-shadow(0 0 14px #FB8500); }
+    /* Feixe de luz holográfico que atravessa a lápide dinamicamente no hover */
+    .memorial-card-luminous::after {
+      content: '';
+      position: absolute;
+      top: -50%;
+      left: -70%;
+      width: 45%;
+      height: 200%;
+      background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.65), transparent);
+      transform: rotate(25deg);
+      transition: all 0.85s ease;
+      opacity: 0;
+      pointer-events: none;
     }
+    .memorial-card-luminous:hover::after {
+      left: 135%;
+      opacity: 1;
+    }
+
+    /* Auréola Estável e Serena do Anjinho (Sem piscar excessivo) */
+    .halo-anjinho {
+      box-shadow: 0 0 15px rgba(245, 158, 11, 0.45), inset 0 0 10px rgba(255, 215, 0, 0.35);
+    }
+
+    /* Partículas de Luz e Pétalas Subindo ao Acender Vela */
+    @keyframes floatParticleUp {
+      0% { transform: translateY(0) scale(0.6); opacity: 1; }
+      100% { transform: translateY(-55px) scale(1.3); opacity: 0; }
+    }
+    .particle-candle {
+      pointer-events: none;
+      animation: floatParticleUp 0.85s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+      z-index: 9999;
+      font-size: 15px;
+    }
+
+    /* Vela acesa contínua e serena (Sem oscilação rápida) */
     .flame-pulsing {
-      animation: flameFlicker 1.8s ease-in-out infinite;
+      opacity: 0.95;
+      filter: drop-shadow(0 0 6px #FFB703);
     }
 
-    /* Cursor dinâmico de máquina de escrever em ouro */
+    /* Cursor suave e discreto (Sem piscar frenético) */
     .cursor-blink {
       display: inline-block;
       width: 2.5px;
       height: 1.1em;
-      background-color: #F59E0B;
+      background-color: #D97706;
       margin-left: 5px;
       vertical-align: middle;
-      animation: blinkMemorial 0.85s infinite;
-    }
-    @keyframes blinkMemorial {
-      0%, 100% { opacity: 1; }
-      50% { opacity: 0; }
+      opacity: 0.75;
     }
 
     /* Revelação fluida ao rolar a página */
@@ -173,13 +206,13 @@
       <span class="text-amber-300">✨</span>
     </div>
 
-    <!-- TÍTULO EM AMARELO DO BOTÃO & LETRAS DINÂMICAS QUE COMPLETAM -->
+    <!-- TÍTULO E SUBTÍTULO NA COR PRETA & SEM FUNDO NO SUBTÍTULO -->
     <div class="space-y-3">
-      <h2 class="text-5xl sm:text-7xl md:text-8xl font-bold font-estrelinhas tracking-wide leading-tight text-transparent bg-clip-text bg-gradient-to-r from-amber-400 via-yellow-300 to-amber-400" style="text-shadow: 0 4px 35px rgba(245, 158, 11, 0.65), 0 0 20px rgba(254, 240, 138, 0.5);">
+      <h2 class="text-5xl sm:text-7xl md:text-8xl font-black font-estrelinhas tracking-wide leading-tight text-black" style="color: #000000; text-shadow: 0 0 25px rgba(255, 255, 255, 0.75), 0 0 45px rgba(255, 215, 0, 0.4);">
         Memorial das Estrelinhas
       </h2>
-      <p class="font-cinzel text-xs sm:text-sm md:text-base uppercase tracking-[0.24em] text-amber-200 font-bold drop-shadow-xs min-h-[2em] flex items-center justify-center">
-        <span id="textoDinamicoMemorial">Onde o Amor Permanece Vivo</span><span class="cursor-blink"></span>
+      <p class="font-cinzel text-xs sm:text-sm md:text-base uppercase tracking-[0.24em] text-black font-black drop-shadow-sm min-h-[2em] flex items-center justify-center" style="color: #000000; text-shadow: 0 0 15px rgba(255, 255, 255, 0.85);">
+        <span id="textoDinamicoMemorial">Onde o Amor Permanece Vivo</span><span class="cursor-blink" style="background-color: #000000;"></span>
       </p>
     </div>
 
@@ -392,59 +425,66 @@
 
       lista.forEach(pet => {
         const card = document.createElement("article");
-        card.className = "memorial-card-luminous rounded-[32px] p-6 flex flex-col justify-between text-center relative group";
+        card.className = "memorial-card-luminous p-6 sm:p-7 flex flex-col justify-between text-center relative group reveal-on-scroll is-visible cursor-pointer select-none";
+        card.id = `card_pet_${pet.id}`;
+        card.setAttribute("onmousemove", "inclinarLapide3D(event, this)");
+        card.setAttribute("onmouseleave", "resetarLapide3D(this)");
         
         card.innerHTML = `
-          <!-- Selo Superior com Auréola -->
-          <div class="flex items-center justify-between mb-4 border-b border-amber-200 pb-3">
-            <span class="text-[10px] bg-amber-100 text-[#2B022F] font-black px-3 py-1 rounded-full uppercase tracking-wider border border-amber-300">
-              🕊️ Em Memória Eterna
+          <!-- Topo da Lápide: Arco Solene & Datas Eternas -->
+          <div class="flex items-center justify-between mb-4 border-b border-amber-200/80 pb-3">
+            <span class="text-[10px] bg-gradient-to-r from-amber-100 to-yellow-100 text-[#4A0E52] font-black px-3 py-1 rounded-full uppercase tracking-wider border border-amber-300 shadow-xs flex items-center gap-1">
+              <span>🕊️</span>
+              <span>Em Memória Eterna</span>
             </span>
-            <span class="text-xs font-mono font-black text-[#5C0560] tracking-wider">
+            <span class="text-xs font-mono font-black text-[#5B0F6B] tracking-wider bg-amber-50/80 px-2.5 py-0.5 rounded-lg border border-amber-200">
               ${pet.nasc || '2012'} &mdash; ${pet.partida || '2026'}
             </span>
           </div>
 
-          <!-- Medalhão do Pet com Borda Ouro Acetinada -->
-          <div class="relative w-36 h-36 mx-auto mb-4">
-            <div class="w-full h-full rounded-full p-1.5 bg-gradient-to-tr from-[#3D0342] via-[#E5A044] to-[#FFE8A3] shadow-lg border-2 border-white relative group-hover:scale-105 transition duration-300">
-              <img src="${pet.fotoPrincipal}" class="w-full h-full object-cover rounded-full">
+          <!-- Medalhão Celestial com Auréola Viva e Zoom Dinâmico -->
+          <div class="relative w-36 h-36 mx-auto mb-4 group/foto">
+            <div class="w-full h-full rounded-full p-1.5 bg-gradient-to-tr from-[#5B0F6B] via-[#E5A044] to-[#FFE8A3] shadow-xl border-2 border-white relative group-hover/foto:scale-105 transition duration-500 halo-anjinho overflow-hidden">
+              <img src="${pet.fotoPrincipal}" class="w-full h-full object-cover rounded-full transform group-hover/foto:scale-110 transition duration-700">
             </div>
-            <div class="absolute -top-1 -right-1 text-xl filter drop-shadow">
+            <div class="absolute -top-1 -right-1 text-xl filter drop-shadow-xs opacity-90">
               ✨
             </div>
           </div>
 
-          <!-- Nome e Linhagem -->
+          <!-- Nome e Linhagem com Tipografia Nobre -->
           <div class="space-y-1 mb-3">
-            <h3 class="text-2xl font-black font-poetic text-[#2B022F] tracking-tight group-hover:text-amber-600 transition">
+            <h3 class="text-2xl sm:text-3xl font-black font-poetic text-[#2B022F] tracking-tight group-hover:text-[#5B0F6B] transition duration-300">
               ${pet.nome}
             </h3>
             <p class="text-xs font-bold text-stone-600">
-              ${pet.raca || 'Fiel Companheiro'} &bull; <span class="italic text-stone-500 font-medium">${pet.tutor || 'Família'}</span>
+              ${pet.raca || 'Fiel Companheiro'} &bull; <span class="italic text-stone-500 font-medium">Tutor: ${pet.tutor || 'Família'}</span>
             </p>
           </div>
 
-          <!-- Frase de Lembrança em Fundo Creme Suave -->
-          <p class="font-poetic italic text-xs sm:text-sm text-[#2B022F] leading-relaxed bg-[#FFF8EB] p-3.5 rounded-2xl border border-amber-200 mb-5 shadow-xs">
+          <!-- Frase de Lembrança em Mármore Polido -->
+          <p class="font-poetic italic text-xs sm:text-sm text-[#2B022F] leading-relaxed bg-[#FFF8EB] p-4 rounded-2xl border border-amber-300/70 mb-5 shadow-xs relative">
             &ldquo;${pet.frase || pet.subtitulo || 'Para sempre guardado no lugar mais luminoso da nossa memória.'}&rdquo;
           </p>
 
-          <!-- AÇÕES DO JAZIGO: ACENDER VELA & ABRIR MEMORIAL COMPLETO -->
-          <div class="space-y-2.5 pt-2 border-t border-amber-200">
+          <!-- AÇÕES DO JAZIGO: VELA VIVA & VISITAR -->
+          <div class="space-y-3 pt-3 border-t border-amber-200/80">
             <div class="flex items-center justify-between text-xs px-1">
-              <div class="flex items-center gap-1.5">
-                <span class="w-2.5 h-3.5 rounded-full bg-gradient-to-t from-amber-600 via-amber-400 to-yellow-200 flame-pulsing"></span>
-                <span id="velas_${pet.id}" class="font-black text-[#2B022F] text-xs">${pet.velas || 85} velas</span>
+              <div class="flex items-center gap-2">
+                <span class="w-3 h-4 rounded-full bg-gradient-to-t from-amber-600 via-amber-400 to-yellow-200 flame-pulsing shadow-sm"></span>
+                <span id="velas_${pet.id}" class="font-black text-[#2B022F] text-xs transition">${pet.velas || 85} velas acesas</span>
               </div>
-              <button onclick="acenderVelaMural('${pet.id}')" class="px-3.5 py-1.5 bg-gradient-to-r from-amber-500 via-yellow-400 to-amber-500 hover:brightness-105 text-[#1C011E] rounded-xl font-black text-[11px] shadow-sm active:scale-95 transition">
-                Acender Vela 🕯️
+              
+              <button onclick="acenderVelaMural('${pet.id}', this, event)" class="px-4 py-2 bg-gradient-to-r from-amber-400 via-yellow-300 to-amber-400 hover:brightness-110 text-[#4A0E52] rounded-xl font-black text-xs shadow-md active:scale-95 transition flex items-center gap-1.5 cursor-pointer">
+                <span>Acender Vela</span>
+                <span>🕯️</span>
               </button>
             </div>
 
-            <a href="memorial.html?pet=${pet.id}" class="block w-full py-2.5 bg-white hover:bg-amber-50 text-[#1C011E] border-2 border-amber-300 font-black text-xs rounded-xl shadow-xs transition flex items-center justify-center gap-2 group-hover:border-amber-400">
+            <a href="memorial.html?pet=${pet.id}" class="block w-full py-3 bg-white hover:bg-amber-50 text-[#4A0E52] border-2 border-amber-400 font-black text-xs rounded-xl shadow-xs transition flex items-center justify-center gap-2 group/btn hover:shadow-md active:scale-95">
               <span>🌹</span>
               <span>Visitar Memorial Completo</span>
+              <span class="group-hover/btn:translate-x-1 transition text-amber-500 font-bold">&rarr;</span>
             </a>
           </div>
         `;
@@ -453,19 +493,68 @@
       });
     }
 
-    // ACENDER VELA
-    function acenderVelaMural(petId) {
+    // Efeito 3D Tilt Dinâmico que segue o mouse na Lápide
+    function inclinarLapide3D(e, card) {
+      const rect = card.getBoundingClientRect();
+      const x = e.clientX - rect.left;
+      const y = e.clientY - rect.top;
+      const centerX = rect.width / 2;
+      const centerY = rect.height / 2;
+      const rotateX = ((y - centerY) / centerY) * -6;
+      const rotateY = ((x - centerX) / centerX) * 6;
+      card.style.transform = `perspective(1000px) rotateX(${rotateX.toFixed(2)}deg) rotateY(${rotateY.toFixed(2)}deg) translateY(-8px) scale3d(1.02, 1.02, 1.02)`;
+    }
+
+    function resetarLapide3D(card) {
+      card.style.transform = `perspective(1000px) rotateX(0deg) rotateY(0deg) translateY(0px) scale3d(1, 1, 1)`;
+    }
+
+    // ACENDER VELA COM EFEITO DINÂMICO DE PARTÍCULAS E BRILHO
+    function acenderVelaMural(petId, btnElement, event) {
+      if (event) event.stopPropagation();
       const pet = todosPetsMural.find(p => p.id === petId);
       if (!pet) return;
       pet.velas = (pet.velas || 85) + 1;
 
+      // 1. Atualizar contador no card com pulso
       const contador = document.getElementById(`velas_${petId}`);
       if (contador) {
-        contador.innerText = `${pet.velas} velas`;
-        contador.classList.add("text-amber-600");
-        setTimeout(() => contador.classList.remove("text-amber-600"), 600);
+        contador.innerText = `${pet.velas} velas acesas`;
+        contador.classList.add("text-amber-600", "scale-110");
+        setTimeout(() => contador.classList.remove("text-amber-600", "scale-110"), 600);
       }
 
+      // 2. Feedback dinâmico no botão
+      if (btnElement) {
+        const textoOriginal = btnElement.innerHTML;
+        btnElement.innerHTML = "<span>Vela Acesa!</span><span>✨</span>";
+        btnElement.classList.add("scale-105", "brightness-110");
+        setTimeout(() => {
+          btnElement.innerHTML = textoOriginal;
+          btnElement.classList.remove("scale-105", "brightness-110");
+        }, 900);
+      }
+
+      // 3. Partículas flutuantes de luz (estrelinhas e velas)
+      if (event && event.clientX) {
+        for (let i = 0; i < 3; i++) {
+          const spark = document.createElement("span");
+          spark.className = "particle-candle text-amber-400 font-bold";
+          spark.innerText = i === 0 ? "🕯️" : "✨";
+          spark.style.left = `${event.clientX - 10 + (i * 14)}px`;
+          spark.style.top = `${event.clientY - 15 - (i * 10)}px`;
+          spark.style.position = "fixed";
+          document.body.appendChild(spark);
+          setTimeout(() => spark.remove(), 850);
+        }
+      }
+
+      // 5. Vibração tátil sutil em smartphones
+      if (navigator.vibrate) {
+        navigator.vibrate([60, 30, 60]);
+      }
+
+      // 6. Atualizar contador global
       const totalGlobal = document.getElementById("totalVelasAcesas");
       if (totalGlobal) {
         let n = parseInt(totalGlobal.innerText.replace(/\D/g, "")) || 15920;
